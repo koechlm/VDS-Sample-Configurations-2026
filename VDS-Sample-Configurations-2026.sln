@@ -1,0 +1,153 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-MFG-Sample", "VDS-MFG-Sample\VDS-MFG-Sample.csproj", "{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-PDMC-Sample", "VDS-PDMC-Sample\VDS-PDMC-Sample.csproj", "{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VDS-MFG-Installer", "VDS-MFG-Installer\VDS-MFG-Installer.vdproj", "{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VDS-PDMC-Installer", "VDS-PDMC-Installer\VDS-PDMC-Installer.vdproj", "{A8592552-AF67-4213-9D58-6646BB19BB57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-Sample-Utilities", "VDS-Sample-Utilities\VDS-Sample-Utilities.csproj", "{5215453A-FFB9-4268-983E-1A8C984D5B83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SDK", "SDK", "{DC4D06D1-8214-4D60-BC26-621A59870C1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VDS", "VDS", "{368FFE18-E314-479D-AFF7-40A3B07D6040}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\Common.dll = SDK\Common.dll
+		SDK\CreateObject.dll = SDK\CreateObject.dll
+		SDK\dataStandard.UI.dll = SDK\dataStandard.UI.dll
+		SDK\log4net.dll = SDK\log4net.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vault", "Vault", "{52C11B9A-9DA9-4C88-93F2-DD4D147BA7D4}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\AdskIdentitySDK.config = SDK\AdskIdentitySDK.config
+		SDK\AdskIdentitySDK.dll = SDK\AdskIdentitySDK.dll
+		SDK\AdskLicensingSDK_9.dll = SDK\AdskLicensingSDK_9.dll
+		SDK\Autodesk.Connectivity.Explorer.Extensibility.dll = SDK\Autodesk.Connectivity.Explorer.Extensibility.dll
+		SDK\Autodesk.Connectivity.Explorer.Extensibility.XML = SDK\Autodesk.Connectivity.Explorer.Extensibility.XML
+		SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll = SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll
+		SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.XML = SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.XML
+		SDK\Autodesk.Connectivity.Extensibility.Framework.dll = SDK\Autodesk.Connectivity.Extensibility.Framework.dll
+		SDK\Autodesk.Connectivity.Extensibility.Framework.XML = SDK\Autodesk.Connectivity.Extensibility.Framework.XML
+		SDK\Autodesk.Connectivity.IDServicesWrapper.dll = SDK\Autodesk.Connectivity.IDServicesWrapper.dll
+		SDK\Autodesk.Connectivity.JobProcessor.Extensibility.dll = SDK\Autodesk.Connectivity.JobProcessor.Extensibility.dll
+		SDK\Autodesk.Connectivity.JobProcessor.Extensibility.XML = SDK\Autodesk.Connectivity.JobProcessor.Extensibility.XML
+		SDK\Autodesk.Connectivity.LicenseWrapper.dll = SDK\Autodesk.Connectivity.LicenseWrapper.dll
+		SDK\Autodesk.Connectivity.WebServices.dll = SDK\Autodesk.Connectivity.WebServices.dll
+		SDK\Autodesk.Connectivity.WebServices.WCF.dll = SDK\Autodesk.Connectivity.WebServices.WCF.dll
+		SDK\Autodesk.Connectivity.WebServices.XML = SDK\Autodesk.Connectivity.WebServices.XML
+		SDK\Autodesk.DataManagement.Client.Framework.dll = SDK\Autodesk.DataManagement.Client.Framework.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Forms.dll = SDK\Autodesk.DataManagement.Client.Framework.Forms.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Forms.xml = SDK\Autodesk.DataManagement.Client.Framework.Forms.xml
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.dll = SDK\Autodesk.DataManagement.Client.Framework.Vault.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.dll = SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.xml = SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.xml
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.xml = SDK\Autodesk.DataManagement.Client.Framework.Vault.xml
+		SDK\Autodesk.DataManagement.Client.Framework.xml = SDK\Autodesk.DataManagement.Client.Framework.xml
+		SDK\DevExpress.Data.Desktop.v24.1.dll = SDK\DevExpress.Data.Desktop.v24.1.dll
+		SDK\DevExpress.Data.v24.1.dll = SDK\DevExpress.Data.v24.1.dll
+		SDK\DevExpress.Docs.v24.1.dll = SDK\DevExpress.Docs.v24.1.dll
+		SDK\DevExpress.Drawing.v24.1.dll = SDK\DevExpress.Drawing.v24.1.dll
+		SDK\DevExpress.Images.v24.1.dll = SDK\DevExpress.Images.v24.1.dll
+		SDK\DevExpress.Office.v24.1.Core.dll = SDK\DevExpress.Office.v24.1.Core.dll
+		SDK\DevExpress.Pdf.v24.1.Core.dll = SDK\DevExpress.Pdf.v24.1.Core.dll
+		SDK\DevExpress.Pdf.v24.1.Drawing.dll = SDK\DevExpress.Pdf.v24.1.Drawing.dll
+		SDK\DevExpress.Printing.v24.1.Core.dll = SDK\DevExpress.Printing.v24.1.Core.dll
+		SDK\DevExpress.RichEdit.v24.1.Core.dll = SDK\DevExpress.RichEdit.v24.1.Core.dll
+		SDK\DevExpress.Sparkline.v24.1.Core.dll = SDK\DevExpress.Sparkline.v24.1.Core.dll
+		SDK\DevExpress.Utils.v24.1.dll = SDK\DevExpress.Utils.v24.1.dll
+		SDK\DevExpress.XtraBars.v24.1.dll = SDK\DevExpress.XtraBars.v24.1.dll
+		SDK\DevExpress.XtraEditors.v24.1.dll = SDK\DevExpress.XtraEditors.v24.1.dll
+		SDK\DevExpress.XtraGrid.v24.1.dll = SDK\DevExpress.XtraGrid.v24.1.dll
+		SDK\DevExpress.XtraLayout.v24.1.dll = SDK\DevExpress.XtraLayout.v24.1.dll
+		SDK\DevExpress.XtraNavBar.v24.1.dll = SDK\DevExpress.XtraNavBar.v24.1.dll
+		SDK\DevExpress.XtraPrinting.v24.1.dll = SDK\DevExpress.XtraPrinting.v24.1.dll
+		SDK\DevExpress.XtraRichEdit.v24.1.dll = SDK\DevExpress.XtraRichEdit.v24.1.dll
+		SDK\DevExpress.XtraTreeList.v24.1.dll = SDK\DevExpress.XtraTreeList.v24.1.dll
+		SDK\DevExpress.XtraVerticalGrid.v24.1.dll = SDK\DevExpress.XtraVerticalGrid.v24.1.dll
+		SDK\DevExpress.XtraWizard.v24.1.dll = SDK\DevExpress.XtraWizard.v24.1.dll
+		SDK\Ijwhost.dll = SDK\Ijwhost.dll
+		SDK\Microsoft.Extensions.ObjectPool.dll = SDK\Microsoft.Extensions.ObjectPool.dll
+		SDK\System.Reflection.MetadataLoadContext.dll = SDK\System.Reflection.MetadataLoadContext.dll
+		SDK\System.ServiceModel.Http.dll = SDK\System.ServiceModel.Http.dll
+		SDK\System.ServiceModel.Primitives.dll = SDK\System.ServiceModel.Primitives.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventor-Vault", "Inventor-Vault", "{6E4B401A-2F37-46C1-8AF4-3DFFB959E9D1}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\Connectivity.Application.VaultBase.dll = SDK\Connectivity.Application.VaultBase.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoCAD", "AutoCAD", "{06FEF859-1530-4E09-882F-4A5821B06935}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\AutoCAD\Autodesk.AutoCAD.Interop.Common.dll = SDK\AutoCAD\Autodesk.AutoCAD.Interop.Common.dll
+		SDK\AutoCAD\Autodesk.AutoCAD.Interop.dll = SDK\AutoCAD\Autodesk.AutoCAD.Interop.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventor", "Inventor", "{DCECFC6B-C784-4EEE-9795-FFE8AABBE54E}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\Inventor\Autodesk.iLogic.Automation.dll = SDK\Inventor\Autodesk.iLogic.Automation.dll
+		SDK\Inventor\Autodesk.iLogic.Interfaces.dll = SDK\Inventor\Autodesk.iLogic.Interfaces.dll
+		SDK\Inventor\Autodesk.Inventor.Interop.dll = SDK\Inventor\Autodesk.Inventor.Interop.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Debug|x64.ActiveCfg = Debug|x64
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Debug|x64.Build.0 = Debug|x64
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Release|x64.ActiveCfg = Release|x64
+		{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}.Release|x64.Build.0 = Release|x64
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Debug|x64.ActiveCfg = Debug|x64
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Debug|x64.Build.0 = Debug|x64
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Release|x64.ActiveCfg = Release|x64
+		{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}.Release|x64.Build.0 = Release|x64
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Debug|Any CPU.ActiveCfg = Debug
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Debug|x64.ActiveCfg = Debug
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Debug|x64.Build.0 = Debug
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Release|Any CPU.ActiveCfg = Release
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Release|Any CPU.Build.0 = Release
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Release|x64.ActiveCfg = Release
+		{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}.Release|x64.Build.0 = Release
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Debug|Any CPU.ActiveCfg = Debug
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Debug|x64.ActiveCfg = Debug
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Debug|x64.Build.0 = Debug
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Release|Any CPU.ActiveCfg = Release
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Release|Any CPU.Build.0 = Release
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Release|x64.ActiveCfg = Release
+		{A8592552-AF67-4213-9D58-6646BB19BB57}.Release|x64.Build.0 = Release
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Debug|x64.ActiveCfg = Debug|x64
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Debug|x64.Build.0 = Debug|x64
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Release|x64.ActiveCfg = Release|Any CPU
+		{5215453A-FFB9-4268-983E-1A8C984D5B83}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{368FFE18-E314-479D-AFF7-40A3B07D6040} = {DC4D06D1-8214-4D60-BC26-621A59870C1B}
+		{52C11B9A-9DA9-4C88-93F2-DD4D147BA7D4} = {DC4D06D1-8214-4D60-BC26-621A59870C1B}
+		{6E4B401A-2F37-46C1-8AF4-3DFFB959E9D1} = {DC4D06D1-8214-4D60-BC26-621A59870C1B}
+		{06FEF859-1530-4E09-882F-4A5821B06935} = {DC4D06D1-8214-4D60-BC26-621A59870C1B}
+		{DCECFC6B-C784-4EEE-9795-FFE8AABBE54E} = {DC4D06D1-8214-4D60-BC26-621A59870C1B}
+	EndGlobalSection
+EndGlobal
