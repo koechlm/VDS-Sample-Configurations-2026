@@ -4,12 +4,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-MFG-Sample", "VDS-MFG-Sample\VDS-MFG-Sample.csproj", "{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5215453A-FFB9-4268-983E-1A8C984D5B83} = {5215453A-FFB9-4268-983E-1A8C984D5B83}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-PDMC-Sample", "VDS-PDMC-Sample\VDS-PDMC-Sample.csproj", "{C30DEB1D-3C31-4BA7-A256-2B0AF9177ABA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5215453A-FFB9-4268-983E-1A8C984D5B83} = {5215453A-FFB9-4268-983E-1A8C984D5B83}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VDS-MFG-Installer", "VDS-MFG-Installer\VDS-MFG-Installer.vdproj", "{BD8AF260-523A-4BEC-A10F-2F4D12F7ABA2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5215453A-FFB9-4268-983E-1A8C984D5B83} = {5215453A-FFB9-4268-983E-1A8C984D5B83}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VDS-PDMC-Installer", "VDS-PDMC-Installer\VDS-PDMC-Installer.vdproj", "{A8592552-AF67-4213-9D58-6646BB19BB57}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5215453A-FFB9-4268-983E-1A8C984D5B83} = {5215453A-FFB9-4268-983E-1A8C984D5B83}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-Sample-Utilities", "VDS-Sample-Utilities\VDS-Sample-Utilities.csproj", "{5215453A-FFB9-4268-983E-1A8C984D5B83}"
 EndProject
