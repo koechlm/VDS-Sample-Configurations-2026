@@ -487,12 +487,12 @@ namespace VdsSampleUtilities
         /// Return running Inventor application
         /// </summary>
         /// <returns></returns>
-        public Inventor.Application m_InventorApplication()
+        public Inventor.Application? m_InventorApplication()
         {
             // Try to get an active instance of Inventor
             try
             {
-                return System.Runtime.InteropServices.Marshal.GetActiveObject("Inventor.Application") as Inventor.Application;
+                return MarshalCore.GetActiveObject("Inventor.Application") as Inventor.Application;
             }
             catch
             {
@@ -601,7 +601,7 @@ namespace VdsSampleUtilities
                             {
                                 foreach (Property m_Prop in m_PropSet)
                                 {
-                                    mFdsKeys.Add(m_Prop.Name, m_Prop.Value);
+                                    mFdsKeys.Add(m_Prop.Name, (string)m_Prop.Value);
                                 }
                                 //Get Fullname set by synchronization, to avoid save to other location
                                 mFdsKeys.Add("FdsNewFullFileName", m_Doc.File.FullFileName);
@@ -651,7 +651,7 @@ namespace VdsSampleUtilities
                         {
                             foreach (Property m_Prop in m_PropSet)
                             {
-                                mFdsKeys.Add(m_Prop.Name, m_Prop.Value);
+                                mFdsKeys.Add(m_Prop.Name, (string)m_Prop.Value);
                             }
 
                             //Get Fullname set by synchronization, to avoid save to other location
@@ -677,9 +677,9 @@ namespace VdsSampleUtilities
                                         {
                                             foreach (Property m_TempProp in m_TempPropSet)
                                             {
-                                                if (!string.IsNullOrEmpty(m_TempProp.Value))
+                                                if (!string.IsNullOrEmpty((string)m_TempProp.Value))
                                                 {
-                                                    mFdsKeys.Add(m_TempProp.Name, m_TempProp.Value);
+                                                    mFdsKeys.Add(m_TempProp.Name, (string)m_TempProp.Value);
                                                 }
                                             }
                                         }
@@ -724,9 +724,9 @@ namespace VdsSampleUtilities
     /// </summary>
     public class AcadHelpers
     {
-        AcInterop.AcadApplication mAcad = null;
+        AcInterop.AcadApplication? mAcad = null;
         private const string progID = "AutoCAD.Application";
-        AcInterop.AcadDocument mAcDoc = null;
+        AcInterop.AcadDocument? mAcDoc = null;
 
         [System.Runtime.InteropServices.DllImport("User32.dll", SetLastError = true)]
         static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
@@ -738,8 +738,8 @@ namespace VdsSampleUtilities
         private Boolean m_ConnectAcad()
         {
             try
-            {
-                mAcad = (AcInterop.AcadApplication)System.Runtime.InteropServices.Marshal.GetActiveObject(progID);
+            {               
+                mAcad = MarshalCore.GetActiveObject("AutoCAD.Application") as AcInterop.AcadApplication;
                 return true;
             }
             catch
