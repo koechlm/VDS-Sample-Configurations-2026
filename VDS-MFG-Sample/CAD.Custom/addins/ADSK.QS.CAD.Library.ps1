@@ -125,7 +125,7 @@ function mGetNewFileParentFldrByCat ([string] $Category) {
 
 function mGetUIOverride {
 	# check language override settings of VDS
-	[xml]$mDSLangFile = Get-Content "C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault\DSLanguages.xml"
+	[xml]$mDSLangFile = Get-Content "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault\DSLanguages.xml"
 	$mUICodes = $mDSLangFile.SelectNodes("/DSLanguages/Language_Code")
 	$mLCode = @{}
 	Foreach ($xmlAttr in $mUICodes) {
@@ -138,7 +138,7 @@ function mGetUIOverride {
 
 function mGetDBOverride {
 	# check language override settings of VDS
-	[xml]$mDSLangFile = Get-Content "C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault\DSLanguages.xml"
+	[xml]$mDSLangFile = Get-Content "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault\DSLanguages.xml"
 	$mUICodes = $mDSLangFile.SelectNodes("/DSLanguages/Language_Code")
 	$mLCode = @{}
 	Foreach ($xmlAttr in $mUICodes) {
@@ -151,7 +151,7 @@ function mGetDBOverride {
 
 function mGetPropTranslations {
 	# check language override settings of VDS
-	[xml]$mDSLangFile = Get-Content "C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault\DSLanguages.xml"
+	[xml]$mDSLangFile = Get-Content "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault\DSLanguages.xml"
 	$mUICodes = $mDSLangFile.SelectNodes("/DSLanguages/Language_Code")
 	$mLCode = @{}
 	Foreach ($xmlAttr in $mUICodes) {
@@ -166,7 +166,7 @@ function mGetPropTranslations {
 	Else {
 		$mVdsDb = $PSUICulture
 	}
-	[xml]$mPrpTrnsltnFile = get-content ("C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\" + $mVdsDb + "\PropertyTranslations.xml")
+	[xml]$mPrpTrnsltnFile = get-content ("C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\" + $mVdsDb + "\PropertyTranslations.xml")
 	$mPrpTrnsltns = @{}
 	$xmlPrpTrnsltns = $mPrpTrnsltnFile.SelectNodes("/PropertyTranslations/PropertyTranslation")
 	Foreach ($xmlAttr in $xmlPrpTrnsltns) {
@@ -186,7 +186,7 @@ function mGetUIStrings {
 		$mVdsUi = $mLCode["UI"]
 	} 
 	Else { $mVdsUi = $PSUICulture }
-	[xml]$mUIStrFile = get-content ("C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\" + $mVdsUi + "\UIStrings.xml")
+	[xml]$mUIStrFile = get-content ("C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\" + $mVdsUi + "\UIStrings.xml")
 	$UIString = @{}
 	$xmlUIStrs = $mUIStrFile.SelectNodes("/UIStrings/UIString")
 	Foreach ($xmlAttr in $xmlUIStrs) {

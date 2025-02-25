@@ -725,7 +725,7 @@ function mHelp ([Int] $mHContext) {
 				$mHPage = "Index.html";
 			}
 		}
-		$mHelpTarget = "C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\HelpFiles\"+$mHPage
+		$mHelpTarget = "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\HelpFiles\"+$mHPage
 		$mhelpfile = Invoke-Item $mHelpTarget
 		if (-not $mhelpfile) {
 			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Help Target not found", "VDS MFG Sample Client")
@@ -793,10 +793,10 @@ function mFindFolder($FolderName, $rootFolder)
 
 function GetTemplateFolders
 {
-	$xmlpath = "$env:programdata\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.File.xml"
+	$xmlpath = "$env:programdata\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.File.xml"
 
 	if ($_IsOfficeClient) {
-		$xmlpath = "$env:programdata\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.FileOffice.xml"
+		$xmlpath = "$env:programdata\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.FileOffice.xml"
 	}
 
 	$xmldata = [xml](Get-Content $xmlpath)

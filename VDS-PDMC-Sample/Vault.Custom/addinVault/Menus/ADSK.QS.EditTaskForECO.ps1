@@ -13,7 +13,7 @@ $vaultContext.ForceRefresh = $true
 $taskId = Get-Content "$($env:appdata)\Autodesk\DataStandard 2025\mECOTabClick.txt" #the clicked task
 
 $dialog = $dsCommands.GetEditCustomObjectDialog($taskId)
-$XamlFile = New-Object CreateObject.WPF.XamlFile "ADSK.QS.CustomObject.xaml", "C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.CustomObject.xaml"
+$XamlFile = New-Object CreateObject.WPF.XamlFile "ADSK.QS.CustomObject.xaml", "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.CustomObject.xaml"
 $dialog.XamlFile = $XamlFile
 
 #show the custom object edit dialog

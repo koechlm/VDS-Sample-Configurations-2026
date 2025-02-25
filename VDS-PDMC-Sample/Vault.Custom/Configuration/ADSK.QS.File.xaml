@@ -541,10 +541,10 @@
                                             <Style>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\ItemMaster_32.png" />
+                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\ItemMaster_32.png" />
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\ItemMaster_32.png" />
+                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\ItemMaster_32.png" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -576,10 +576,10 @@
                                                     <Style>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchSearched_16.png" />
+                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchSearched_16.png" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchSearched_16.png" />
+                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchSearched_16.png" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -599,10 +599,10 @@
                                                     <Style>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchNotSearched_16.png" />
+                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchNotSearched_16.png" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchNotSearched_16.png" />
+                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchNotSearched_16.png" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -664,10 +664,10 @@
                                                             <Style>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
+                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
+                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -689,10 +689,10 @@
                                                 <Style>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
+                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
+                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -739,10 +739,10 @@
                                                 <Style>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\Term-OK.ico" />
+                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Term-OK.ico" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\Term-OK.ico" />
+                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Term-OK.ico" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -758,7 +758,7 @@
                                                 <Button.Template>
                                                     <ControlTemplate>
                                                         <Border BorderThickness="1">
-                                                            <Image x:Name="imgTemplateReset" Source="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\filter-delete.ico" Margin="2" />
+                                                            <Image x:Name="imgTemplateReset" Source="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\filter-delete.ico" Margin="2" />
                                                         </Border>
                                                     </ControlTemplate>
                                                 </Button.Template>
@@ -787,10 +787,10 @@
                                                         <Style>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                                    <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchSearched_16.png" />
+                                                                    <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchSearched_16.png" />
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                                    <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchSearched_16.png" />
+                                                                    <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchSearched_16.png" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -856,10 +856,10 @@
                                                             <Style>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
+                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
                                                                     </DataTrigger>
                                                                     <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
+                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -882,10 +882,10 @@
                                                     <Style>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
+                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\CopyDesign_16.png" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
+                                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\CopyDesign_16.png" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -1023,10 +1023,10 @@
                                     <Style>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsDark\Refresh_16.png" />
+                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\Refresh_16.png" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\IconsLight\Refresh_16.png" />
+                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\Refresh_16.png" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

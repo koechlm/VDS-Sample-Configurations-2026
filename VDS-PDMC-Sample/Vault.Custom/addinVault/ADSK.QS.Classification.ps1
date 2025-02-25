@@ -592,7 +592,7 @@ function mAvlblClsReset
 
 function mInitializeClsSelection
 {
-	[xml]$AssignClsXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2025\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.SelectClassification.xaml"
+	[xml]$AssignClsXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.SelectClassification.xaml"
 	$reader = New-Object System.Xml.XmlNodeReader $AssignClsXaml
 	$global:AssignClsWindow = [Windows.Markup.XamlReader]::Load($reader)
 	$AssignClsWindow.DataContext = $dsWindow.DataContext
