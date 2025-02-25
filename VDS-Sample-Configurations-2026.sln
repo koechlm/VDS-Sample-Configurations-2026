@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VDS-MFG-Sample", "VDS-MFG-Sample\VDS-MFG-Sample.csproj", "{EEF87C87-208A-4E6E-8BF0-38FD2320B31A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -102,6 +102,87 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoCAD", "AutoCAD", "{06FE
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventor", "Inventor", "{DCECFC6B-C784-4EEE-9795-FFE8AABBE54E}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\Inventor\Autodesk.iLogic.Automation.dll = SDK\Inventor\Autodesk.iLogic.Automation.dll
+		SDK\Inventor\Autodesk.iLogic.Interfaces.dll = SDK\Inventor\Autodesk.iLogic.Interfaces.dll
+		SDK\Inventor\Autodesk.Inventor.Interop.dll = SDK\Inventor\Autodesk.Inventor.Interop.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VDS", "VDS", "{A577DA75-EDCF-4929-B5BA-BEB6AECAC2A5}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\Common.dll = SDK\Common.dll
+		SDK\CreateObject.dll = SDK\CreateObject.dll
+		SDK\dataStandard.UI.dll = SDK\dataStandard.UI.dll
+		SDK\log4net.dll = SDK\log4net.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vault", "Vault", "{4493B7E0-78C3-4A85-953E-BA66341FF581}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\AdskIdentitySDK.config = SDK\AdskIdentitySDK.config
+		SDK\AdskIdentitySDK.dll = SDK\AdskIdentitySDK.dll
+		SDK\AdskLicensingSDK_9.dll = SDK\AdskLicensingSDK_9.dll
+		SDK\Autodesk.Connectivity.Explorer.Extensibility.dll = SDK\Autodesk.Connectivity.Explorer.Extensibility.dll
+		SDK\Autodesk.Connectivity.Explorer.Extensibility.XML = SDK\Autodesk.Connectivity.Explorer.Extensibility.XML
+		SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll = SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll
+		SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.XML = SDK\Autodesk.Connectivity.Explorer.ExtensibilityTools.XML
+		SDK\Autodesk.Connectivity.Extensibility.Framework.dll = SDK\Autodesk.Connectivity.Extensibility.Framework.dll
+		SDK\Autodesk.Connectivity.Extensibility.Framework.XML = SDK\Autodesk.Connectivity.Extensibility.Framework.XML
+		SDK\Autodesk.Connectivity.IDServicesWrapper.dll = SDK\Autodesk.Connectivity.IDServicesWrapper.dll
+		SDK\Autodesk.Connectivity.JobProcessor.Extensibility.dll = SDK\Autodesk.Connectivity.JobProcessor.Extensibility.dll
+		SDK\Autodesk.Connectivity.JobProcessor.Extensibility.XML = SDK\Autodesk.Connectivity.JobProcessor.Extensibility.XML
+		SDK\Autodesk.Connectivity.LicenseWrapper.dll = SDK\Autodesk.Connectivity.LicenseWrapper.dll
+		SDK\Autodesk.Connectivity.WebServices.dll = SDK\Autodesk.Connectivity.WebServices.dll
+		SDK\Autodesk.Connectivity.WebServices.WCF.dll = SDK\Autodesk.Connectivity.WebServices.WCF.dll
+		SDK\Autodesk.Connectivity.WebServices.XML = SDK\Autodesk.Connectivity.WebServices.XML
+		SDK\Autodesk.DataManagement.Client.Framework.dll = SDK\Autodesk.DataManagement.Client.Framework.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Forms.dll = SDK\Autodesk.DataManagement.Client.Framework.Forms.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Forms.xml = SDK\Autodesk.DataManagement.Client.Framework.Forms.xml
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.dll = SDK\Autodesk.DataManagement.Client.Framework.Vault.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.dll = SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.dll
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.xml = SDK\Autodesk.DataManagement.Client.Framework.Vault.Forms.xml
+		SDK\Autodesk.DataManagement.Client.Framework.Vault.xml = SDK\Autodesk.DataManagement.Client.Framework.Vault.xml
+		SDK\Autodesk.DataManagement.Client.Framework.xml = SDK\Autodesk.DataManagement.Client.Framework.xml
+		SDK\DevExpress.Data.Desktop.v24.1.dll = SDK\DevExpress.Data.Desktop.v24.1.dll
+		SDK\DevExpress.Data.v24.1.dll = SDK\DevExpress.Data.v24.1.dll
+		SDK\DevExpress.Docs.v24.1.dll = SDK\DevExpress.Docs.v24.1.dll
+		SDK\DevExpress.Drawing.v24.1.dll = SDK\DevExpress.Drawing.v24.1.dll
+		SDK\DevExpress.Images.v24.1.dll = SDK\DevExpress.Images.v24.1.dll
+		SDK\DevExpress.Office.v24.1.Core.dll = SDK\DevExpress.Office.v24.1.Core.dll
+		SDK\DevExpress.Pdf.v24.1.Core.dll = SDK\DevExpress.Pdf.v24.1.Core.dll
+		SDK\DevExpress.Pdf.v24.1.Drawing.dll = SDK\DevExpress.Pdf.v24.1.Drawing.dll
+		SDK\DevExpress.Printing.v24.1.Core.dll = SDK\DevExpress.Printing.v24.1.Core.dll
+		SDK\DevExpress.RichEdit.v24.1.Core.dll = SDK\DevExpress.RichEdit.v24.1.Core.dll
+		SDK\DevExpress.Sparkline.v24.1.Core.dll = SDK\DevExpress.Sparkline.v24.1.Core.dll
+		SDK\DevExpress.Utils.v24.1.dll = SDK\DevExpress.Utils.v24.1.dll
+		SDK\DevExpress.XtraBars.v24.1.dll = SDK\DevExpress.XtraBars.v24.1.dll
+		SDK\DevExpress.XtraEditors.v24.1.dll = SDK\DevExpress.XtraEditors.v24.1.dll
+		SDK\DevExpress.XtraGrid.v24.1.dll = SDK\DevExpress.XtraGrid.v24.1.dll
+		SDK\DevExpress.XtraLayout.v24.1.dll = SDK\DevExpress.XtraLayout.v24.1.dll
+		SDK\DevExpress.XtraNavBar.v24.1.dll = SDK\DevExpress.XtraNavBar.v24.1.dll
+		SDK\DevExpress.XtraPrinting.v24.1.dll = SDK\DevExpress.XtraPrinting.v24.1.dll
+		SDK\DevExpress.XtraRichEdit.v24.1.dll = SDK\DevExpress.XtraRichEdit.v24.1.dll
+		SDK\DevExpress.XtraTreeList.v24.1.dll = SDK\DevExpress.XtraTreeList.v24.1.dll
+		SDK\DevExpress.XtraVerticalGrid.v24.1.dll = SDK\DevExpress.XtraVerticalGrid.v24.1.dll
+		SDK\DevExpress.XtraWizard.v24.1.dll = SDK\DevExpress.XtraWizard.v24.1.dll
+		SDK\Ijwhost.dll = SDK\Ijwhost.dll
+		SDK\Microsoft.Extensions.ObjectPool.dll = SDK\Microsoft.Extensions.ObjectPool.dll
+		SDK\System.Reflection.MetadataLoadContext.dll = SDK\System.Reflection.MetadataLoadContext.dll
+		SDK\System.ServiceModel.Http.dll = SDK\System.ServiceModel.Http.dll
+		SDK\System.ServiceModel.Primitives.dll = SDK\System.ServiceModel.Primitives.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventor-Vault", "Inventor-Vault", "{F2F7D0A6-373C-4174-A7D3-86F81AA7BFA9}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\Connectivity.Application.VaultBase.dll = SDK\Connectivity.Application.VaultBase.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoCAD", "AutoCAD", "{39D1F2C8-A6A1-4F0C-9DD2-09F849FF1604}"
+	ProjectSection(SolutionItems) = preProject
+		SDK\AutoCAD\Autodesk.AutoCAD.Interop.Common.dll = SDK\AutoCAD\Autodesk.AutoCAD.Interop.Common.dll
+		SDK\AutoCAD\Autodesk.AutoCAD.Interop.dll = SDK\AutoCAD\Autodesk.AutoCAD.Interop.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventor", "Inventor", "{58F02DB6-C36C-452C-932B-A2A3B1F2A588}"
 	ProjectSection(SolutionItems) = preProject
 		SDK\Inventor\Autodesk.iLogic.Automation.dll = SDK\Inventor\Autodesk.iLogic.Automation.dll
 		SDK\Inventor\Autodesk.iLogic.Interfaces.dll = SDK\Inventor\Autodesk.iLogic.Interfaces.dll
