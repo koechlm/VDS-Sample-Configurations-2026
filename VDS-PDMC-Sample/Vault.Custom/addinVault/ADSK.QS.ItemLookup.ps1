@@ -643,7 +643,7 @@ function mFileItemTabGetAssocFiles($itemids, $iconLocation)
 				$mRow.revision = ($mPropInsts | Where-Object { $_.PropDefId -eq $mPropDict[$UIString["LBL12"]]}).Val # as before for Revision
 				$mRow.version = $_.CldFileVerNum
 				# get the related icons
-				$mFileExt = ([System.IO.Path]::GetExtension($mRow.filename)).Substring(1)
+				$mFileExt = ([System.IO.FileInfo]::new($mRow.filename)).Extension.Substring(1)
 				$path = mGetPath $iconLocation $mFileExt
 				$exists = Test-Path $path
 				if (-not $exists)
@@ -701,7 +701,7 @@ function mFileItemTabGetAssocFiles($itemids, $iconLocation)
 				$mRow.revision = ($mPropInsts | Where-Object { $_.PropDefId -eq $mPropDict[$UIString["LBL12"]]}).Val # as before for Revision
 				$mRow.version = $_.VerNum
 				# get the related icons
-				$mFileExt = ([System.IO.Path]::GetExtension($mRow.filename)).Substring(1)
+				$mFileExt = ([System.IO.FileInfo]::new($mRow.filename)).Extension.Substring(1)
 				$path = mGetPath $iconLocation $mFileExt
 				$exists = Test-Path $path
 				if (-not $exists)

@@ -454,14 +454,21 @@ function GetTitleWindow
 #fired when the file selection changes
 function OnTabContextChanged
 {      
-	$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile)
+	#$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile) not working in powershell 7.2.0
+	#Just use System.IO.FileInfo as the workaround for powershell 7.2.0
+	$xamlFile = ([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile)).Name
 
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml")
 	{
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
-		$bom = @(GetFileBOM($file.id))
-		$dsWindow.FindName("bomList").ItemsSource = $bom
+		try{
+			$bom = @(GetFileBOM($file.id))
+			$dsWindow.FindName("bomList").ItemsSource = $bom
+		}
+		catch {
+			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
+		}
 		return
 	}
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml")
@@ -469,7 +476,7 @@ function OnTabContextChanged
 		$items = $vault.ItemService.GetItemsByIds(@($vaultContext.SelectedObject.Id))
 		$item = $items[0]
 		$itemids = @($item.Id)
-		$assocFiles = @(GetAssociatedFiles $itemids $([System.IO.Path]::GetDirectoryName($VaultContext.UserControl.XamlFile)))
+		$assocFiles = @(GetAssociatedFiles $itemids $([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile).DirectoryName))
 		$dsWindow.FindName("AssoicatedFiles").ItemsSource = $assocFiles
 		return
 	}
@@ -578,7 +585,7 @@ function OnTabContextChanged
 		mFillItemView -file $file
 		#fill grid of associated files; primary only Yes/No
 		$itemids = @($item.Id)
-		$assocFiles = @(mFileItemTabGetAssocFiles $itemids $([System.IO.Path]::GetDirectoryName($VaultContext.UserControl.XamlFile)))
+		$assocFiles = @(mFileItemTabGetAssocFiles $itemids $([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile).DirectoryName))
 		$dsWindow.FindName("AssociatedFiles").ItemsSource = $assocFiles
 		return
 	}

@@ -44,7 +44,7 @@ function mGetAssocCustents($mIds)
 		$mAssocCustent.id = $mCustEnt.Id
 
 		#set custom icon
-		$iconLocation = $([System.IO.Path]::GetDirectoryName($VaultContext.UserControl.XamlFile))
+		$iconLocation = $([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile).DirectoryName)
 		$mIconpath = [System.IO.Path]::Combine($iconLocation,"Icons\task.ico")
 		$exists = Test-Path $mIconPath
 		$mAssocCustEnt.icon = $mIconPath
