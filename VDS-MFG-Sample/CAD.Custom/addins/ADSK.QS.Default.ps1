@@ -14,27 +14,29 @@ function InitializeWindow {
 	$Global:mCategories = GetCategories
 
 	#new folder selection 2025.2 ++
-	# set a preference for suggested Vault path, e.g. the model's path for a drawing
-	if ($Prop["_SuggestedVaultPath"].Value -ne "") {
-		$Prop["Folder"].Value = $Prop["_SuggestedVaultPath"].Value		
+	# set a preference for suggested Vault path, e.g. the model's path for a drawing, FG, DA, TP, CH, 
+	$DC = $dsWindow.DataContext
+	if (-not [String]::IsNullOrEmpty($DC.PathAndFileNameHandler.SuggestedVaultPath)) {
+		$Prop["Folder"].Value = $DC.PathAndFileNameHandler.SuggestedVaultPath
 	}
 	else {
 		SetFolderByLastSelectedPath
-	}
+	}	
 
 	# leverage the current theme variable in theme dependent path names etc.
 	$Global:currentTheme = [Autodesk.DataManagement.Client.Framework.Forms.SkinUtils.WinFormsTheme]::Instance.CurrentTheme
-
+		
 	# check if the file is a shrinkwrap; we need to pre-set the folder to the parent file's location
-	$mShrnkWrp = $false					
+	$global:mShrnkWrp = $false					
 	if ($Document.ComponentDefinition.ReferenceComponents.ShrinkwrapComponents.Count -ne 0) {
-		$mShrnkWrp = $true
+		$global:mShrnkWrp = $true
 		# Inventor shrinkwrap workflow; replace the last used folder with the parent file's location.						
 		$mFilePath = $Document.FullFileName.Replace($Document.DisplayName, "")	
 		$mWrkngFldr = $vaultConnection.WorkingFoldersManager.GetWorkingFolder("$")
 		$mVaultPath = "$/" + $mFilePath.Replace($mWrkngFldr, "") -replace "\\", "/" -replace "//", "/"
 		$Prop["Folder"].Value = $mVaultPath.Replace($Prop["_VaultVirtualPath"].Value, "").Replace(($Prop["_WorkspacePath"].Value + "/").Replace("\", "/"), "")
-	}	
+	}
+
 	$mWindowName = $dsWindow.Name
 	switch ($mWindowName) {
 		"InventorWindow" {
@@ -606,22 +608,22 @@ function GetNumSchms {
 			$_FilteredNumSchems += ($_Default)
 			if ($Prop["_NumSchm"].Value) { $Prop["_NumSchm"].Value = $_FilteredNumSchems[0].Name } #note - functional dialogs don't have the property _NumSchm, therefore we conditionally set the value
 			$dsWindow.FindName("NumSchms").IsEnabled = $true
-			$dsWindow.FindName("NumSchms").SelectedValue = $_FilteredNumSchems[0].Name
+			$dsWindow.FindName("NumSchms").SelectedValue = $_Default.Name
 			#add the "None" scheme to allow user interactive file name input
 			$noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
 			$noneNumSchm.Name = $UIString["LBL77"] # None 
 			$_FilteredNumSchems += $noneNumSchm
 			
 			#Inventor ShrinkWrap workflows suggest a file name; allow user overrides
-			if ($dsWindow.Name -eq "InventorWindow" -and $mShrnkWrp -eq $true) {
-				if ($Prop["_NumSchm"].Value) { $Prop["_NumSchm"].Value = $_FilteredNumSchems[1].Name } # None 	
+			if ($dsWindow.Name -eq "InventorWindow" -and $global:mShrnkWrp -eq $true) {				
+				if ($Prop["_NumSchm"].Value) { $Prop["_NumSchm"].Value = $noneNumSchm.Name }
 			}
 			
 			# Inventor Open From ContentCenter -> Custom Part command either gets a file number from Vault or has a standard based file name
 			Try {			
 				if ($Document.FilePropertySets[6][1]) {
 					if ($Document.FilePropertySets[6][1].Value -eq "1") {
-						if ($Prop["_NumSchm"].Value) { $Prop["_NumSchm"].Value = $_FilteredNumSchems[1].Name } # None
+						if ($Prop["_NumSchm"].Value) { $Prop["_NumSchm"].Value = $noneNumSchm.Name } # None
 					}
 				}
    			}
