@@ -466,7 +466,7 @@ function ShowFolderTreeView() {
 
 function AddinLoaded {
 	#activate or create the user's VDS profile
-	$m_File = "$($env:appdata)\Autodesk\DataStandard 2025\Folder2026.xml"
+	$m_File = "$($env:appdata)\Autodesk\DataStandard 2026\Folder2026.xml"
 	if (!(Test-Path $m_File)) {
 		$source = "$($env:ProgramData)\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Folder2026.xml"
 		Copy-Item $source $m_File
@@ -1056,7 +1056,7 @@ function mGetIconSource {
 		#create string array for ARGB values
 		$ARGBValues = [Regex]::Matches($ARGB, "\d{1,3}")
 		#build file name for recolored image
-		$FlrdArgbName = "$($env:appdata)\Autodesk\DataStandard 2025\FolderScColored-$($ARGBValues[0].Value)-$($ARGBValues[1].Value)-$($ARGBValues[2].Value)-$($ARGBValues[3].Value)_16.png"		
+		$FlrdArgbName = "$($env:appdata)\Autodesk\DataStandard 2026\FolderScColored-$($ARGBValues[0].Value)-$($ARGBValues[1].Value)-$($ARGBValues[2].Value)-$($ARGBValues[3].Value)_16.png"		
 		#check if file exists and create it if it doesn't
 		if (Test-Path $FlrdArgbName) {
 			return $ImagePath = $FlrdArgbName
@@ -1179,7 +1179,7 @@ function mAddShortCutByName([STRING] $mScName) {
 	try {
 		#$dsDiag.Trace(">> Continue to add ShortCut, creating new from template...")	
 		#read from template
-		$m_File = "$($env:appdata)\Autodesk\DataStandard 2025\Folder2026.xml"
+		$m_File = "$($env:appdata)\Autodesk\DataStandard 2026\Folder2026.xml"
 
 		if (Test-Path $m_File) {
 			#$dsDiag.Trace(">>-- Started to read Folder2026.xml...")

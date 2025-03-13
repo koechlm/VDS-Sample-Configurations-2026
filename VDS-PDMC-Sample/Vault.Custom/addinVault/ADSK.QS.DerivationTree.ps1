@@ -381,7 +381,7 @@ function mDerivativesSelectNothing()
 {
 	$mSelItem = ""
     $mOutFile = "mStrTabClick.txt"
-	$mSelItem | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+	$mSelItem | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 }
 
 function mDerivativesClick()
@@ -390,7 +390,7 @@ function mDerivativesClick()
     $mOutFile = "mStrTabClick.txt"
 	foreach($mItem in $mSelItem)
 	{
-		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 	}
 }
 
@@ -400,7 +400,7 @@ function mDerivatives1Click()
     $mOutFile = "mStrTabClick.txt"
 	foreach($mItem in $mSelItem)
 	{
-		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 	}
 }
 
@@ -410,7 +410,7 @@ function mDerivatives2Click()
     $mOutFile = "mStrTabClick.txt"
 	foreach($mItem in $mSelItem)
 	{
-		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 	}
 }
 

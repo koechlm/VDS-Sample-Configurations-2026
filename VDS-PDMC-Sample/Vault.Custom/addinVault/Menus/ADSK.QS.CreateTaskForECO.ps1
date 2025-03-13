@@ -42,7 +42,7 @@ $dialog.XamlFile = $XamlFile
 $result = $dialog.Execute()
 if ($result) {
 	try {
-		$contactID = Get-Content "$($env:appdata)\Autodesk\DataStandard 2025\mPersonId.txt"
+		$contactID = Get-Content "$($env:appdata)\Autodesk\DataStandard 2026\mPersonId.txt"
 		if ($contactID -ne $null) { $link3 = $vault.DocumentService.AddLink($dialog.CurrentEntity.Id, "CUSTENT", $contactID, "Task->Person") }
 	}
 	catch {
@@ -51,8 +51,8 @@ if ($result) {
 }
 
 #in case cancel / close Window (Window button X), remove last entries as well...
-$null | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\mOrganisationId.txt"
-$null | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\mPersonId.txt"
+$null | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\mOrganisationId.txt"
+$null | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\mPersonId.txt"
 
 
 

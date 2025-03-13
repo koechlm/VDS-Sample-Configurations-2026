@@ -283,7 +283,7 @@ function mSelectClassification()
 	$dsWindow.FindName("btnSelectClass").IsEnabled = $true
 
 	$value = $AssignClsWindow.FindName("cmbAvailableClasses").SelectedItem.Id
-	$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\mFileClassId.txt"
+	$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\mFileClassId.txt"
 
 	$dsWindow.FindName("dtgrdClassProps").ItemsSource = $AssignClsWindow.FindName("dtgrdClassProps").ItemsSource
 	
@@ -366,7 +366,7 @@ function mRemoveClassification() #applies to $dsWindow
 	
 	#write the highest level Custent Id to a text file for post-close event
 	$value = -1
-	$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\mFileClassId.txt"
+	$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\mFileClassId.txt"
 
 	$dsWindow.CloseWindowCommand.Execute($this)
 	#$dsDiag.Trace("...remove classification finished.")
@@ -592,54 +592,45 @@ function mAvlblClsReset
 
 function mInitializeClsSelection
 {
-	[xml]$AssignClsXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.SelectClassification.xaml"
-	$reader = New-Object System.Xml.XmlNodeReader $AssignClsXaml
-	$global:AssignClsWindow = [Windows.Markup.XamlReader]::Load($reader)
-	$AssignClsWindow.DataContext = $dsWindow.DataContext
-	
-	#activate the UI tab according to the classification standard
-	mAssignClsGrdReset -ComboBox $AssignClsWindow.FindName("cmb_ClsStd")
+    [xml]$AssignClsXaml = Get-Content "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.SelectClassification.xaml"
+    $reader = New-Object System.Xml.XmlNodeReader $AssignClsXaml
+    $global:AssignClsWindow = [Windows.Markup.XamlReader]::Load($reader)
+    $AssignClsWindow.DataContext = $dsWindow.DataContext
 
-	if (-not $global:mActiveStandard) {
-		$global:mActiveStandard = $AssignClsWindow.FindName("cmb_ClsStd").SelectedItem.Content
-	}
+    # Ensure the window is created correctly
+    if ($AssignClsWindow -eq $null) {
+        throw "Failed to create the classification window."
+    }
 
-	#todo: integrate search options developed for IEC standard selection
-	#if ($global:mActiveStandard -eq "IEC 61355") {
-	#	mInitializeIEC61355
-	#}
-	#else {
-	#	mInitializeCompClassification
-	#}
+    # Activate the UI tab according to the classification standard
+    mAssignClsGrdReset -ComboBox $AssignClsWindow.FindName("cmb_ClsStd")
 
-	mInitializeCompClassification
+    if (-not $global:mActiveStandard) {
+        $global:mActiveStandard = $AssignClsWindow.FindName("cmb_ClsStd").SelectedItem.Content
+    }
 
-	$AssignClsWindow.FindName("cmb_ClsStd").add_SelectionChanged({
-		param ($mSender, $e)
-		#update environment according to the classification standard
-		mAssignClsGrdReset -ComboBox $AssignClsWindow.FindName("cmb_ClsStd")
-		$global:mActiveStandard = $AssignClsWindow.FindName("cmb_ClsStd").SelectedItem.Content
+    mInitializeCompClassification
 
-		#if ($global:mActiveStandard -ne "IEC 61355") {
-		#	mInitializeCompClassification
-		#}
+    $AssignClsWindow.FindName("cmb_ClsStd").add_SelectionChanged({
+        param ($mSender, $e)
+        # Update environment according to the classification standard
+        mAssignClsGrdReset -ComboBox $AssignClsWindow.FindName("cmb_ClsStd")
+        $global:mActiveStandard = $AssignClsWindow.FindName("cmb_ClsStd").SelectedItem.Content
+        mInitializeCompClassification
+    })
 
-		#if ($global:mActiveStandard -eq "IEC 61355") {
-		#	mInitializeIEC61355
-		#}
-
-		mInitializeCompClassification
-
-	})
-
-
-	if ($AssignClsWindow.ShowDialog() -eq "OK") {
-        #grab all the values to return
-		$global:AssignClsWindow = $null
-        return
-    } 
-	else {
-        return $null
+    # Show the dialog and handle the result
+    try {
+		$result = $AssignClsWindow.ShowDialog()
+        if ($result -eq $true) {
+            # Grab all the values to return
+            $global:AssignClsWindow = $null
+            return
+        } else {
+            return $null
+        }
+    } catch {
+        throw "An error occurred while showing the classification window: $_"
     }
 
 }

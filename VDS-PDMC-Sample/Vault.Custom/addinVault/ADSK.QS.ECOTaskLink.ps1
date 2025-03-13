@@ -96,7 +96,7 @@ function mTaskClick()
 {
 	$mSelectedItem = $dsWindow.FindName("dataGrdLinks").SelectedItem
     $mOutFile = "mECOTabClick.txt"
-	$mSelectedItem.Id | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+	$mSelectedItem.Id | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 }
 
 function mGetEcoTasks([String]$m)

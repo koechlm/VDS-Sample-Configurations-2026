@@ -12,7 +12,7 @@ function mUwUsdChldrnClick
 	foreach($mItem in $mSelItem)
 	{
 		#$dsDiag.Trace("UsesWhereUsed-ChildrenSelection: ($Item.Name)")
-		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 	}
 }
 
@@ -23,7 +23,7 @@ function mUwUsdPrntClick
 	foreach($mItem in $mSelItem)
 	{
 		#$dsDiag.Trace("UsesWhereUsed-WhereUSedSelection: ($Item.Name)")
-		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\$($mOutFile)"
+		$mItem.Name | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\$($mOutFile)"
 	}
 }
 

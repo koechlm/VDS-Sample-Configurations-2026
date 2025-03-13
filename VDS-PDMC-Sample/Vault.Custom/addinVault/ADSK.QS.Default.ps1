@@ -328,7 +328,7 @@ function InitializeWindow
 		{
 			$_t = $Prop["Internal ID"].Value
 
-			$mTargetFile = Get-Content "$($env:appdata)\Autodesk\DataStandard 2025\mStrTabClick.txt"
+			$mTargetFile = Get-Content "$($env:appdata)\Autodesk\DataStandard 2026\mStrTabClick.txt"
 
 			#create search conditions for 
 			$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 1
