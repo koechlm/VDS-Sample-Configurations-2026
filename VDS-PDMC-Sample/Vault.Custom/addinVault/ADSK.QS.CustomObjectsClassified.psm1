@@ -403,7 +403,7 @@ function m_SelectTerm {
 #region BreadCrumb ClassSelection
 function mAddCoCombo ([String] $_CoName, $_classes) 
 {	
-	$children = mgetCustomEntityList -_CoName $_CoName
+	$children = mgetCustomEntityList($_CoName) #-_CoName $_CoName
 	If($children -eq $null) { return }
 	
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
@@ -411,12 +411,16 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 	$cmb.Name = "cmbClassBreadCrumb_" + $mBreadCrumb.Children.Count.ToString();
 	$cmb.DisplayMemberPath = "Name";
 	$cmb.Tooltip = $UIString["ClassTerms_TT01"] #"Suche auf Hierarchieebene begrenzen..."
-	$cmb.ItemsSource = @($children)
 	#If (($Prop["_CreateMode"].Value -eq $true) -or ($_Return -eq "Yes")) {$cmb.IsDropDownOpen = $true}
 	$cmb.MinWidth = 140
 	$cmb.HorizontalContentAlignment = "Center"
 	$cmb.BorderThickness = "1,1,1,1"
 	$cmb.Margin = "1,0,0,1"
+	#register the name to activate later via indexed name
+	$mBreadCrumb.RegisterName($cmb.Name, $cmb) 
+	$mBreadCrumb.Children.Add($cmb);
+	$cmb.ItemsSource = @($children)
+
 	$mWindowName = $dsWindow.Name
 	switch($mWindowName)
 	{
@@ -432,10 +436,8 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 	$cmb.add_SelectionChanged({
 			param($sender,$e)
 			$dsDiag.Trace("1. SelectionChanged, Sender = $sender, $e")
-			mCoComboSelectionChanged -sender $sender
+			mCoComboSelectionChanged($sender) #-sender $sender
 		});
-	$mBreadCrumb.RegisterName($cmb.Name, $cmb) #register the name to activate later via indexed name
-	$mBreadCrumb.Children.Add($cmb);
 
 	#region EditMode CustomObjectTerm or CustomObjectClass Window
 	If ($dsWindow.Name-eq "CustomObjectClassifiedWindow")
@@ -445,7 +447,7 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 			$_cmbNames = @()
 			Foreach ($_cmbItem in $cmb.Items) 
 			{
-				$dsDiag.Trace("---$_cmbItem---")
+				#$dsDiag.Trace("---$_cmbItem---")
 				$_cmbNames += $_cmbItem.Name
 			}
 			$dsDiag.Trace("Combo $index Namelist = $_cmbNames")
@@ -478,8 +480,8 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 function mAddCoComboChild ($data) 
 {
 	$children = @()
-	$children = mGetCustomEntityUsesList -sender $data
-	$dsDiag.Trace("check data object: $children")
+	$children = mGetCustomEntityUsesList($data) #-sender $data
+	#$dsDiag.Trace("check data object: $children")
 		
 	#Filter classification levels and classes
 	if(-not $Global:mClassLevelCustentDefIds)
@@ -501,12 +503,17 @@ function mAddCoComboChild ($data)
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 	$cmb = New-Object System.Windows.Controls.ComboBox
 	$cmb.Name = "cmbClassBreadCrumb_" + $mBreadCrumb.Children.Count.ToString();
-	$cmb.DisplayMemberPath = "Name";
-	$cmb.ItemsSource = @($children)	
+	$cmb.DisplayMemberPath = "Name"	
 	$cmb.BorderThickness = "1,1,1,1"
 	$cmb.Margin = "1,0,0,1"
 	$cmb.HorizontalContentAlignment = "Center"
 	$cmb.MinWidth = 140
+
+	#register the name to activate later via indexed name
+	$mBreadCrumb.RegisterName($cmb.Name, $cmb)
+	$mBreadCrumb.Children.Add($cmb)
+	$cmb.ItemsSource = @($children)
+
 	$mWindowName = $dsWindow.Name
 		switch($mWindowName)
 		{
@@ -522,10 +529,9 @@ function mAddCoComboChild ($data)
 	$cmb.add_SelectionChanged({
 			param($sender,$e)
 			$dsDiag.Trace("next. SelectionChanged, Sender = $sender")
-			mCoComboSelectionChanged -sender $sender
+			mCoComboSelectionChanged($sender) #-sender $sender
 		});
-	$mBreadCrumb.RegisterName($cmb.Name, $cmb) #register the name to activate later via indexed name
-	$mBreadCrumb.Children.Add($cmb)
+
 	$_i = $mBreadCrumb.Children.Count
 	$_Label = "lblGroup_" + $_i
 	$dsDiag.Trace("Label to display: $_Label - but not longer used")
@@ -541,28 +547,28 @@ function mAddCoComboChild ($data)
 				$_cmbNames = @()
 				Foreach ($_cmbItem in $cmb.Items) 
 				{
-					$dsDiag.Trace("---$_cmbItem---")
+					#$dsDiag.Trace("---$_cmbItem---")
 					$_cmbNames += $_cmbItem.Name
 				}
-				$dsDiag.Trace("Combo $index Namelist = $_cmbNames")
+				#$dsDiag.Trace("Combo $index Namelist = $_cmbNames")
 				#get the index of name in array
 				If ($_classes[$_i-2]) #avoid activation of null ;)
 				{
 					$_CurrentName = $_classes[$_i-2] #remember the number of breadcrumb children is +2 (delete button, and the class start with index 0)
-					$dsDiag.Trace("Current Name: $_CurrentName ")
+					#$dsDiag.Trace("Current Name: $_CurrentName ")
 					$i = 0
 					Foreach ($_Name in $_cmbNames) 
 					{
 						$_1 = $_cmbNames.count
 						$_2 = $_cmbNames[$i]
-						$dsDiag.Trace(" Counter: $i von $_1 Value: $_2  and CurrentName: $_CurrentName ")
+						#$dsDiag.Trace(" Counter: $i von $_1 Value: $_2  and CurrentName: $_CurrentName ")
 						If ($_cmbNames[$i] -eq $_CurrentName) 
 						{
 							$_IndexToActivate = $i
 						}
 						$i +=1
 					}
-					$dsDiag.Trace("Index of current name: $_IndexToActivate ")
+					#$dsDiag.Trace("Index of current name: $_IndexToActivate ")
 					$cmb.SelectedIndex = $_IndexToActivate
 				} #end
 							
@@ -642,7 +648,7 @@ function mGetCustomEntityUsesList ($sender) {
 					4 { $mSearchFilter = "Class"} #$UIString["Adsk.QS.ClassLevel_04"]
 			        default { $mSearchFilter = "*"}
 		        }
-		$_customObjects = mgetCustomEntityList -_CoName $mSearchFilter
+		$_customObjects = mgetCustomEntityList($mSearchFilter) #-_CoName $mSearchFilter
 		$_Parent = $_customObjects | Where-Object { $_.Name -eq $_CurrentClass }
 		try {
 			$links = $vault.DocumentService.GetLinksByParentIds(@($_Parent.Id),@("CUSTENT"))
@@ -667,7 +673,7 @@ function mGetCustomEntityUsesList ($sender) {
 
 function mCoComboSelectionChanged ($sender) {
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
-	$position = [int]::Parse($sender.Name.Split('_')[1]);
+	[int]$position = $sender.Name.Split('_')[1]
 	$children = $mBreadCrumb.Children.Count - 1
 	while($children -gt $position )
 	{
@@ -689,7 +695,7 @@ function mCoComboSelectionChanged ($sender) {
 
 		#write the highest level Custent Id to a text file for post-close event
 		$value = $mBreadCrumb.Children[$children].SelectedItem.Id
-		$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2025\mParentId.txt"
+		$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\mParentId.txt"
 
 	}
 	catch{}
@@ -712,7 +718,7 @@ function mCoComboSelectionChanged ($sender) {
 			}
 			else
 			{
-				mAddCoComboChild -sender $sender.SelectedItem
+				mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
 			}
 		}
 		
@@ -724,7 +730,7 @@ function mCoComboSelectionChanged ($sender) {
 			}
 			else
 			{
-				mAddCoComboChild -sender $sender.SelectedItem
+				mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
 			}
 		}
 
@@ -736,13 +742,13 @@ function mCoComboSelectionChanged ($sender) {
 			}
 			else
 			{
-				mAddCoComboChild -sender $sender.SelectedItem
+				mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
 			}
 		}
 
 		default
 		{
-			mAddCoComboChild -sender $sender.SelectedItem
+			mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
 		}
 	}
 }
