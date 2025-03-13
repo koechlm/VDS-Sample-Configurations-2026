@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
-[assembly: ApiVersion("17.0")]
+[assembly: ApiVersion("19.0")]
 [assembly: ExtensionId("2c1e3c5a-86ce-47c2-b4bb-1572121d8bd7")]
 
 namespace VdsSampleUtilities

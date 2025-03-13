@@ -14,40 +14,6 @@
             Events registration
             </summary>
         </member>
-        <member name="T:VdsSampleUtilities.VdsSampleProgressForm">
-            <summary>
-            Themed dialog for progress feedback
-            </summary>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.ShowProgress(System.String)">
-            <summary>
-            Create a new asynchron dialog with marquee style progress bar.
-            Call Thread.Abort() to terminated the dialog.
-            </summary>
-            <returns>Thread</returns>
-        </member>
-        <member name="F:VdsSampleUtilities.VdsSampleProgressForm.components">
-            <summary>
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:VdsSampleUtilities.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -116,6 +82,67 @@
             Get the parent application's installation path
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:VdsSampleUtilities.VdsSampleAdminForm">
+            <summary>
+            User interface for administrators; supports themes
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleAdminForm.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:VdsSampleUtilities.VdsSampleAdminForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleAdminForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleAdminForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:VdsSampleUtilities.VdsSampleProgressForm">
+            <summary>
+            Themed dialog for progress feedback
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.ShowProgress(System.String)">
+            <summary>
+            Create a new asynchron dialog with marquee style progress bar.
+            Call Thread.Abort() to terminated the dialog.
+            </summary>
+            <returns>Thread</returns>
+        </member>
+        <member name="F:VdsSampleUtilities.VdsSampleProgressForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:VdsSampleUtilities.VdsSampleProgressForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
         </member>
         <member name="T:VdsSampleUtilities.VltHelpers">
             <summary>
@@ -228,38 +255,6 @@
             <param name="CustentId">Custom Object Id</param>
             <param name="CustentProperties">Name-Value map of Display Name and Values. All Values return as text.</param>
         </member>
-        <member name="T:VdsSampleUtilities.TreeNode">
-            <summary>
-            Class enabling the Document Tree
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.TreeNode.Name">
-            <summary>
-            Filename
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.TreeNode.Children">
-            <summary>
-            Child references
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.TreeNode.Parents">
-            <summary>
-            Parent references
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.TreeNode.Icon">
-            <summary>
-            Get the Vault Entity Icon
-            </summary>
-        </member>
-        <member name="M:VdsSampleUtilities.TreeNode.#ctor(Autodesk.Connectivity.WebServices.File,Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection)">
-            <summary>
-            Return parent/child tree nodes of a file
-            </summary>
-            <param name="file">File</param>
-            <param name="con">Vault Connection</param>
-        </member>
         <member name="T:VdsSampleUtilities.InvHelpers">
             <summary>
             Class sharing options to interact with hosting Inventor session
@@ -267,20 +262,11 @@
         </member>
         <member name="M:VdsSampleUtilities.InvHelpers.m_GetMainViewModelPropValue(System.Object,System.String,System.String)">
             <summary>
-            DEPRECATED - Use m_GetInventorPropertyValue instead (Retrieve property value of main view referenced model)
+            Retrieve property value of main view referenced model
             </summary>
             <param name="m_InvApp">Connect to the hosting instance of the VDS dialog</param>
             <param name="m_ViewModelFullName"></param>
             <param name="m_PropName">Display Name</param>
-            <returns></returns>
-        </member>
-        <member name="M:VdsSampleUtilities.InvHelpers.m_GetInventorPropertyValue(System.Object,System.String,System.String)">
-            <summary>
-            Retrieve property value of the given Inventor file.
-            </summary>
-            <param name="InventorApplication">Connect to the hosting instance of the VDS dialog $Application</param>
-            <param name="FullFileName"></param>
-            <param name="PropertyName">Display Name</param>
             <returns></returns>
         </member>
         <member name="M:VdsSampleUtilities.InvHelpers.m_GetMainViewModelPath(System.Object)">
@@ -290,13 +276,6 @@
             </summary>
             <param name="m_InvApp">Running host (instance of Inventor) of calling VDS Dialog.</param>
             <returns>Returns the fullfilename (path and filename incl. extension) of the referenced model as string.</returns>
-        </member>
-        <member name="M:VdsSampleUtilities.InvHelpers.m_GetShrinkWrapParentFullFileName(System.Object)">
-            <summary>
-            Gets the 3D model file path of the first Shrinkwrap Feature's referenced file.
-            </summary>
-            <param name="m_InvApp">Running host (instance of Inventor) of calling VDS Dialog.</param>
-            <returns>Returns the fullfilename (path\filename.ext) of the referenced model as string.</returns>
         </member>
         <member name="M:VdsSampleUtilities.InvHelpers.m_RemoveOrphanedSheets(System.Object)">
             <summary>
@@ -371,33 +350,6 @@
             Switch running AutoCAD application
             </summary>
             <param name="m_AcadApp">AutoCAD Application ($Application)</param>
-        </member>
-        <member name="T:VdsSampleUtilities.VdsSampleAdminForm">
-            <summary>
-            User interface for administrators; supports themes
-            </summary>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleAdminForm.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:VdsSampleUtilities.VdsSampleAdminForm.components">
-            <summary>
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleAdminForm.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:VdsSampleUtilities.VdsSampleAdminForm.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
         </member>
     </members>
 </doc>
