@@ -88,3 +88,8 @@ function GetFileBOM($fileID)
 	}
 	return $bomItems	
 }
+
+function mGoToCadBomComp{
+	$selectedBomRow = $dsWindow.FindName("bomList").SelectedItem
+	$dsDiag.Inspect("selectedBomRow")
+}

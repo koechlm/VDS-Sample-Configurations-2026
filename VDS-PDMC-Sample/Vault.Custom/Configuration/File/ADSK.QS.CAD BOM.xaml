@@ -134,6 +134,13 @@
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PsCmd[mGoToCadBomComp]}" Header="{Binding UIString[], FallbackValue='Go to Folder'}" ToolTip="{Binding UIString[], FallbackValue='Navigate to the selected compoent'}" >
+                        
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </DataGrid>
     </Grid>
 </UserControl>
