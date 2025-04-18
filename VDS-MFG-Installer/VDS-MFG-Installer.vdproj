@@ -213,6 +213,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0F0238F95F6546D0A6BA2399816E23F1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0FED981090294A2C846CFA8D0B86B6FB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2259,6 +2265,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A1A10F6DC97C49C5824966410C33B85D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A1D4B8EB5BCD4949A34D0631E48973BD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2458,6 +2470,12 @@
         "Entry"
         {
         "MsmKey" = "8:_AD0EEB8D17DB4195972AE0E19F1176F5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AD13605303CC4957802BC9E54F979F52"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2812,6 +2830,12 @@
         "Entry"
         {
         "MsmKey" = "8:_C306C4B0171A4B7E83A05E442D27B8CB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C37517207FB74758A86053A8C78B09B4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3664,43 +3688,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_92527661DDC541E49E603A7A640963AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2020D0BA3462516E8843B381E2B1F56C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_FCAF2F88A61BFBFC382DC301AB437927"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1EAE1DC7FEBB1680A523B4EC6B4C3AA0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BEDAC95EE196971AD52EA4846BFFA33E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_58E123085A739944D15A613092EB1130"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_959C2B81EC3F8AFE3B40B78464613DC4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3712,7 +3700,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CC395F8AD5B12BA2A120301068359F56"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BEDAC95EE196971AD52EA4846BFFA33E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9DC4E79084B61338ABBA12A979C0777E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_959C2B81EC3F8AFE3B40B78464613DC4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_92527661DDC541E49E603A7A640963AB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3724,7 +3736,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CC395F8AD5B12BA2A120301068359F56"
+        "OwnerKey" = "8:_58E123085A739944D15A613092EB1130"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2020D0BA3462516E8843B381E2B1F56C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1EAE1DC7FEBB1680A523B4EC6B4C3AA0"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -4463,6 +4487,26 @@
             "TargetName" = "8:ADSK.QS.FolderDataSheet.xaml"
             "Tag" = "8:"
             "Folder" = "8:_2BF200C9BBF8488AAAE3039437F391F7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0F0238F95F6546D0A6BA2399816E23F1"
+            {
+            "SourcePath" = "8:..\\VDS-MFG-Sample\\Vault.Custom\\IconsLight\\File Store_32.png"
+            "TargetName" = "8:File Store_32.png"
+            "Tag" = "8:"
+            "Folder" = "8:_CF0C5BBC19D34496A34E2FB04323F185"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -11165,6 +11209,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A1A10F6DC97C49C5824966410C33B85D"
+            {
+            "SourcePath" = "8:..\\VDS-MFG-Sample\\Vault.Custom\\IconsDark\\File Store_32.png"
+            "TargetName" = "8:File Store_32.png"
+            "Tag" = "8:"
+            "Folder" = "8:_54C9510244C14AEF8BF7714BFB3685FD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A1D4B8EB5BCD4949A34D0631E48973BD"
             {
             "SourcePath" = "8:..\\VDS-MFG-Sample\\HelpFiles\\\\NotesImages\\Topic45NotesImage2.jpg"
@@ -11831,6 +11895,26 @@
             "TargetName" = "8:Topic14NotesImage9.jpg"
             "Tag" = "8:"
             "Folder" = "8:_3EE9FB2E74F44FF89E06291A9AE7562A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AD13605303CC4957802BC9E54F979F52"
+            {
+            "SourcePath" = "8:..\\VDS-MFG-Sample\\Vault.Custom\\IconsLight\\File Store_16.png"
+            "TargetName" = "8:File Store_16.png"
+            "Tag" = "8:"
+            "Folder" = "8:_CF0C5BBC19D34496A34E2FB04323F185"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -12982,6 +13066,26 @@
             "TargetName" = "8:Term-info.ico"
             "Tag" = "8:"
             "Folder" = "8:_9D611A849B444AE0B69D493628C904F6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C37517207FB74758A86053A8C78B09B4"
+            {
+            "SourcePath" = "8:..\\VDS-MFG-Sample\\Vault.Custom\\IconsDark\\File Store_16.png"
+            "TargetName" = "8:File Store_16.png"
+            "Tag" = "8:"
+            "Folder" = "8:_54C9510244C14AEF8BF7714BFB3685FD"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -16103,15 +16207,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Autodesk Vault | VDS-MFG-Sample Configuration 2026"
-        "ProductCode" = "8:{B04EE2B2-1E10-4DBB-AB49-5F92DF37D9A0}"
-        "PackageCode" = "8:{B70CB6D3-C00C-40E8-B912-A5FC77FB4B4E}"
+        "ProductCode" = "8:{83E6985A-ACEC-4CB7-89B6-3B5264C85B14}"
+        "PackageCode" = "8:{7D832FC1-8C8A-4C0A-9882-27E48ADE993D}"
         "UpgradeCode" = "8:{C2B5CF88-E568-43E0-B9DE-8108591C4353}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:31.0.01"
+        "ProductVersion" = "8:31.0.02"
         "Manufacturer" = "8:Autodesk, Technical Sales CE"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/koechlm/VDS-Sample-Configurations-2026"

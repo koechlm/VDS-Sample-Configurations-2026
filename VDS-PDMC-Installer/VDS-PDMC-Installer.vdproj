@@ -423,6 +423,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1CA77BF64FC6444D8C636416030751E3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1CB8234BC8344EB8999FA2514389ABB1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2571,6 +2577,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_98CD8E6DFFA947879892B2DB67C04D31"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_98D9F11D02BC449988C1BF7F0C82B5F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2584,6 +2596,12 @@
         "Entry"
         {
         "MsmKey" = "8:_993C3627EB5E4B4D8918D8D11462154F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_996B7762C3874660AB0DC0B160D9EC5F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3568,6 +3586,12 @@
         "Entry"
         {
         "MsmKey" = "8:_D511103F192E4427B689052CC6907115"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D5D70E3060354979927DE01FC8C49225"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -5775,6 +5799,26 @@
             "TargetName" = "8:shared.css"
             "Tag" = "8:"
             "Folder" = "8:_ABA532DF969C44B0A84D585A9FA13CEE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1CA77BF64FC6444D8C636416030751E3"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\IconsLight\\File Store_16.png"
+            "TargetName" = "8:File Store_16.png"
+            "Tag" = "8:"
+            "Folder" = "8:_A5A6146DDB2F415BA42FFCFEFB4CDB83"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -12684,6 +12728,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98CD8E6DFFA947879892B2DB67C04D31"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\IconsDark\\File Store_32.png"
+            "TargetName" = "8:File Store_32.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B9F9A3D3C418405296A5CF4E4CB1DA93"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98D9F11D02BC449988C1BF7F0C82B5F2"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\File\\Icons\\PrimarySub.png"
@@ -12730,6 +12794,26 @@
             "TargetName" = "8:VdsSampleUtilities.xml"
             "Tag" = "8:"
             "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_996B7762C3874660AB0DC0B160D9EC5F"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\IconsLight\\File Store_32.png"
+            "TargetName" = "8:File Store_32.png"
+            "Tag" = "8:"
+            "Folder" = "8:_A5A6146DDB2F415BA42FFCFEFB4CDB83"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -15948,6 +16032,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D5D70E3060354979927DE01FC8C49225"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\IconsDark\\File Store_16.png"
+            "TargetName" = "8:File Store_16.png"
+            "Tag" = "8:"
+            "Folder" = "8:_B9F9A3D3C418405296A5CF4E4CB1DA93"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D60EE0A6676E476EA2E77D788C82CF74"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\NotesImages\\Topic62NotesImage2.gif"
@@ -18920,15 +19024,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Autodesk Vault | VDS-PDMC-Sample Configuration 2026"
-        "ProductCode" = "8:{E04A8193-0498-4BBC-B0ED-8D363FA078BE}"
-        "PackageCode" = "8:{D554C9DE-F7DF-4475-A70C-EA3E75885053}"
+        "ProductCode" = "8:{BAA70D91-1AFD-412C-A2E1-A28865666CE5}"
+        "PackageCode" = "8:{129CD52B-16DB-480E-A690-B4B2D194227A}"
         "UpgradeCode" = "8:{D3B536B0-747A-4D24-A4BD-2D981EE88792}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:31.0.01"
+        "ProductVersion" = "8:31.0.04"
         "Manufacturer" = "8:Autodesk, Technical Sales CE"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/koechlm/VDs-Sample-Configurations-2026"
