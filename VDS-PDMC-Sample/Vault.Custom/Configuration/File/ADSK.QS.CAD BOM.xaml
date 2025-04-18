@@ -136,8 +136,41 @@
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PsCmd[mGoToCadBomComp]}" Header="{Binding UIString[], FallbackValue='Go to Folder'}" ToolTip="{Binding UIString[], FallbackValue='Navigate to the selected compoent'}" >
-                        
+                    <MenuItem Command="{Binding PsCmd[mGoToCadBomCompFile]}" Header="{Binding UIString[ADSK-GoToNavigation_MNU04], FallbackValue='Go to Folder'}" >
+                        <MenuItem.Icon>
+                            <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                <Image.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\File Store_16.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\File Store_16.png" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding PsCmd[mGoToCadBomCompItem]}" Header="{Binding UIString[ADSK-GoToNavigation_MNU05], FallbackValue='Go to Item'}" >
+                        <MenuItem.Icon>
+                            <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                <Image.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\Item_16.png" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\Item_16.png" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>

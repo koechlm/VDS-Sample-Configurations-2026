@@ -348,6 +348,8 @@
   <UIString ID="ADSK-GoToNavigation_MNU01">Gehe zu Ursprung</UIString>
   <UIString ID="ADSK-GoToNavigation_MNU02">Gehe zu Nachfolger</UIString>
   <UIString ID="ADSK-GoToNavigation_MNU03">Gehe zur Auswahl (Struktur-Register)</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU04">Gehe zu Ordner</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU05">Gehe zu Artikel</UIString>
   <UIString ID="ADSK-GoToNavigation_Prop01">Entstanden aus</UIString>
   <UIString ID="ADSK-GoToNavigation_Prop02">Ersetzt durch</UIString>
   <UIString ID="ADSK-GoToNavigation_MSG00">Eigenschaft '{0}' ist entweder nicht vorhanden oder leer.</UIString>

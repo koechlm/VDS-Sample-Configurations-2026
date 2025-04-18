@@ -370,9 +370,11 @@
 
   <!--GoToSourceFile-GoToReplacement Snippet Start-->
   <UIString ID="ADSK-GoToNavigation_MNU00">File-Navigation</UIString>
-  <UIString ID="ADSK-GoToNavigation_MNU01">Go to source</UIString>
-  <UIString ID="ADSK-GoToNavigation_MNU02">Go to replacement</UIString>
-  <UIString ID="ADSK-GoToNavigation_MNU03">Go to selection (structure tab)</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU01">Go To Source</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU02">Go To Replacement</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU03">Go To Selection (Structure Tab)</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU04">Go to Folder</UIString>
+  <UIString ID="ADSK-GoToNavigation_MNU05">Go to Item</UIString>
   <!--the attributes *Prop* need to match the name of the Vault's UDPs and must not localize-->
   <UIString ID="ADSK-GoToNavigation_Prop01">Source File</UIString>
   <UIString ID="ADSK-GoToNavigation_Prop02">Replaced by</UIString>
