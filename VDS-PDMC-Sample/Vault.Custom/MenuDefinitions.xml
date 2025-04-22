@@ -91,12 +91,6 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
     <GoToReplacedBy Label = "$UIString[ADSK-GoToNavigation_MNU02]" Description = "$UIString[ADSK-GoToNavigation_MNU02]" Hint = "$UIString[ADSK-GoToNavigation_MNU02]"
       PSFile = "ADSK.QS.GoToReplacedBy.ps1" Image="GoToReplacedBy.ico" ToolbarPaintStyle = "TextAndGlyph"
       MultiSelectEnabled = "false" NavigationTypes="File"/>
-    <GoToSelectedFile Label = "$UIString[ADSK-GoToNavigation_MNU03]" Description = "$UIString[ADSK-GoToNavigation_MNU03]" Hint = "$UIString[ADSK-GoToNavigation_MNU03]"
-      PSFile = "ADSK.QS.GoToSelectedFile.ps1" Image="GoToSelectedFile.ico" ToolbarPaintStyle = "TextAndGlyph"
-      MultiSelectEnabled = "false" NavigationTypes="File"/>
-    <GoToInvSibling Label = "$UIString[ADSK-GoToInvSibl_MNU00]" Description = "$UIString[ADSK-GoToInvSibl_MNU00]" Hint = "$UIString[ADSK-GoToInvSibl_MNU00]"
-          PSFile = "ADSK.QS.GoToInvSibling.ps1" Image="Search.ico" ToolbarPaintStyle = "TextAndGlyph" NavigationTypes="File"
-          MultiSelectEnabled = "false" />
     <GoToSelectedTask Label = "Go to Selected Task" Description = "Navigate to selected Task of ECO" Hint = "Go To Selected Task"
       PSFile = "ADSK.QS.GoToTaskFromEco.ps1" Image="Task-GoTo.ico" ToolbarPaintStyle = "TextAndGlyph"
       MultiSelectEnabled = "false" NavigationTypes="ChangeOrder" />
@@ -173,14 +167,10 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
     <FileContext Label="Navigation" DeployAsPullDown="True" Location="FileContextMenu">
       <Item Name="GoToReplacedBy"></Item>
       <Item Name="GoToSourceFile"></Item>
-      <Item Name="GoToSelectedFile"></Item>
-      <Item Name="GoToInvSibling"></Item>
     </FileContext>
     <FileContext Label="Navigation" DeployAsPullDown="True" Location="StandardToolbar">
       <Item Name="GoToReplacedBy"></Item>
       <Item Name="GoToSourceFile"></Item>
-      <Item Name="GoToSelectedFile"></Item>
-      <Item Name="GoToInvSibling"></Item>
       <Item Name ="GoToSelectedTask"></Item>
       <Item Name="GoToLinkedEco"></Item>
     </FileContext>

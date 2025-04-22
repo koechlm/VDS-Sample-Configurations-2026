@@ -68,22 +68,9 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
   Items: list with MenuItems. Name should be same as the element name defined in the MenuItem.
   -->
   <CommandSite>
-    <FileContext Label="Navigation" DeployAsPullDown="True" Location="FileContextMenu">
-      <Item Name="GoToReplacedBy"></Item>
-      <Item Name="GoToSourceFile"></Item>
-      <Item Name="GoToSelectedFile"></Item>
-      <Item Name="GoToInvSibling"></Item>
-    </FileContext>
-    <FileContext Label="Navigation" DeployAsPullDown="True" Location="StandardToolbar">
-      <Item Name="GoToReplacedBy"></Item>
-      <Item Name="GoToSourceFile"></Item>
-      <Item Name="GoToSelectedFile"></Item>
-      <Item Name="GoToInvSibling"></Item>
-    </FileContext>
     <FileContext Label="myMenu" DeployAsPullDown="False" Location="FileContextMenu">
       <Item Name="NewFile"></Item>
       <Item Name="EditFile"></Item>
-      <Item Name="mInsertInvCompCopy"></Item>
     </FileContext>
     <FolderContex Label="myMenu" DeployAsPullDown="False" Location="FolderContextMenu">
       <Item Name="NewFile"></Item>
@@ -121,7 +108,6 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
       <Item Name="NewTask"></Item>
       <Item Name="EditTask"></Item>
     </CustomObject>
-    <!--VDS MFG Sample Command Sites End-->
   </CommandSite>
 
   <!--

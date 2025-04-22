@@ -429,12 +429,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1CB8234BC8344EB8999FA2514389ABB1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1CC55A7E3B144F09856AF25CCC8E44FC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -5833,26 +5827,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1CB8234BC8344EB8999FA2514389ABB1"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\addinVault\\Menus\\ADSK.QS.GoToSelectedFile.ps1"
-            "TargetName" = "8:ADSK.QS.GoToSelectedFile.ps1"
-            "Tag" = "8:"
-            "Folder" = "8:_132D27F77E1F48FC889B8F40D3475E20"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1CC55A7E3B144F09856AF25CCC8E44FC"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\NotesImages\\Topic34NotesImage2.jpg"
@@ -9128,7 +9102,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:VdsSampleUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:VdsSampleUtilities, Version=2026.31.0.1, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_56F413376D2D4E0CA071A6EE742FC06D"
@@ -19024,15 +18998,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Autodesk Vault | VDS-PDMC-Sample Configuration 2026"
-        "ProductCode" = "8:{BAA70D91-1AFD-412C-A2E1-A28865666CE5}"
-        "PackageCode" = "8:{129CD52B-16DB-480E-A690-B4B2D194227A}"
+        "ProductCode" = "8:{77BE5C69-A55A-4D25-98CC-71CAB7C1650B}"
+        "PackageCode" = "8:{9644BC09-E0C0-4D5D-A913-F7EF0F1B0159}"
         "UpgradeCode" = "8:{D3B536B0-747A-4D24-A4BD-2D981EE88792}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:31.0.04"
+        "ProductVersion" = "8:31.0.05"
         "Manufacturer" = "8:Autodesk, Technical Sales CE"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/koechlm/VDs-Sample-Configurations-2026"

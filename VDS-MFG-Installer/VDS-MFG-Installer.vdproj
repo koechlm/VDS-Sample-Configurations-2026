@@ -10400,7 +10400,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:VdsSampleUtilities, Version=2026.31.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:VdsSampleUtilities, Version=2026.31.0.1, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_92527661DDC541E49E603A7A640963AB"
@@ -16207,15 +16207,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Autodesk Vault | VDS-MFG-Sample Configuration 2026"
-        "ProductCode" = "8:{83E6985A-ACEC-4CB7-89B6-3B5264C85B14}"
-        "PackageCode" = "8:{7D832FC1-8C8A-4C0A-9882-27E48ADE993D}"
+        "ProductCode" = "8:{DB61A5B2-A71F-45E3-B8C8-D81C775ECBA3}"
+        "PackageCode" = "8:{5E7B662F-9E81-42F3-8135-CA9F6C6A410E}"
         "UpgradeCode" = "8:{C2B5CF88-E568-43E0-B9DE-8108591C4353}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:31.0.02"
+        "ProductVersion" = "8:31.0.05"
         "Manufacturer" = "8:Autodesk, Technical Sales CE"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/koechlm/VDS-Sample-Configurations-2026"
