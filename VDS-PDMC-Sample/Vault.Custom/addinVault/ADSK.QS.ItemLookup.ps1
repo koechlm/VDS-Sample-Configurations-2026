@@ -559,7 +559,7 @@ function mClearItemView()
 
 
 
-Add-Type @'
+#Add-Type @'
 public class mFileItemTabAssocFile
 {
 	public string link;
@@ -572,7 +572,7 @@ public class mFileItemTabAssocFile
 	public string description;
 	public string partnumber;
 }
-'@
+#'@
 
 function mFileItemTabGetAssocFiles($itemids, $iconLocation)
 {
@@ -622,7 +622,8 @@ function mFileItemTabGetAssocFiles($itemids, $iconLocation)
 		$mPropInstArray += $vault.PropertyService.GetProperties("FILE", $mFiles, $mPropDefs)
 	
 		#build the table's row for each file
-		$assocFiles | ForEach-Object{
+		$assocFiles | ForEach-Object {
+			
 			$mRow = New-Object mFileItemTabAssocFile
 			#check that the file is accessible by the user
 			if($_.Cloaked)
@@ -727,6 +728,6 @@ function mFileItemTabGetAssocFiles($itemids, $iconLocation)
 
 function mGetPath($iconLocation,$name)
 {
-	$iconpath = [string]::Format("Icons\{0}.png", $name)
+	$iconpath = "Icons\$name.png"
 	return [System.IO.Path]::Combine($iconLocation,$iconpath)
 }
