@@ -113,57 +113,136 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="200"/>
+            <ColumnDefinition/>
             <ColumnDefinition MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <Label Content="Uses Tree" />
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="1">
-            <TreeView x:Name="Uses"  >
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ThemedTreeViewItemStyle}">
-                        <Setter Property="IsExpanded" Value="False"/>
-                    </Style>
-                </TreeView.ItemContainerStyle>
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Source="{Binding Icon}"/>
-                            <Label Content="{Binding Name}" Grid.Column="1" />
-                        </Grid>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-        </ScrollViewer>
+        <Border Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+                <TreeView x:Name="Uses" BorderBrush="{x:Null}" >
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ThemedTreeViewItemStyle}">
+                            <Setter Property="IsExpanded" Value="False"/>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Icon}"/>
+                                <Label Content="{Binding Name}" Grid.Column="1" />
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding PsCmd[mGoToUsesFile]}" Header="{Binding UIString[ADSK-GoToNavigation_MNU04], FallbackValue=Go to Folder}" >
+                                <MenuItem.Icon>
+                                    <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\File Store_16.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\File Store_16.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding PsCmd[mGoToUsesItem]}" Header="{Binding UIString[ADSK-GoToNavigation_MNU05], FallbackValue=Go to Item}" >
+                                <MenuItem.Icon>
+                                    <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\Item_16.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\Item_16.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+                </TreeView>
+            </ScrollViewer>
+        </Border>
         <Label Content="Where Used Tree" Grid.Column="1"  />
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="1">
-            <TreeView x:Name="WhereUsed" ItemsSource="{Binding SelectedItem.Parents, ElementName=Uses, Mode=OneWay}" Focusable="False" SelectedValuePath="Name" >
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ThemedTreeViewItemStyle}">
-                        <Setter Property="IsExpanded" Value="False"/>
-                    </Style>
-                </TreeView.ItemContainerStyle>
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Parents}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Source="{Binding Icon}"/>
-                            <Label Content="{Binding Name}" Grid.Column="1" />
-                        </Grid>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-                <!--<TreeView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding PsCmd[mUwUsdCopyToClipBoard]}" Header="{Binding UIString[ADSK-DocStructure_01], FallbackValue=Copy File Name to Clipboard}"/>
-                    </ContextMenu>
-                </TreeView.ContextMenu>-->
-            </TreeView>
-        </ScrollViewer>
+        <Border Grid.Column="1" Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <TreeView x:Name="WhereUsed" ItemsSource="{Binding SelectedItem.Parents, ElementName=Uses, Mode=OneWay}" Focusable="False" SelectedValuePath="Name" BorderBrush="{x:Null}">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ThemedTreeViewItemStyle}">
+                            <Setter Property="IsExpanded" Value="False"/>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Parents}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Icon}"/>
+                                <Label Content="{Binding Name}" Grid.Column="1" />
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding PsCmd[mGoToWhereUsedFile]}" Header="{Binding UIString[ADSK-GoToNavigation_MNU04], FallbackValue=Go to Folder}" >
+                                <MenuItem.Icon>
+                                    <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\File Store_16.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\File Store_16.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding PsCmd[mGoToWhereUsedItem]}" Header="{Binding UIString[ADSK-GoToNavigation_MNU05], FallbackValue=Go to Item}" >
+                                <MenuItem.Icon>
+                                    <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\Item_16.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\Item_16.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+                </TreeView>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>

@@ -140,7 +140,7 @@
                         <MenuItem.Icon>
                             <Image Width="16" Height="16" StretchDirection="DownOnly">
                                 <Image.Style>
-                                    <Style>
+                                    <Style TargetType="Image">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
                                                 <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\File Store_16.png" />
@@ -158,7 +158,7 @@
                         <MenuItem.Icon>
                             <Image Width="16" Height="16" StretchDirection="DownOnly">
                                 <Image.Style>
-                                    <Style>
+                                    <Style TargetType="Image">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
                                                 <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\Item_16.png" />

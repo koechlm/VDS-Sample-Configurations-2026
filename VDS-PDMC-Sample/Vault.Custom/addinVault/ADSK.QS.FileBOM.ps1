@@ -132,13 +132,12 @@ function mGoToCadBomCompItem
 
 function mSearchFileByPartNumber([String]$PartNumber)
 {
-	$mSearchString = $selectedBomRow.PartNumber
 	$srchCond = New-Object autodesk.Connectivity.WebServices.SrchCond
 	$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE")
 	$propDef = $propDefs | Where-Object { $_.SysName -eq "PartNumber" }
 	$srchCond.PropDefId = $propDef.Id
 	$srchCond.SrchOper = 3
-	$srchCond.SrchTxt = $mSearchString
+	$srchCond.SrchTxt = $PartNumber
 	$srchCond.PropTyp = [Autodesk.Connectivity.WebServices.PropertySearchType]::SingleProperty
 	$srchCond.SrchRule = [Autodesk.Connectivity.WebServices.SearchRuleType]::Must
 

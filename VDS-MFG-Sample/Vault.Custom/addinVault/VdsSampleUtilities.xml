@@ -144,6 +144,38 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="T:VdsSampleUtilities.TreeNode">
+            <summary>
+            Class representing a node in the tree structure of file dependencies.
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.TreeNode.#ctor(Autodesk.Connectivity.WebServices.File,Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:VdsSampleUtilities.TreeNode"/> class.
+            </summary>
+            <param name="file">The file to be represented by this node.</param>
+            <param name="con">The connection to the Vault.</param>
+        </member>
+        <member name="P:VdsSampleUtilities.TreeNode.Name">
+            <summary>
+            Gets the name of the file represented by this node.
+            </summary>
+        </member>
+        <member name="P:VdsSampleUtilities.TreeNode.Children">
+            <summary>
+            Retrieve the children of the current file. The children are the files that are dependent on this file.
+            </summary>
+        </member>
+        <member name="P:VdsSampleUtilities.TreeNode.Parents">
+            <summary>
+            Retrieve the parent of the current file. The parent is the file that is dependent on this file.
+            </summary>
+        </member>
+        <member name="P:VdsSampleUtilities.TreeNode.Icon">
+            <summary>
+            Get the file type's icon as a bitmap image.
+            </summary>
+        </member>
         <member name="T:VdsSampleUtilities.VltHelpers">
             <summary>
             Class extending VDS Vault scripts
@@ -151,14 +183,13 @@
         </member>
         <member name="M:VdsSampleUtilities.VltHelpers.UserCredentials1(System.String,System.String,System.String,System.String)">
             <summary>
-            UserCredentials1 and UserCredentials2 differentiate overloads as powershell can't handle
-            UserCredentials1 returns read-write loginuser object
+            Creates user credentials for connecting to a Vault server.
             </summary>
-            <param name="server">IP Address or DNS Name of ADMS Server</param>
-            <param name="vault">Name of vault to connect to</param>
-            <param name="user">User name</param>
-            <param name="pw">Password</param>
-            <returns>User Credentials</returns>
+            <param name="server">The IP address or DNS name of the ADMS server.</param>
+            <param name="vault">The name of the Vault to connect to.</param>
+            <param name="user">The username for authentication.</param>
+            <param name="pw">The password for authentication.</param>
+            <returns>A <see cref="T:Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials"/> object for the specified server and Vault.</returns>
         </member>
         <member name="M:VdsSampleUtilities.VltHelpers.UserCredentials2(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
@@ -237,7 +268,7 @@
             </summary>
             <param name="conn">Current Vault connection ($VaultConnection)</param>
             <param name="FolderId">Folder Id</param>
-            <param name="FolderProperties">Name-Value map of Display Name and Values. All Values return as text.</param>
+            <param name="FolderProperties">Name-Value map of Display Name and Values. All Values return as text.</param>        
         </member>
         <member name="M:VdsSampleUtilities.VltHelpers.GetItemProps(Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection,System.Int64,System.Collections.Generic.Dictionary{System.String,System.String}@)">
             <summary>

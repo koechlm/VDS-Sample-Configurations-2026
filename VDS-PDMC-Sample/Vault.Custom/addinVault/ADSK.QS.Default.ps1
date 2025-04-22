@@ -606,15 +606,6 @@ function OnTabContextChanged
 			$file = $vault.DocumentService.GetLatestFileByMasterId($vaultContext.SelectedObject.Id)
 			$treeNode = New-Object VdsSampleUtilities.TreeNode($file, $vaultConnection)
 			$dsWindow.FindName("Uses").ItemsSource = @($treeNode)
-
-			$dsWindow.FindName("Uses").add_SelectedItemChanged({
-				mUwUsdChldrnClick
-				#$dsDiag.Trace("Child selected")
-			})
-			$dsWindow.FindName("WhereUsed").add_SelectedItemChanged({
-				mUwUsdPrntClick
-				#$dsDiag.Trace("Child selected")
-			})
 			return
 		}
 	#endregion documentstructure
