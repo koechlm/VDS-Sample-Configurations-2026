@@ -1,23 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>VDSSampleUtilities</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>x64</Platforms>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <AssemblyName>VdsSampleUtilities</AssemblyName>
     <ApplicationIcon>Resources\Vault.Pro.ico</ApplicationIcon>
-    <AssemblyVersion>2026.31.0.0</AssemblyVersion>
-    <FileVersion>2026.31.0.0</FileVersion>
+    <AssemblyVersion>2026.31.0.1</AssemblyVersion>
+    <FileVersion>2026.31.0.1</FileVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="Resources\Vault.Pro.ico" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Win.Design" Version="24.1.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Autodesk.AutoCAD.Interop">
       <HintPath>..\SDK\AutoCAD\Autodesk.AutoCAD.Interop.dll</HintPath>
@@ -79,26 +87,19 @@
       <HintPath>..\SDK\Inventor\Autodesk.Inventor.Interop.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.Desktop.v24.1">
-      <HintPath>..\SDK\Vault\DevExpress.Data.Desktop.v24.1.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DevExpress.Data.v24.1">
-      <HintPath>..\SDK\Vault\DevExpress.Data.v24.1.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DevExpress.Utils.v24.1">
-      <HintPath>..\SDK\Vault\DevExpress.Utils.v24.1.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraBars.v24.1">
-      <HintPath>..\SDK\Vault\DevExpress.XtraBars.v24.1.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraEditors.v24.1">
-      <HintPath>..\SDK\Vault\DevExpress.XtraEditors.v24.1.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Update="VdsSampleAdmin.cs">
+      <CopyToOutputDirectory>
+      </CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Vault.Pro.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="VdsSampleUtilities.vcet.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

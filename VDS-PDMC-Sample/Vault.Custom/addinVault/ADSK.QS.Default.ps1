@@ -593,7 +593,16 @@ function OnTabContextChanged
 	#region Documentstructure Extension
 		if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDocStructure.xaml")
 		{
-			Add-Type -Path 'C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll'
+			# there are some custom functions to enhance functionality; 2023 version added webservice and explorer extensions to be installed optionally
+			$mVdsUtilities = "$($env:programdata)\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll"
+			if (! (Test-Path $mVdsUtilities)) {
+				# the basic utility installation only
+				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll')
+			}
+			Else {
+				# the extended utility activation
+				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll')
+			}
 			$file = $vault.DocumentService.GetLatestFileByMasterId($vaultContext.SelectedObject.Id)
 			$treeNode = New-Object VdsSampleUtilities.TreeNode($file, $vaultConnection)
 			$dsWindow.FindName("Uses").ItemsSource = @($treeNode)

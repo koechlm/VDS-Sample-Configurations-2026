@@ -29,40 +29,42 @@ namespace VdsSampleUtilities
         /// </summary>
         private void InitializeComponent()
         {
-            this.formAssistant1 = new DevExpress.XtraBars.FormAssistant();
-            this.lblProgress = new DevExpress.XtraEditors.LabelControl();
-            this.ProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
-            ((System.ComponentModel.ISupportInitialize)(this.ProgressBarControl1.Properties)).BeginInit();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VdsSampleProgressForm));
+            formAssistant1 = new DevExpress.XtraBars.FormAssistant();
+            lblProgress = new DevExpress.XtraEditors.LabelControl();
+            ProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
+            ((System.ComponentModel.ISupportInitialize)ProgressBarControl1.Properties).BeginInit();
+            SuspendLayout();
             // 
             // lblProgress
             // 
-            this.lblProgress.Location = new System.Drawing.Point(12, 12);
-            this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(54, 13);
-            this.lblProgress.TabIndex = 1;
-            this.lblProgress.Text = "Progress...";
+            lblProgress.Location = new Point(12, 12);
+            lblProgress.Name = "lblProgress";
+            lblProgress.Size = new Size(54, 13);
+            lblProgress.TabIndex = 1;
+            lblProgress.Text = "Progress...";
             // 
             // ProgressBarControl1
             // 
-            this.ProgressBarControl1.Location = new System.Drawing.Point(12, 31);
-            this.ProgressBarControl1.Name = "ProgressBarControl1";
-            this.ProgressBarControl1.Size = new System.Drawing.Size(423, 20);
-            this.ProgressBarControl1.TabIndex = 2;
+            ProgressBarControl1.EditValue = 0;
+            ProgressBarControl1.Location = new Point(12, 31);
+            ProgressBarControl1.Name = "ProgressBarControl1";
+            ProgressBarControl1.Size = new Size(423, 20);
+            ProgressBarControl1.TabIndex = 2;
             // 
             // VdsSampleProgressForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(447, 63);
-            this.Controls.Add(this.ProgressBarControl1);
-            this.Controls.Add(this.lblProgress);
-            this.IconOptions.Image = global::VdsSampleUtilities.Properties.Resources.Vault_Pro;
-            this.Name = "VdsSampleProgressForm";
-            this.Text = "VDS-Sample-Configuration";
-            ((System.ComponentModel.ISupportInitialize)(this.ProgressBarControl1.Properties)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(447, 63);
+            Controls.Add(ProgressBarControl1);
+            Controls.Add(lblProgress);
+            IconOptions.Icon = (Icon)resources.GetObject("VdsSampleProgressForm.IconOptions.Icon");
+            Name = "VdsSampleProgressForm";
+            Text = "VDS-Sample-Configuration";
+            ((System.ComponentModel.ISupportInitialize)ProgressBarControl1.Properties).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

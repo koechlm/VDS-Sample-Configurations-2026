@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using System.Drawing;
+using System.Media;
 using Autodesk.Connectivity.WebServices;
 using Autodesk.Connectivity.WebServicesTools;
 using Autodesk.DataManagement.Client.Framework.Vault.Currency.Entities;
@@ -13,31 +15,164 @@ using ACET = Autodesk.Connectivity.Explorer.ExtensibilityTools;
 using Inventor;
 using AcInterop = Autodesk.AutoCAD.Interop;
 using AcInteropCom = Autodesk.AutoCAD.Interop.Common;
+using Autodesk.DataManagement.Client.Framework.Vault.Currency.Properties;
+using System.Runtime.Versioning;
+
+using System.Windows.Media.Imaging;
+using System.Linq;
+using ACW = Autodesk.Connectivity.WebServices;
+using System.IO;
+using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
 
 
 namespace VdsSampleUtilities
 {
+    /// <summary>
+    /// Class representing a node in the tree structure of file dependencies.
+    /// </summary>
+
+    public class TreeNode
+    {
+        private Connection? _con;
+        private Autodesk.Connectivity.WebServices.File? _file;
+        private WebServiceManager? _svc => _con?.WebServiceManager;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeNode"/> class.
+        /// </summary>
+        /// <param name="file">The file to be represented by this node.</param>
+        /// <param name="con">The connection to the Vault.</param>
+        public TreeNode(Autodesk.Connectivity.WebServices.File file, Connection con)
+        {
+            _con = con;
+            _file = file;
+        }
+
+        /// <summary>
+        /// Gets the name of the file represented by this node.
+        /// </summary>
+        public string? Name => _file?.Name;
+
+        /// <summary>
+        /// Retrieve the children of the current file. The children are the files that are dependent on this file.
+        /// </summary>
+        public List<TreeNode> Children
+        {
+            get
+            {
+                if (_svc == null || _file == null)
+                {
+                    throw new InvalidOperationException("WebServiceManager or File is null.");
+                }
+
+                List<TreeNode> children = new List<TreeNode>();
+                FileAssocArray[] fileAssociations = _svc.DocumentService.GetLatestFileAssociationsByMasterIds(
+                    new long[] { _file.MasterId },
+                    FileAssociationTypeEnum.None,
+                    false,
+                    FileAssociationTypeEnum.Dependency,
+                    false,
+                    false,
+                    false,
+                    false);
+
+                if (fileAssociations.FirstOrDefault()?.FileAssocs != null)
+                {
+                    foreach (var fileAssociation in fileAssociations.First().FileAssocs)
+                    {
+                        children.Add(new TreeNode(fileAssociation.CldFile, _con));
+                    }
+                }
+                return children;
+            }
+        }
+
+        /// <summary>
+        /// Retrieve the parent of the current file. The parent is the file that is dependent on this file.
+        /// </summary>
+        public List<TreeNode> Parents
+        {
+            get
+            {
+                if (_svc == null || _file == null)
+                {
+                    throw new InvalidOperationException("WebServiceManager or File is null.");
+                }
+
+                List<TreeNode> parents = new List<TreeNode>();
+                FileAssocArray[] fileAssociations = _svc.DocumentService.GetLatestFileAssociationsByMasterIds(
+                    new long[] { _file.MasterId },
+                    FileAssociationTypeEnum.Dependency,
+                    false,
+                    FileAssociationTypeEnum.None,
+                    false,
+                    false,
+                    false,
+                    false);
+
+                if (fileAssociations.FirstOrDefault()?.FileAssocs != null)
+                {
+                    foreach (var fileAssociation in fileAssociations.First().FileAssocs)
+                    {
+                        parents.Add(new TreeNode(fileAssociation.ParFile, _con));
+                    }
+                }
+                return parents;
+            }
+        }
+
+        /// <summary>
+        /// Get the file type's icon as a bitmap image.
+        /// </summary>
+        public BitmapImage? Icon
+        {
+            get
+            {
+                PropertyDefinitionDictionary props = _con.PropertyManager.GetPropertyDefinitions("FILE", null, PropertyDefinitionFilter.IncludeAll);
+                var def = props["EntityIcon"];
+                object fileIter = new FileIteration(_con, _file);
+                ImageInfo? prop = _con.PropertyManager.GetPropertyValue((IEntity)fileIter, def, null) as ImageInfo;
+                if (prop != null)
+                {
+                    System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                    // Save the memory stream as a PNG file
+                    prop.GetImage().Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    prop.Dispose();
+                    System.Windows.Media.Imaging.BitmapImage bImg = new System.Windows.Media.Imaging.BitmapImage();
+                    bImg.BeginInit();
+                    bImg.StreamSource = ms;// new System.IO.MemoryStream(ms.ToArray());
+                    bImg.EndInit();
+                    return bImg;
+                }
+                return null;
+            }
+        }
+    }
+
     /// <summary>
     /// Class extending VDS Vault scripts
     /// </summary>
     public class VltHelpers
     {
         /// <summary>
-        /// UserCredentials1 and UserCredentials2 differentiate overloads as powershell can't handle
-        /// UserCredentials1 returns read-write loginuser object
+        /// Creates user credentials for connecting to a Vault server.
         /// </summary>
-        /// <param name="server">IP Address or DNS Name of ADMS Server</param>
-        /// <param name="vault">Name of vault to connect to</param>
-        /// <param name="user">User name</param>
-        /// <param name="pw">Password</param>
-        /// <returns>User Credentials</returns>
-        public Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials UserCredentials1(string server, string vault, string user, string pw)
+        /// <param name="server">The IP address or DNS name of the ADMS server.</param>
+        /// <param name="vault">The name of the Vault to connect to.</param>
+        /// <param name="user">The username for authentication.</param>
+        /// <param name="pw">The password for authentication.</param>
+        /// <returns>A <see cref="Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials"/> object for the specified server and Vault.</returns>
+        public static Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials UserCredentials1(string server, string vault, string user, string pw)
         {
-            ServerIdentities mServer = new ServerIdentities();
-            mServer.DataServer = server;
-            mServer.FileServer = server;
-            Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials mCred = new Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials(mServer, vault, user, pw);
-            return mCred;
+            // Simplify object initialization and ensure platform compatibility
+            var mServer = new ServerIdentities
+            {
+                DataServer = server,
+                FileServer = server
+            };
+
+            return new Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials(mServer, vault, user, pw);
         }
 
         /// <summary>
@@ -52,11 +187,14 @@ namespace VdsSampleUtilities
         /// <returns></returns>
         public Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials UserCredentials2(string server, string vault, string user, string pw, bool rw = true)
         {
-            ServerIdentities mServer = new ServerIdentities();
-            mServer.DataServer = server;
-            mServer.FileServer = server;
-            Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials mCred = new Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials(mServer, vault, user, pw, rw);
-            return mCred;
+            // Simplify object initialization and ensure platform compatibility
+            var mServer = new ServerIdentities
+            {
+                DataServer = server,
+                FileServer = server
+            };
+
+            return new Autodesk.Connectivity.WebServicesTools.UserPasswordCredentials(mServer, vault, user, pw, rw);
         }
 
         /// <summary>
@@ -91,11 +229,11 @@ namespace VdsSampleUtilities
         /// CO and ITEM cannot have linked children, as they use specific links to related child objects.</param>
         /// <param name="mFilter">Limit the search on links to a particular class; providing an empty value "" will result in a search on all types</param>
         /// <returns>List of entity Ids</returns>
-        public List<long> mGetLinkedChildren1(Connection con, long mId, string mClsId, string mFilter)
+        public List<long>? mGetLinkedChildren1(Connection con, long mId, string mClsId, string mFilter)
         {
             IEnumerable<PersistableIdEntInfo> mEntInfo = new PersistableIdEntInfo[] { new PersistableIdEntInfo(mClsId, mId, true, false) };
             IDictionary<PersistableIdEntInfo, IEntity> mIEnts = con.EntityOperations.ConvertEntInfosToIEntities(mEntInfo);
-            IEntity mIEnt = null;
+            IEntity? mIEnt = null;
             try
             {
                 foreach (var item in mIEnts)
@@ -124,26 +262,13 @@ namespace VdsSampleUtilities
         /// <param name="mParEntIds"></param>
         /// <param name="mClsIds"></param>
         /// <returns></returns>
-        private IEnumerable<IEntity> GetLinkedChildren2(Connection con, long[] mParEntIds, string[] mClsIds)
+        private static IEnumerable<IEntity>? GetLinkedChildren2(Connection con, long[] mParEntIds, string[] mClsIds)
         {
             List<PersistableIdEntInfo> mEntInfo = new List<PersistableIdEntInfo>();
             for (int i = 0; i < mParEntIds.Length; i++)
             {
                 mEntInfo.Add(new PersistableIdEntInfo("CUSTENT", mParEntIds[i], true, false));
             }
-            //List<CustEnt> mEnts = new List<CustEnt>();
-            //CustEnt mEnt = new CustEnt();
-            //foreach (var item in mParentEnts)
-            //{
-            //    mEnt = (CustEnt)item;
-            //    mEnts.Add(mEnt);
-            //}
-            //List<PersistableIdEntInfo> mEntInfo = new List<PersistableIdEntInfo>();
-            //foreach (var item in mEnts)
-
-            //{
-            //    mEntInfo.Add( new PersistableIdEntInfo(mClsIds[0], item.Id, true, false));
-            //}
 
             IDictionary<PersistableIdEntInfo, IEntity> mIEnts = con.EntityOperations.ConvertEntInfosToIEntities(mEntInfo.AsEnumerable());
             List<IEntity> mIEnt = new List<IEntity>();
@@ -245,14 +370,14 @@ namespace VdsSampleUtilities
         /// <param name="FileProperties">Name-Value map of Display Name and Values. All Values return as text.</param>
         public void GetFileProps(Connection conn, long FileId, ref Dictionary<string, string> FileProperties)
         {
-            PropDef[] mPropDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE");
-            PropInst[] mSourcePropInsts = conn.WebServiceManager.PropertyService.GetPropertiesByEntityIds("FILE", new long[] { FileId });
+            PropDef[]? mPropDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE");
+            PropInst[]? mSourcePropInsts = conn.WebServiceManager.PropertyService.GetPropertiesByEntityIds("FILE", new long[] { FileId });
             string mPropDispName;
             string mPropVal;
-            string mThumbnailDispName = mPropDefs.Where(n => n.SysName == "Thumbnail").FirstOrDefault().DispName;
+            string mThumbnailDispName = mPropDefs.FirstOrDefault(n => n.SysName == "Thumbnail").DispName;
             foreach (PropInst mFilePropInst in mSourcePropInsts)
             {
-                mPropDispName = mPropDefs.Where(n => n.Id == mFilePropInst.PropDefId).FirstOrDefault().DispName;
+                mPropDispName = mPropDefs.FirstOrDefault(n => n.Id == mFilePropInst.PropDefId).DispName;
                 //filter thumbnail property
                 if (mPropDispName != mThumbnailDispName)
                 {
@@ -274,7 +399,7 @@ namespace VdsSampleUtilities
         /// </summary>
         /// <param name="conn">Current Vault connection ($VaultConnection)</param>
         /// <param name="FolderId">Folder Id</param>
-        /// <param name="FolderProperties">Name-Value map of Display Name and Values. All Values return as text.</param>
+        /// <param name="FolderProperties">Name-Value map of Display Name and Values. All Values return as text.</param>        
         public void GetFolderProps(Connection conn, long FolderId, ref Dictionary<string, string> FolderProperties)
         {
             PropDef[] mPropDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FLDR");
@@ -337,6 +462,7 @@ namespace VdsSampleUtilities
         /// <param name="conn">Current Vault connection ($VaultConnection)</param>
         /// <param name="CustentId">Custom Object Id</param>
         /// <param name="CustentProperties">Name-Value map of Display Name and Values. All Values return as text.</param>
+
         public void GetCustentProps(Connection conn, long CustentId, ref Dictionary<string, string> CustentProperties)
         {
             PropDef[] mPropDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("CUSTENT");
@@ -364,7 +490,6 @@ namespace VdsSampleUtilities
         }
 
     }
-
 
     /// <summary>
     /// Class sharing options to interact with hosting Inventor session
@@ -718,7 +843,6 @@ namespace VdsSampleUtilities
 
     }
 
-
     /// <summary>
     /// /// Class sharing options to interact with hosting AutoCAD session
     /// </summary>
@@ -738,7 +862,7 @@ namespace VdsSampleUtilities
         private Boolean m_ConnectAcad()
         {
             try
-            {               
+            {
                 mAcad = MarshalCore.GetActiveObject("AutoCAD.Application") as AcInterop.AcadApplication;
                 return true;
             }
@@ -764,7 +888,8 @@ namespace VdsSampleUtilities
                 if (mBlock.Name.Contains("FDS"))
                 {
                     return true;
-                };
+                }
+                ;
             }
             return false;
         }
