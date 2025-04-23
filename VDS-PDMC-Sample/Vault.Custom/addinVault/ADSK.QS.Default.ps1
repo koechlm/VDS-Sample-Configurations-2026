@@ -405,14 +405,29 @@ function OnTabContextChanged {
 		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
 
 		#check for model state BOMs;  
-			# model state names and BOMComp Id are the key value pairs of the combobox
+		# model state names and BOMComp Id are the key value pairs of the combobox
 		$dsWindow.FindName("bomList").ItemsSource = $null
+		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
+		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
+		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
 		$_MsArray = @()
 		# applies to Inventor IAMs with true model state = false
-		#toDo: check if the file is a true model state file or not and extend the condition below accordingly
-
 		if ($file.Name -match "\.iam$" ) {
-			$_MsArray += mGetMdlStates($file.id)
+			$mMsPropSysNames = @("HasModelState", "IsTrueModelState")
+			$mPropDefs = $vault.PropertyService.FindPropertyDefinitionsBySystemNames("FILE", $mMsPropSysNames)
+			$mPropInsts = @()
+			[Int64]$mFileId = $file.Id
+			$mPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("FILE", @($mFileId))
+			$mPropNameValues = @{}
+			$mPropInsts = $mPropInsts | Where-Object { $_.PropDefId -eq $mPropDefs[0].Id -or $_.PropDefId -eq $mPropDefs[1].Id } 
+			ForEach ($mPropInst in $mPropInsts) {
+				$mSysName = ($mPropDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }).SysName
+				$mPropNameValues.Add($mSysName, $mPropInst.Val)
+			}
+
+			if ($mPropNameValues["HasModelState"] -eq $true -and $mPropNameValues["IsTrueModelState"] -eq $false) {
+				$_MsArray += mGetMdlStates($file.id)
+			}
 		}
 
 		#read the primary BOM
@@ -425,14 +440,13 @@ function OnTabContextChanged {
 		}
 
 		# read model state BOMs on demand;		
-		if (	$dsWindow.FindName("cmbModelStates").ItemsSource.Count -gt 0) {
+		if ($dsWindow.FindName("cmbModelStates").ItemsSource.Count -gt 0) {
 			# add a selection changed event to the combobox
 			$dsWindow.FindName("cmbModelStates").add_SelectionChanged({
 					$mModelStateId = $dsWindow.FindName("cmbModelStates").SelectedValue
 					$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
 					$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
 				})
-			# get the selected model state BOM
 		}
 
 		return

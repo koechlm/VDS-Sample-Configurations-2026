@@ -17,39 +17,27 @@ class mBom {
 function mGetMdlStates($fileID) {
 		
 	$global:mFileBOM = $vault.DocumentService.GetBOMByFileId($fileID)
-	$dsDiag.Inspect("mFileBOM")
+	#$dsDiag.Inspect("mFileBOM")
 	$MsArray = @()
-	$MsArray += $mFileBom.CompArray | Where-Object { $_.XRefId -eq -1 -and $_.UniqueId -like "MS:*" } # model state BOMs are internal component BOMs
+	$MsArray += $mFileBom.CompArray | Where-Object { $_.XRefId -eq -1 -and ($_.UniqueId -like "MS:*" -or $_.Name -match "\[.*\]") } # model state BOMs are internal component BOMs
 	
 	if ($MsArray.Count -gt 1) {
 		$mMdlStates = @{}
 		$MsArray | ForEach-Object { 
 			$mName = ""
-			if($_.Name -like "* [*]") {
-				#get the model state name
+			if ($_.Name -match "\[.*\]") {
 				$mName = "[Primary]"
 			}
 			if ($_.Name -like "* (*)") {
 				#get the model state name
 				$mName = $_.Name.Split(" (")[1]
 				$mName = $mName.Substring(0, $mName.Length - 1)					
-			}	#add the primary state name
-			
-			
-			<# $msNames = $_.Name.Split(" (")
-			if ($msNames.Count -gt 1) {
-				#get the model state name
-				$mName = $msNames.LastOrDefault()
-			}
-			else {
-				#add the primary state name
-				$mName = "[" + $msNames[0].Split("[")[1]
-			} #>
+			}	#add the primary state name		
 
-			$mMdlStates.Add($mName, $_.Id)
-
-			
-		}			
+			$mMdlStates.Add($mName, $_.Id)		
+		}
+		#sort the model states by name
+		$mMdlStates = $mMdlStates.GetEnumerator() | Sort-Object Name		
 		$dsWindow.FindName("cmbModelStates").ItemsSource = $mMdlStates
 		$dsWindow.FindName("cmbModelStates").SelectedIndex = 0
 		$dsWindow.FindName("cmbModelStates").IsEnabled = $true
@@ -74,7 +62,7 @@ function GetFileBOM($fileID, $BomCompId) {
 
 	$cldIds = @()
 	$mFileBom.InstArray | Where-Object { $_.ParId -eq $BomCompId } | ForEach-Object { 
-		[autodesk.Connectivity.WebServices.BOMInst]$mBomInst = $_
+		#[autodesk.Connectivity.WebServices.BOMInst]$mBomInst = $_
 		#$dsDiag.Inspect("mBomInst")
 		$CldId = $_.CldId
 		$comp = $mFileBom.CompArray | Where-Object { $_.Id -eq $CldId }
@@ -91,10 +79,10 @@ function GetFileBOM($fileID, $BomCompId) {
 		$CldBoms = $vault.DocumentService.GetBOMByFileIds($cldIds)
 		$schm = $mFileBom.SchmArray | Where-Object { $_.SchmTyp -eq "Structured" -and $_.RootCompId -eq $BomCompId }
 		$cldBomCounter = 0
-		$dsDiag.Inspect("schm")
+		#$dsDiag.Inspect("schm")
 		$mFileBom.InstArray | Where-Object { $_.ParId -eq $BomCompId } | ForEach-Object {
-			[autodesk.Connectivity.WebServices.BOMInst]$mBomInst = $_
-			$dsDiag.Inspect("mBomInst")
+			#[autodesk.Connectivity.WebServices.BOMInst]$mBomInst = $_
+			#$dsDiag.Inspect("mBomInst")
 			$bomItem = New-Object mBomRow
 			$CldId = $_.CldId #$BomCompId
 			if ($_.QuantOverde -eq -1) {
@@ -104,10 +92,10 @@ function GetFileBOM($fileID, $BomCompId) {
 				$bomItem.Quantity = $_.QuantOverde
 			}
 			$comp = $mFileBom.CompArray | Where-Object { $_.Id -eq $CldId }
-			$dsDiag.Inspect("comp")
+			#$dsDiag.Inspect("comp")
 			$occur = $mFileBom.SchmOccArray | Where-Object { $_.SchmId -eq $schm.Id -and $_.CompId -eq $CldId }
 			$bomItem.Position = $occur.DtlId
-			$dsDiag.Inspect("occur")
+			#$dsDiag.Inspect("occur")
 			if ($comp.XRefId -eq -1) {
 				$cldBom = $mFileBom
 			}
@@ -117,7 +105,7 @@ function GetFileBOM($fileID, $BomCompId) {
 			$UniqueId = $comp.UniqueId
 			#find component in current file bom only
 			$cldComp = $cldBom.CompArray | Where-Object { $_.UniqueId -eq $UniqueId -and $_.XRefId -eq -1 } #| Select-Object -First 1
-			$dsDiag.Inspect("cldComp")
+			#$dsDiag.Inspect("cldComp")
 			if (-not $cldComp) {
 				$cldComp = $cldBom.CompArray[0]
 			}
@@ -131,7 +119,7 @@ function GetFileBOM($fileID, $BomCompId) {
 			$prop = ($cldCompAttrArray | Where-Object { $_.PropId -eq $PropPartNumber.Id }) | Select-Object -First 1
 			$bomItem.PartNumber = $prop.Val
 			$bomItems += $bomItem
-			$dsDiag.Inspect("prop")
+			#$dsDiag.Inspect("prop")
 			#add Inventor default BOM columns
 			$thumbnailProp = $vault.PropertyService.GetProperties('FILE', @($cldIds[$cldBomCounter - 1]), @($thumbnailPropDef.Id))[0]
 			$bomItem.Thumbnail = $thumbnailProp.Val
@@ -149,12 +137,8 @@ function GetFileBOM($fileID, $BomCompId) {
 	$global:mPrimaryBOM = New-Object mBom
 	$global:mPrimaryBOM.BOMItems += $bomItems
 
-	$dsDiag.Inspect("bomItems")
+	#$dsDiag.Inspect("bomItems")
 	return $bomItems
-
-	#$mBoms += $compBOM
-	#$dsDiag.Inspect()
-	#return $mBom[0].BOMItems[0]
 }
 	
 
