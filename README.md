@@ -9,7 +9,7 @@ The sample collection shares 2 configurations with individual scope and compatib
 --- VDS-PDMC-Sample --- This extended configuration sample requires a dedicated Vault behavior configuration called "PDMC-Sample"; it is available to Autodesk Channel Partners only. The configuration includes everything of VDS-20xx-Manufacturing-Sample but targets comprehensive VDS feature additions and Vault API consumption.
 ![image](https://github.com/user-attachments/assets/45d08170-2b75-4494-8a5c-b2d11e777cdb)
 
-The 2026 releases of the sample received significant enhancements, such as context navigation and Inventor Model State support for displaying CAD BOM content; go to the release section for details.
+The 2026 sample releases received significant enhancements, such as context navigation and Inventor Model State support for displaying CAD BOM content; go to the release section (https://github.com/koechlm/VDS-Sample-Configurations-2026/releases/latest) for details.
 
 The code base of VDS Utilities merged from a separate solution/repository into the VDS configuration sample.
 
