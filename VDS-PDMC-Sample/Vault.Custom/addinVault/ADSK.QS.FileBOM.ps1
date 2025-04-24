@@ -1,5 +1,5 @@
 ﻿class mBomRow {
-	[string] $Position
+	[int32] $Position
 	[string] $PartNumber
 	[string] $ComponentType
 	[float] $Quantity
@@ -45,7 +45,7 @@ function mGetMdlStates($fileID) {
 	else {
 		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
 		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
-		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
+		$dsWindow.FindName("cmbModelStates").ItemsSource = $null		
 	}
 
 	return $MsArray
@@ -137,7 +137,8 @@ function GetFileBOM($fileID, $BomCompId) {
 	$global:mPrimaryBOM = New-Object mBom
 	$global:mPrimaryBOM.BOMItems += $bomItems
 
-	#$dsDiag.Inspect("bomItems")
+	#sort the BOM items by position
+	$bomItems = $bomItems | Sort-Object Position
 	return $bomItems
 }
 	

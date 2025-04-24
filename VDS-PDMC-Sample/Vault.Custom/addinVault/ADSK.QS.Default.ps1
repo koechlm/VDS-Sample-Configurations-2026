@@ -402,7 +402,7 @@ function OnTabContextChanged {
 
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
-		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
+		$global:file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
 
 		#check for model state BOMs;  
 		# model state names and BOMComp Id are the key value pairs of the combobox
@@ -410,7 +410,7 @@ function OnTabContextChanged {
 		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
 		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
 		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
-		$_MsArray = @()
+
 		# applies to Inventor IAMs with true model state = false
 		if ($file.Name -match "\.iam$" ) {
 			$mMsPropSysNames = @("HasModelState", "IsTrueModelState")
@@ -426,6 +426,7 @@ function OnTabContextChanged {
 			}
 
 			if ($mPropNameValues["HasModelState"] -eq $true -and $mPropNameValues["IsTrueModelState"] -eq $false) {
+				$_MsArray = @()
 				$_MsArray += mGetMdlStates($file.id)
 			}
 		}
@@ -444,11 +445,17 @@ function OnTabContextChanged {
 			# add a selection changed event to the combobox
 			$dsWindow.FindName("cmbModelStates").add_SelectionChanged({
 					$mModelStateId = $dsWindow.FindName("cmbModelStates").SelectedValue
-					$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
-					$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+					if ($dsWindow.FindName("cmbModelStates").SelectedIndex -eq -1) {
+						$dsWindow.FindName("bomList").ItemsSource = $null
+					}
+					else {
+						$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
+						$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+					}
 				})
 		}
 
+		$global:mFileBOM = $null #clear the global variable to release the grid content
 		return
 	}
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml") {

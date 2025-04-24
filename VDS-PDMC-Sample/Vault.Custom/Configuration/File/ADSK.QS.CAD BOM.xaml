@@ -70,7 +70,7 @@
             <Label Content="Select Modelstate: "/>
             <ComboBox x:Name="cmbModelStates" Width="Auto" MinWidth="200" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value"/>
         </Grid>
-        <DataGrid x:Name="bomList" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto" Grid.Row="1" Grid.ColumnSpan="4">
+        <DataGrid x:Name="bomList" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto" Grid.Row="1" Grid.ColumnSpan="4" IsSynchronizedWithCurrentItem="True">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="Auto" Header="{Binding DataContext.UIString[LBL58], FallbackValue=Preview}">
                     <DataGridTemplateColumn.HeaderTemplate>
@@ -84,7 +84,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn x:Name="clmPosition" Binding="{Binding Position}">
+                <DataGridTextColumn x:Name="clmPosition" Binding="{Binding Position}" SortDirection="Ascending">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding DataContext.UIString[LBL15], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
