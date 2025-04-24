@@ -6,7 +6,7 @@
             xmlns:winFormTheme="clr-namespace:Autodesk.DataManagement.Client.Framework.Forms.SkinUtils;assembly=Autodesk.DataManagement.Client.Framework.Forms"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
             x:Name="MainWindow"
-            behaviours:TabTitleBehavior.TabTitle="$UIString[LBL38]" d:DesignWidth="474" d:DesignHeight="264">
+            behaviours:TabTitleBehavior.TabTitle="$UIString[LBL38]" d:DesignWidth="1019" d:DesignHeight="264">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -65,10 +65,16 @@
         <Grid Grid.ColumnSpan="4" Margin="0,0,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="305"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Select Modelstate: "/>
-            <ComboBox x:Name="cmbModelStates" Width="Auto" MinWidth="200" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value"/>
+            <Label Content="Modelstate: "/>
+            <ComboBox x:Name="cmbModelStates" Width="Auto" MinWidth="200" VerticalAlignment="Center" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value" MaxWidth="300" HorizontalAlignment="Left"/>
+            <Button x:Name="btnCadBomClear" IsEnabled="False" Command="{Binding PsCmd[CadBomClearButton_Click]}" Grid.Column="2" Content="  X  " Foreground="Red" FontWeight="Bold" HorizontalAlignment="Right" Margin="20,1,0,1" ToolTip="Clear search text"/>
+            <TextBox x:Name="txtCadBomSearch" Grid.Column="3" TextWrapping="Wrap" Text="" IsReadOnly="False" MaxWidth="300"/>
+            <Button x:Name="btnCadBomFind" Command="{Binding PsCmd[CadBomSearchButton_Click]}" Grid.Column="4" HorizontalAlignment="Left" Content="Find" MinWidth="60" Margin="0,1,0,1" ToolTip="Search and filter the grid"/>
         </Grid>
         <DataGrid x:Name="bomList" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto" Grid.Row="1" Grid.ColumnSpan="4" IsSynchronizedWithCurrentItem="True">
             <DataGrid.Columns>

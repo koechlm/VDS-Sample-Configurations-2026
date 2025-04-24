@@ -209,3 +209,75 @@ function mSearchFileByPartNumber([String]$PartNumber) {
 
 	return $mResultAll[0]
 }
+
+# Function to handle the search button click event
+function CadBomSearchButton_Click {
+	# Get the search text from the TextBox
+	$searchText = $dsWindow.FindName("txtCadBomSearch").Text
+
+	# Call the FilterBOMList function to filter the BOM list based on the search text
+	FilterBOMList -searchText $searchText
+
+	 # enable the clear button if the search filtered the list
+	$dsWindow.FindName("btnCadBomClear").IsEnabled = $true
+	# disable the Find button to avoid changing the search text while filtering
+	$dsWindow.FindName("btnCadBomFind").IsEnabled = $false
+}
+
+# Function to handle the clear button click event
+function CadBomClearButton_Click {
+	# Clear the search text in the TextBox
+	$dsWindow.FindName("txtCadBomSearch").Text = ""
+
+	#reset the bom list to its original state if the search text is empty
+	$dsWindow.FindName("bomList").ItemsSource = $global:currentBOMList
+
+	#disable the clear button and enable the Find button
+	$dsWindow.FindName("btnCadBomFind").IsEnabled = $true
+	$dsWindow.FindName("btnCadBomClear").IsEnabled = $false
+
+}
+
+# Function to filter the BOM list based on a search string
+function FilterBOMList {
+    param (
+        [string]$searchText
+    )
+
+	# Escape the '*' character in the search text
+    $escapedSearchText = [regex]::Escape($searchText)
+	
+	# avoid to update the unfiltered list with a filtered one
+	if ($null -eq $global:currentBOMList) {
+	    $global:currentBOMList = $dsWindow.FindName("bomList").ItemsSource
+	}
+
+	# Restrict the '*' character
+	if ($searchText -match '\*') {
+		[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("The '*' character is not allowed in the search.", "Invalid Input", "OK")
+	}
+
+    # Filter the BOM list by checking all properties of each mBomRow
+	$global:filteredBOMList = New-Object mBom
+    $global:filteredBOMList = $currentBOMList | Where-Object {
+        $row = $_
+        $row.PSObject.Properties.Value | ForEach-Object {
+            if ($_ -match $escapedSearchText) {
+				# If any property matches the search text, return true to include this row in the filtered list and enable the clear button
+				$dsWindow.FindName("btnCadBomClear").IsEnabled = $true
+                return $true
+            }			
+        }
+		# If no properties matched, return false and disable the clear button
+		$dsWindow.FindName("btnCadBomClear").IsEnabled = $false
+        return $false
+    }
+
+	    # Ensure the result is enumerable
+		if ($filteredBOMList.Count -eq 1) {
+			$filteredBOMList = @($filteredBOMList)
+		}
+
+    # Update the ItemsSource of the BOM list with the filtered results
+    $dsWindow.FindName("bomList").ItemsSource = $filteredBOMList
+}

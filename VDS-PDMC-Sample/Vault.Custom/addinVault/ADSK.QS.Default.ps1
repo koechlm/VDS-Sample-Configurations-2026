@@ -410,6 +410,8 @@ function OnTabContextChanged {
 		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
 		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
 		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
+		#reset the search text box
+		$dsWindow.FindName("txtCadBomSearch").Text = ""
 
 		# applies to Inventor IAMs with true model state = false
 		if ($file.Name -match "\.iam$" ) {
@@ -451,6 +453,10 @@ function OnTabContextChanged {
 					else {
 						$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
 						$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+						#update the global bom list to restore clearing the search text box
+						$global:currentBOMList = $mMdlStateBom
+						#clear the search text box as the grid content has changed
+						CadBomClearButton_Click
 					}
 				})
 		}
