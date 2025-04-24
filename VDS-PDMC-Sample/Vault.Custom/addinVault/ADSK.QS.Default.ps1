@@ -6,8 +6,7 @@
 
 
 #this function will be called to check if the Ok button can be enabled
-function ActivateOkButton
-{
+function ActivateOkButton {
 	return Validate;
 }
 
@@ -17,33 +16,27 @@ function ActivateOkButton
 # these funcions should return a boolean value, $true if the Property is valid
 # $false otherwise
 # As soon as one property validation function returns $false the entire Validate function will return $false
-function Validate
-{
-	if ($Prop["_ReadOnly"].Value){
+function Validate {
+	if ($Prop["_ReadOnly"].Value) {
 		return $false
 	}
 
 	$mWindowName = $dsWindow.Name
-	switch($mWindowName)
-	{
-		"FileWindow"
-		{
-			foreach ($func in dir function:ValidateFile*) { if(!(&$func)) { return $false } }
+	switch ($mWindowName) {
+		"FileWindow" {
+			foreach ($func in dir function:ValidateFile*) { if (!(&$func)) { return $false } }
 			return $true
 		}
-		"FolderWindow"
-		{
-			foreach ($func in dir function:ValidateFolder*) { if(!(&$func)) { return $false } }
+		"FolderWindow" {
+			foreach ($func in dir function:ValidateFolder*) { if (!(&$func)) { return $false } }
 			return $true
 		}
-		"CustomObjectWindow"
-		{
-			foreach ($func in dir function:ValidateCustomObject*) { if(!(&$func)) { return $false } }
+		"CustomObjectWindow" {
+			foreach ($func in dir function:ValidateCustomObject*) { if (!(&$func)) { return $false } }
 			return $true
 		}
-		"CustomObjectClassifiedWindow"
-		{
-			foreach ($func in dir function:ValidateCustomObject*) { if(!(&$func)) { return $false } }
+		"CustomObjectClassifiedWindow" {
+			foreach ($func in dir function:ValidateCustomObject*) { if (!(&$func)) { return $false } }
 			return $true
 		}
 		default { return $true }
@@ -53,81 +46,65 @@ function Validate
 
 # sample validation function for the FileName property
 # if the File Name is empty the validation will fail
-function ValidateFileName
-{
-	if($Prop["_FileName"].Value -or !$dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty)
-	{
+function ValidateFileName {
+	if ($Prop["_FileName"].Value -or !$dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty) {
 		return $true;
 	}
 	return $false;
 }
 
-function ValidateFolderName
-{
-	if($Prop["_CreateMode"].Value)
-	{
-		if($Prop["_FolderName"].Value -or !$dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty)
-		{
+function ValidateFolderName {
+	if ($Prop["_CreateMode"].Value) {
+		if ($Prop["_FolderName"].Value -or !$dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty) {
 			return mValidateUniqueFldrName
 		}
 		return $false;
 	}
-	else{
+	else {
 		return $true
 	}	
 }
 
-function ValidateCustomObjectName
-{
-	if($Prop["_CreateMode"].Value)
-	{
-		if($Prop["_CustomObjectName"].Value -or !$dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty)
-		{
+function ValidateCustomObjectName {
+	if ($Prop["_CreateMode"].Value) {
+		if ($Prop["_CustomObjectName"].Value -or !$dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty) {
 			return ValidateCustentName
 		}
 		return $false;
 	}
-	else{
+	else {
 		return $true
 	}
 }
 
-function InitializeTabWindow
-{
+function InitializeTabWindow {
 	#$dsDiag.ShowLog()
 	#$dsDiag.Inspect()
 }
 
-function InitializeWindow
-{	      
+function InitializeWindow {	      
 	#$dsDiag.ShowLog()
 	#$dsDiag.Clear()
 
 	#begin rules applying commonly
 	$Prop["_Category"].add_PropertyChanged({
-        if ($_.PropertyName -eq "Value")
-        {
-			m_CategoryChanged
-        }		
-    })
+			if ($_.PropertyName -eq "Value") {
+				m_CategoryChanged
+			}		
+		})
 	#end rules applying commonly
 
 	$mWindowName = $dsWindow.Name
-	switch($mWindowName)
-	{
-		"FileWindow"
-		{
+	switch ($mWindowName) {
+		"FileWindow" {
 			#rules applying for File
 			$dsWindow.Title = SetWindowTitle $UIString["LBL24"] $UIString["LBL25"] $Prop["_FileName"].Value
 
-			if ($Prop["_CreateMode"].Value)
-			{
-				if ($Prop["_IsOfficeClient"].Value)
-				{
+			if ($Prop["_CreateMode"].Value) {
+				if ($Prop["_IsOfficeClient"].Value) {
 					$Prop["_Category"].Value = $UIString["CAT2"]
 				}
-				else
-				{
+				else {
 					$Prop["_Category"].Value = $UIString["CAT1"]
 				}
 			}
@@ -135,59 +112,52 @@ function InitializeWindow
 			#region VDS-PDMC-Sample
 
 			$dsWindow.FindName("TemplateCB").add_SelectionChanged({
-				#update the category = selected template's category
-				m_TemplateChanged
-			})
+					#update the category = selected template's category
+					m_TemplateChanged
+				})
 
-			if($dsWindow.FindName("tabItemProperties")) { mInitializeTabItemProps}
+			if ($dsWindow.FindName("tabItemProperties")) { mInitializeTabItemProps }
 
-			if($dsWindow.FindName("tabClassification")) 
-			{ 
+			if ($dsWindow.FindName("tabClassification")) { 
 				#hide tab for user groups, e.g., group "Trainees", enable for all others
-				$clsDisabled =  $false #replace by e.g., Adsk.GroupMemberOf "Trainees"
-				if($clsDisabled -eq $true) 
-				{
+				$clsDisabled = $false #replace by e.g., Adsk.GroupMemberOf "Trainees"
+				if ($clsDisabled -eq $true) {
 					$dsWindow.FindName("tabClassification").Visibility = "Collapsed" 
 				}
-				if($clsDisabled -eq $false -and $Prop["_EditMode"].Value -eq $true)
-				{
+				if ($clsDisabled -eq $false -and $Prop["_EditMode"].Value -eq $true) {
 					$dsWindow.FindName("tabClassification").Visibility = "Visible"
 					$dsWindow.FindName("tabClassification").add_GotFocus({
-						if(-not $Global:mClsTabInitialized)
-						{
-							mInitializeClassificationTab -ParentType "Dialog" -file $null
-						}
-					}) #add_GotFocus
+							if (-not $Global:mClsTabInitialized) {
+								mInitializeClassificationTab -ParentType "Dialog" -file $null
+							}
+						}) #add_GotFocus
 				}
 				else {
 					$dsWindow.FindName("tabClassification").Visibility = "Collapsed" 
 				}
 			}
 
-			if($dsWindow.FindName("tabRevision")) 
-			{
+			if ($dsWindow.FindName("tabRevision")) {
 				$dsWindow.FindName("tabRevision").Visibility = "Visible"
 								
 				InitializeRevisionValidation
 				
 				$Prop["_Category"].add_PropertyChanged({
-					InitializeRevisionValidation
-				})
+						InitializeRevisionValidation
+					})
 			}
 			#endregion VDS-PDMC-Sample
 			
 		}
-		"FolderWindow"
-		{
+		"FolderWindow" {
 			#rules applying for Folder
 			$dsWindow.Title = SetWindowTitle $UIString["LBL29"] $UIString["LBL30"] $Prop["_FolderName"].Value
-			if ($Prop["_CreateMode"].Value)
-			{
+			if ($Prop["_CreateMode"].Value) {
 				$Prop["_Category"].Value = $UIString["CAT5"]
 			}
 			#region VDS-PDMC-Sample - for imported folders easily set title to folder name on edit
 			If ($Prop["_EditMode"].Value) {
-				If ($Prop["_XLTN_TITLE"]){
+				If ($Prop["_XLTN_TITLE"]) {
 					IF ($Prop["_XLTN_TITLE"].Value -eq $null) {
 						$Prop["_XLTN_TITLE"].Value = $Prop["Name"].Value
 					}
@@ -195,118 +165,108 @@ function InitializeWindow
 			}
 			#endregion VDS-PDMC-Sample
 		}
-		"CustomObjectWindow"
-		{
+		"CustomObjectWindow" {
 			#rules applying for Custom Object
 			$dsWindow.Title = SetWindowTitle $UIString["LBL61"] $UIString["LBL62"] $Prop["_CustomObjectName"].Value
-			if ($Prop["_CreateMode"].Value)
-			{
+			if ($Prop["_CreateMode"].Value) {
 				$Prop["_Category"].Value = $Prop["_CustomObjectDefName"].Value
 
 				#region VDS-PDMC-Sample
-					$dsWindow.FindName("Categories").IsEnabled = $false
-					$dsWindow.FindName("NumSchms").Visibility = "Collapsed"
-					$Prop["_NumSchm"].Value = $Prop["_Category"].Value
+				$dsWindow.FindName("Categories").IsEnabled = $false
+				$dsWindow.FindName("NumSchms").Visibility = "Collapsed"
+				$Prop["_NumSchm"].Value = $Prop["_Category"].Value
 				#endregion
 
-				if($Prop["_Category"].Value -eq "Person")
-				{
+				if ($Prop["_Category"].Value -eq "Person") {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-						$Prop["First Name"].Value = ($dsWindow.FindName("CUSTOMOBJECTNAME").Text).Split(" ")[0]
-						$Prop["Last Name"].Value = ($dsWindow.FindName("CUSTOMOBJECTNAME").Text).Split(" ")[1]
-					})
+							$Prop["First Name"].Value = ($dsWindow.FindName("CUSTOMOBJECTNAME").Text).Split(" ")[0]
+							$Prop["Last Name"].Value = ($dsWindow.FindName("CUSTOMOBJECTNAME").Text).Split(" ")[1]
+						})
 
 					$Prop["First Name"].add_PropertyChanged({
-						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["First Name"].Value + " " + $Prop["Last Name"].Value
-					})
+							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["First Name"].Value + " " + $Prop["Last Name"].Value
+						})
 
 					$Prop["Last Name"].add_PropertyChanged({
-						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["First Name"].Value + " " + $Prop["Last Name"].Value
-					})
+							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["First Name"].Value + " " + $Prop["Last Name"].Value
+						})
 
 					$dsWindow.FindName("CUSTOMOBJECTNAME").IsEnabled = $false
 					$dsWindow.FindName("CUSTOMOBJECTNAME").ToolTip = "Name derives from First and Last Name."
 				}
 
-				if($Prop["_Category"].Value -eq "Organisation")
-                {
-                    $dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-                        $Prop["Company"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-                    })
+				if ($Prop["_Category"].Value -eq "Organisation") {
+					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
+							$Prop["Company"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+						})
 
-                   $Prop["Company"].add_PropertyChanged({
-                        $dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Company"].Value
-                    })
+					$Prop["Company"].add_PropertyChanged({
+							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Company"].Value
+						})
 
-                   $dsWindow.FindName("CUSTOMOBJECTNAME").IsEnabled = $false
-                   $dsWindow.FindName("CUSTOMOBJECTNAME").ToolTip = "Name derives from Company."
-                }
+					$dsWindow.FindName("CUSTOMOBJECTNAME").IsEnabled = $false
+					$dsWindow.FindName("CUSTOMOBJECTNAME").ToolTip = "Name derives from Company."
+				}
 
 			}
 		}
 
 
 		#region CustomObjectClassifiedWindow
-		"CustomObjectClassifiedWindow"
-		{      
-			IF ($Prop["_CreateMode"].Value -eq $true) 
-			{
+		"CustomObjectClassifiedWindow" {      
+			IF ($Prop["_CreateMode"].Value -eq $true) {
 				$Prop["_Category"].Value = $Prop["_CustomObjectDefName"].Value
 
-					$dsWindow.FindName("Categories").IsEnabled = $false
-					$dsWindow.FindName("NumSchms").Visibility = "Collapsed"
-					$Prop["_NumSchm"].Value = $Prop["_Category"].Value
+				$dsWindow.FindName("Categories").IsEnabled = $false
+				$dsWindow.FindName("NumSchms").Visibility = "Collapsed"
+				$Prop["_NumSchm"].Value = $Prop["_Category"].Value
 
 				#IF($Prop["_XLTN_IDENTNUMBER"]){ $Prop["_XLTN_IDENTNUMBER"].Value = $UIString["LBL27"]}
 
 				$dsWindow.Title = "New $($Prop["_Category"].Value)..."
 
 				#synchronize property with CO name
-				if($Prop["_Category"].Value -eq "Class")
-				{
+				if ($Prop["_Category"].Value -eq "Class") {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-						$Prop["Class"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-					})
+							$Prop["Class"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+						})
 
 					$Prop["Class"].add_PropertyChanged({
-						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Class"].Value
-					})
+							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Class"].Value
+						})
 				}
 
-				if($Prop["_Category"].Value -eq "Term")
-				{
+				if ($Prop["_Category"].Value -eq "Term") {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-						$Prop["Term EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-					})
+							$Prop["Term EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+						})
 
 					$Prop["Term EN"].add_PropertyChanged({
-						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Term EN"].Value
-					})
+							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Term EN"].Value
+						})
 				}
 			}
 
 			#region EditMode
-			IF ($Prop["_EditMode"].Value -eq $true) 
-			{
-				if($Prop["_ReadOnly"].Value -eq $true)
-				{
+			IF ($Prop["_EditMode"].Value -eq $true) {
+				if ($Prop["_ReadOnly"].Value -eq $true) {
 					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value) - $($UIString["LBL26"])"
 				}
-				else
-				{
+				else {
 					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value)"
 				}
 
 				#read existing classification elements
 				$_classes = @()
-				Try{ #likely not all properties are used...
-					If ($Prop["_XLTN_SEGMENT"].Value.Length -gt 1){
+				Try {
+					#likely not all properties are used...
+					If ($Prop["_XLTN_SEGMENT"].Value.Length -gt 1) {
 						$_classes += $Prop["_XLTN_SEGMENT"].Value
-						If ($Prop["_XLTN_MAINGROUP"].Value.Length -gt 1){
+						If ($Prop["_XLTN_MAINGROUP"].Value.Length -gt 1) {
 							$_classes += $Prop["_XLTN_MAINGROUP"].Value
-							If ($Prop["_XLTN_GROUP"].Value.Length -gt 1){
+							If ($Prop["_XLTN_GROUP"].Value.Length -gt 1) {
 								$_classes += $Prop["_XLTN_GROUP"].Value
-								If ($Prop["_XLTN_SUBGROUP"].Value.Length -gt 1){
+								If ($Prop["_XLTN_SUBGROUP"].Value.Length -gt 1) {
 									$_classes += $Prop["_XLTN_SUBGROUP"].Value
 								}
 							}
@@ -324,155 +284,187 @@ function InitializeWindow
 		
 		
 		#region GoToInvSibling
-		"GoToInvSibling"
-		{
+		"GoToInvSibling" {
 			$_t = $Prop["Internal ID"].Value
 
 			$mTargetFile = Get-Content "$($env:appdata)\Autodesk\DataStandard 2026\mStrTabClick.txt"
 
 			#create search conditions for 
 			$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 1
-				$srchCond = New-Object autodesk.Connectivity.WebServices.SrchCond
-				$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE")
-				$propNames = @("Internal ID")
-				$propDefIds = @{}
-				foreach($name in $propNames) {
-					$propDef = $propDefs | Where-Object { $_.DispName -eq $name }
-					$propDefIds[$propDef.Id] = $propDef.DispName
-				}
-				$srchCond.PropDefId = $propDef.Id
-				$srchCond.SrchOper = 3
-				$srchCond.SrchTxt = $Prop["Internal ID"].Value
+			$srchCond = New-Object autodesk.Connectivity.WebServices.SrchCond
+			$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE")
+			$propNames = @("Internal ID")
+			$propDefIds = @{}
+			foreach ($name in $propNames) {
+				$propDef = $propDefs | Where-Object { $_.DispName -eq $name }
+				$propDefIds[$propDef.Id] = $propDef.DispName
+			}
+			$srchCond.PropDefId = $propDef.Id
+			$srchCond.SrchOper = 3
+			$srchCond.SrchTxt = $Prop["Internal ID"].Value
 
-				$srchCond.PropTyp = [Autodesk.Connectivity.WebServices.PropertySearchType]::SingleProperty
-				$srchCond.SrchRule = [Autodesk.Connectivity.WebServices.SearchRuleType]::Must
-				$srchConds[0] = $srchCond
-				$srchSort = New-Object autodesk.Connectivity.WebServices.SrchSort
-				$mSearchStatus = New-Object autodesk.Connectivity.WebServices.SrchStatus
-				$mBookmark = ""     
-				$mResultAll = New-Object 'System.Collections.Generic.List[Autodesk.Connectivity.WebServices.File]'
-				$mResultFiltered = New-Object 'System.Collections.Generic.List[Autodesk.Connectivity.WebServices.File]'
+			$srchCond.PropTyp = [Autodesk.Connectivity.WebServices.PropertySearchType]::SingleProperty
+			$srchCond.SrchRule = [Autodesk.Connectivity.WebServices.SearchRuleType]::Must
+			$srchConds[0] = $srchCond
+			$srchSort = New-Object autodesk.Connectivity.WebServices.SrchSort
+			$mSearchStatus = New-Object autodesk.Connectivity.WebServices.SrchStatus
+			$mBookmark = ""     
+			$mResultAll = New-Object 'System.Collections.Generic.List[Autodesk.Connectivity.WebServices.File]'
+			$mResultFiltered = New-Object 'System.Collections.Generic.List[Autodesk.Connectivity.WebServices.File]'
 	
-				while(($mSearchStatus.TotalHits -eq 0) -or ($mResultAll.Count -lt $mSearchStatus.TotalHits))
-				{
-					$mResultPage = $vault.DocumentService.FindFilesBySearchConditions($srchConds,@($srchSort),@(($vault.DocumentService.GetFolderRoot()).Id),$true,$false,[ref]$mBookmark,[ref]$mSearchStatus)
-					if($mResultPage.Count -ne 0)
-					{
-						$mResultAll.AddRange($mResultPage)
-					}
-					else { break;}
+			while (($mSearchStatus.TotalHits -eq 0) -or ($mResultAll.Count -lt $mSearchStatus.TotalHits)) {
+				$mResultPage = $vault.DocumentService.FindFilesBySearchConditions($srchConds, @($srchSort), @(($vault.DocumentService.GetFolderRoot()).Id), $true, $false, [ref]$mBookmark, [ref]$mSearchStatus)
+				if ($mResultPage.Count -ne 0) {
+					$mResultAll.AddRange($mResultPage)
+				}
+				else { break; }
 		
-					break; #limit the search result to the first result page; page scrolling not implemented in this snippet release
-				}
+				break; #limit the search result to the first result page; page scrolling not implemented in this snippet release
+			}
 
-				If($mResultAll.Count -lt $mSearchStatus.TotalHits)
-				{
-					$dsWindow.FindName("txtBlck_Notification1").Text = ([String]::Format($UIString["ADSK-GoToInvSibl_MSG00"], $mResultAll.Count, $mSearchStatus.TotalHits))
-				}
-				Else{
-					$dsWindow.FindName("txtBlck_Notification1").Visibility = "Collapsed"
-				}
+			If ($mResultAll.Count -lt $mSearchStatus.TotalHits) {
+				$dsWindow.FindName("txtBlck_Notification1").Text = ([String]::Format($UIString["ADSK-GoToInvSibl_MSG00"], $mResultAll.Count, $mSearchStatus.TotalHits))
+			}
+			Else {
+				$dsWindow.FindName("txtBlck_Notification1").Visibility = "Collapsed"
+			}
 
-				IF($mResultAll.Count -gt 0)
-				{
-					$mResultFiltered += $mResultAll | Where-Object {$_.Name -ne ($Prop["_FileName"].Value + $Prop["_FileExt"].Value)} # don't list the selected file's versions as parallel copies
-					If ($mResultFiltered.Count -gt 0)
-					{
-						$dsWindow.FindName("mDerivatives1").ItemsSource = @(mGetResultMeta $mResultFiltered) # @() #the array of each file iterations meta data
-					}
-					$dsWindow.FindName("mDerivatives1").add_SelectionChanged({
+			IF ($mResultAll.Count -gt 0) {
+				$mResultFiltered += $mResultAll | Where-Object { $_.Name -ne ($Prop["_FileName"].Value + $Prop["_FileExt"].Value) } # don't list the selected file's versions as parallel copies
+				If ($mResultFiltered.Count -gt 0) {
+					$dsWindow.FindName("mDerivatives1").ItemsSource = @(mGetResultMeta $mResultFiltered) # @() #the array of each file iterations meta data
+				}
+				$dsWindow.FindName("mDerivatives1").add_SelectionChanged({
 						mDerivatives1Click
-						If($dsWindow.FindName("mDerivatives1").SelectedItem)
-							{
-								$dsWindow.FindName("btnGoTo").IsEnabled = $true
-							}
-						})
-				}
-				IF($mResultFiltered.Count -lt 1)
-				{
-					$dsWindow.FindName("txtBlck_Notification1").Visibility = "Visible"
-					$dsWindow.FindName("txtBlck_Notification1").Text = $UIString["ADSK-GoToInvSibl_MSG01"]
-				}
+						If ($dsWindow.FindName("mDerivatives1").SelectedItem) {
+							$dsWindow.FindName("btnGoTo").IsEnabled = $true
+						}
+					})
+			}
+			IF ($mResultFiltered.Count -lt 1) {
+				$dsWindow.FindName("txtBlck_Notification1").Visibility = "Visible"
+				$dsWindow.FindName("txtBlck_Notification1").Text = $UIString["ADSK-GoToInvSibl_MSG01"]
+			}
 		}
 		#endregion GoToInvSibling
 
-		"ActivateSchedTaskWindow"
-		{
+		"ActivateSchedTaskWindow" {
 			ADSK.QS.ReadSchedTasks
-			$dsWindow.FindName("dataGrdSchedTasks").add_SelectionChanged({ ADSK.QS.TaskSelectionChanged})
+			$dsWindow.FindName("dataGrdSchedTasks").add_SelectionChanged({ ADSK.QS.TaskSelectionChanged })
 		}
 
-		"FileImportWindow"
-		{
+		"FileImportWindow" {
 			mInitializeFileImport
 		}
 
-		"ReserveNumberWindow"
-		{
+		"ReserveNumberWindow" {
 			$dsWindow.FindName("cmbNumType").add_SelectionChanged({
-				mGetNumSchms
-			})
+					mGetNumSchms
+				})
 		}
 
 	}
 }
 
-function SetWindowTitle($newFile, $editFile, $name)
-{
-	if ($Prop["_CreateMode"].Value)
-    {
+function SetWindowTitle($newFile, $editFile, $name) {
+	if ($Prop["_CreateMode"].Value) {
 		$windowTitle = $newFile
 	}
-	elseif ($Prop["_EditMode"].Value)
-	{
-		if ($Prop["_ReadOnly"].Value){
-				$windowTitle = "$($editFile) - $($name) - $($UIString["LBL26"])"
-				$dsWindow.FindName("btnOK").ToolTip = $UIString["LBL26"]
-            }
-			else{
-				$windowTitle = "$($editFile) - $($name)"
-			}
+	elseif ($Prop["_EditMode"].Value) {
+		if ($Prop["_ReadOnly"].Value) {
+			$windowTitle = "$($editFile) - $($name) - $($UIString["LBL26"])"
+			$dsWindow.FindName("btnOK").ToolTip = $UIString["LBL26"]
+		}
+		else {
+			$windowTitle = "$($editFile) - $($name)"
+		}
 	}
 	return $windowTitle
 }
 
-function OnLogOn
-{
+function OnLogOn {
 	#Executed when User logs on Vault; $vaultUsername can be used to get the username, which is used in Vault on login
 }
-function OnLogOff
-{
+function OnLogOff {
 	#Executed when User logs off Vault
 }
 
-function GetTitleWindow
-{
-	$message = "Autodesk Data Standard - Create/Edit "+$Prop["_FileName"]
+function GetTitleWindow {
+	$message = "Autodesk Data Standard - Create/Edit " + $Prop["_FileName"]
 	return $message
 }
 
 #fired when the file selection changes
-function OnTabContextChanged
-{      
+function OnTabContextChanged {      
 	#$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile) not working in powershell 7.2.0
 	#Just use System.IO.FileInfo as the workaround for powershell 7.2.0
 	$xamlFile = ([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile)).Name
 
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml")
-	{
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
-		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
-		try{
-			$bom = @(GetFileBOM($file.id))
+		$global:file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
+
+		#check for model state BOMs;  
+		# model state names and BOMComp Id are the key value pairs of the combobox
+		$dsWindow.FindName("bomList").ItemsSource = $null
+		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
+		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
+		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
+		#reset the search text box
+		$dsWindow.FindName("txtCadBomSearch").Text = ""
+
+		# applies to Inventor IAMs with true model state = false
+		if ($file.Name -match "\.iam$" ) {
+			$mMsPropSysNames = @("HasModelState", "IsTrueModelState")
+			$mPropDefs = $vault.PropertyService.FindPropertyDefinitionsBySystemNames("FILE", $mMsPropSysNames)
+			$mPropInsts = @()
+			[Int64]$mFileId = $file.Id
+			$mPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("FILE", @($mFileId))
+			$mPropNameValues = @{}
+			$mPropInsts = $mPropInsts | Where-Object { $_.PropDefId -eq $mPropDefs[0].Id -or $_.PropDefId -eq $mPropDefs[1].Id } 
+			ForEach ($mPropInst in $mPropInsts) {
+				$mSysName = ($mPropDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }).SysName
+				$mPropNameValues.Add($mSysName, $mPropInst.Val)
+			}
+
+			if ($mPropNameValues["HasModelState"] -eq $true -and $mPropNameValues["IsTrueModelState"] -eq $false) {
+				$_MsArray = @()
+				$_MsArray += mGetMdlStates($file.id)
+			}
+		}
+
+		#read the primary BOM
+		try {
+			$bom = @(GetFileBOM $file.id 0)
 			$dsWindow.FindName("bomList").ItemsSource = $bom
 		}
 		catch {
 			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
 		}
+
+		# read model state BOMs on demand;		
+		if ($dsWindow.FindName("cmbModelStates").ItemsSource.Count -gt 0) {
+			# add a selection changed event to the combobox
+			$dsWindow.FindName("cmbModelStates").add_SelectionChanged({
+					$mModelStateId = $dsWindow.FindName("cmbModelStates").SelectedValue
+					if ($dsWindow.FindName("cmbModelStates").SelectedIndex -eq -1) {
+						$dsWindow.FindName("bomList").ItemsSource = $null
+					}
+					else {
+						$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
+						$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+						#update the global bom list to restore clearing the search text box
+						$global:currentBOMList = $mMdlStateBom
+						#clear the search text box as the grid content has changed
+						CadBomClearButton_Click
+					}
+				})
+		}
+
+		$global:mFileBOM = $null #clear the global variable to release the grid content
 		return
 	}
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml")
-	{
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml") {
 		$items = $vault.ItemService.GetItemsByIds(@($vaultContext.SelectedObject.Id))
 		$item = $items[0]
 		$itemids = @($item.Id)
@@ -480,16 +472,14 @@ function OnTabContextChanged
 		$dsWindow.FindName("AssoicatedFiles").ItemsSource = $assocFiles
 		return
 	}
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDataSheet.xaml")
-	{
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDataSheet.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
 		mInitializeClassificationTab -ParentType $null -file $file
 		return
 	}
 
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "ADSK.QS.ItemFileClassification.xaml")
-	{
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "ADSK.QS.ItemFileClassification.xaml") {
 		$items = $vault.ItemService.GetItemsByIds(@($vaultContext.SelectedObject.Id))
 		$item = $items[0]
 		$itemids = @($item.Id)
@@ -543,40 +533,36 @@ function OnTabContextChanged
 		return
 	}
 		
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ChangeOrder" -and $xamlFile -eq "ADSK.QS.TaskLinks.xaml")
-	{
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ChangeOrder" -and $xamlFile -eq "ADSK.QS.TaskLinks.xaml") {
 		$mCoId = $VaultContext.SelectedObject.Id
 
 		#to get links of COs to CUSTENT we need to analyse the CUSTENTS for linked children of type CO
 		#get all CUSTENTS of category $_CoName first, then iterate the result and analyse each items links: do they link to the current CO id?
-        $_CoName = $UIString["ADSK-LnkdTask-00"]
+		$_CoName = $UIString["ADSK-LnkdTask-00"]
 		$_allCustents = mgetCustomEntityList $_CoName
 		$_LinkedCustentIDs = @()
-		Foreach ($_Custent in $_allCustents)
-		{
-			$_AllLinks1 = $vault.DocumentService.GetLinksByParentIds(@($_Custent.Id),@("CO"))
-			If($_AllLinks1) #the current custent has links; check that the current ECO is one of these link's target
-			{
+		Foreach ($_Custent in $_allCustents) {
+			$_AllLinks1 = $vault.DocumentService.GetLinksByParentIds(@($_Custent.Id), @("CO"))
+			If ($_AllLinks1) {
+				#the current custent has links; check that the current ECO is one of these link's target
 				$_match = $_AllLinks1 | Where { $_.ToEntId -eq $mCoId }
-				If($_match){ $_LinkedCustentIDs += $_Custent.Id}
+				If ($_match) { $_LinkedCustentIDs += $_Custent.Id }
 			}		
 		}
 		
 		#get all detail information of $_LinkedCustentIDs and push to the datagrid
-		If($_LinkedCustentIDs.Count -ne 0)
-		{
+		If ($_LinkedCustentIDs.Count -ne 0) {
 			$_LinkedCustentsMeta = @(mGetAssocCustents $_LinkedCustentIDs)
 		}
 		$dsWindow.FindName("dataGrdLinks").ItemsSource = $_LinkedCustentsMeta
 		$dsWindow.FindName("dataGrdLinks").add_SelectionChanged({
-			$dsWindow.FindName("txtComments").Text = $dsWindow.FindName("dataGrdLinks").SelectedItem.Comments
-			mTaskClick
-		})
+				$dsWindow.FindName("txtComments").Text = $dsWindow.FindName("dataGrdLinks").SelectedItem.Comments
+				mTaskClick
+			})
 		return
 	}
 
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileItemDataSheet.xaml")
-	{
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileItemDataSheet.xaml") {
 		#clear any data from previous selections:
 		mClearItemView
 		$fileMasterId = $vaultContext.SelectedObject.Id
@@ -591,94 +577,85 @@ function OnTabContextChanged
 	}
 
 	#region Documentstructure Extension
-		if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDocStructure.xaml")
-		{
-			# there are some custom functions to enhance functionality; 2023 version added webservice and explorer extensions to be installed optionally
-			$mVdsUtilities = "$($env:programdata)\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll"
-			if (! (Test-Path $mVdsUtilities)) {
-				# the basic utility installation only
-				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll')
-			}
-			Else {
-				# the extended utility activation
-				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll')
-			}
-			$file = $vault.DocumentService.GetLatestFileByMasterId($vaultContext.SelectedObject.Id)
-			$treeNode = New-Object VdsSampleUtilities.TreeNode($file, $vaultConnection)
-			$dsWindow.FindName("Uses").ItemsSource = @($treeNode)
-			return
+	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDocStructure.xaml") {
+		# there are some custom functions to enhance functionality; 2023 version added webservice and explorer extensions to be installed optionally
+		$mVdsUtilities = "$($env:programdata)\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll"
+		if (! (Test-Path $mVdsUtilities)) {
+			# the basic utility installation only
+			[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll')
 		}
+		Else {
+			# the extended utility activation
+			[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll')
+		}
+		$file = $vault.DocumentService.GetLatestFileByMasterId($vaultContext.SelectedObject.Id)
+		$treeNode = New-Object VdsSampleUtilities.TreeNode($file, $vaultConnection)
+		$dsWindow.FindName("Uses").ItemsSource = @($treeNode)
+		return
+	}
 	#endregion documentstructure
 	
 	#powerPLM Tabs run separated script
 	OnTabContextChanged_Fusion360Manage
 }
 
-function GetNewCustomObjectName
-{
+function GetNewCustomObjectName {
 	#region VDS-PDMC-Sample
-		$m_Cat = $Prop["_Category"].Value
-		switch ($m_Cat)
-		{
-			$UIString["MSDCE_CO02"] #Person
-			{
-				if($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty -eq $false)
-				{
-					$Prop["_XLTN_IDENTNUMBER"].Value = $Prop["_GeneratedNumber"].Value
-				}
-				$customObjectName = $Prop["_XLTN_FIRSTNAME"].Value + " " + $Prop["_XLTN_LASTNAME"].Value
-				return $customObjectName
+	$m_Cat = $Prop["_Category"].Value
+	switch ($m_Cat) {
+		$UIString["MSDCE_CO02"] {
+			#Person
+			if ($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty -eq $false) {
+				$Prop["_XLTN_IDENTNUMBER"].Value = $Prop["_GeneratedNumber"].Value
 			}
-
-			$UIString["ClassTerms_00"] #CatalogTermsTranslations
-			{
-				if($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty -eq $false)
-				{
-					Try {$Prop["_XLTN_IDENTNUMBER"].Value = $Prop["_GeneratedNumber"].Value}
-					catch { $dsDiag.Trace("UDP to save ident number does not exist")}
-				}
-				$customObjectName = $Prop["_XLTN_TERM"].Value
-				return $customObjectName
-			}
-
-			Default 
-			{
-				#region - default configuration's behavior
-				if($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty)
-				{	
-					#$dsDiag.Trace("read text from TextBox CUSTOMOBJECTNAME")
-					$customObjectName = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-					#$dsDiag.Trace("customObjectName = $customObjectName")
-				}
-				else{
-					#$dsDiag.Trace("-> GenerateNumber")
-					$customObjectName = $Prop["_GeneratedNumber"].Value
-					#$dsDiag.Trace("customObjectName = $customObjectName")
-				}
-				return $customObjectName
-				#endregion - default configuration's behavior
-			}
+			$customObjectName = $Prop["_XLTN_FIRSTNAME"].Value + " " + $Prop["_XLTN_LASTNAME"].Value
+			return $customObjectName
 		}
+
+		$UIString["ClassTerms_00"] {
+			#CatalogTermsTranslations
+			if ($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty -eq $false) {
+				Try { $Prop["_XLTN_IDENTNUMBER"].Value = $Prop["_GeneratedNumber"].Value }
+				catch { $dsDiag.Trace("UDP to save ident number does not exist") }
+			}
+			$customObjectName = $Prop["_XLTN_TERM"].Value
+			return $customObjectName
+		}
+
+		Default {
+			#region - default configuration's behavior
+			if ($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty) {	
+				#$dsDiag.Trace("read text from TextBox CUSTOMOBJECTNAME")
+				$customObjectName = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+				#$dsDiag.Trace("customObjectName = $customObjectName")
+			}
+			else {
+				#$dsDiag.Trace("-> GenerateNumber")
+				$customObjectName = $Prop["_GeneratedNumber"].Value
+				#$dsDiag.Trace("customObjectName = $customObjectName")
+			}
+			return $customObjectName
+			#endregion - default configuration's behavior
+		}
+	}
 	#endregion VDS-PDMC-Sample
 }
 
 #Constructs the filename(numschems based or handtyped)and returns it.
-function GetNewFileName
-{
+function GetNewFileName {
 	#$dsDiag.Trace(">> GetNewFileName")
-	if($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty)
-	{	
+	if ($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty) {	
 		#$dsDiag.Trace("read text from TextBox FILENAME")
 		$fileName = $dsWindow.FindName("FILENAME").Text
 		#$dsDiag.Trace("fileName = $fileName")
 	}
-	else{
+	else {
 		#$dsDiag.Trace("-> GenerateNumber")
 		$fileName = $Prop["_GeneratedNumber"].Value
 		#$dsDiag.Trace("fileName = $fileName")
 		
 		#VDS-PDMC-Sample
-			If($Prop["_XLTN_PARTNUMBER"]) { $Prop["_XLTN_PARTNUMBER"].Value = $Prop["_GeneratedNumber"].Value }
+		If ($Prop["_XLTN_PARTNUMBER"]) { $Prop["_XLTN_PARTNUMBER"].Value = $Prop["_GeneratedNumber"].Value }
 		#VDS-PDMC-Sample
 	}
 	$newfileName = $fileName + $Prop["_FileExt"].Value
@@ -686,16 +663,14 @@ function GetNewFileName
 	return $newfileName
 }
 
-function GetNewFolderName
-{
+function GetNewFolderName {
 	#$dsDiag.Trace(">> GetNewFolderName")
-	if($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty)
-	{	
+	if ($dsWindow.FindName("DSNumSchmsCtrl").NumSchmFieldsEmpty) {	
 		#$dsDiag.Trace("read text from TextBox FOLDERNAME")
 		$folderName = $dsWindow.FindName("FOLDERNAME").Text
 		#$dsDiag.Trace("folderName = $folderName")
 	}
-	else{
+	else {
 		#$dsDiag.Trace("-> GenerateNumber")
 		$folderName = $Prop["_GeneratedNumber"].Value
 		#$dsDiag.Trace("folderName = $folderName")
@@ -707,101 +682,84 @@ function GetNewFolderName
 # This function can be used to force a specific folder when using "New Standard File" or "New Standard Folder" functions.
 # If an empty string is returned the selected folder is used
 # ! Do not remove the function
-function GetParentFolderName
-{
+function GetParentFolderName {
 	$folderName = ""
 	return $folderName
 }
 
-function GetCategories
-{
-	if ($dsWindow.Name -eq "FileWindow")
-	{
+function GetCategories {
+	if ($dsWindow.Name -eq "FileWindow") {
 		#return $vault.CategoryService.GetCategoriesByEntityClassId("FILE", $true)
 		#region VDS-PDMC-Sample
-			$global:mFileCategories = $Prop["_Category"].ListValues #$vault.CategoryService.GetCategoriesByEntityClassId("FILE", $true)
-			return $global:mFileCategories | Sort-Object -Property "Name" #Ascending is default; no option required
+		$global:mFileCategories = $Prop["_Category"].ListValues #$vault.CategoryService.GetCategoriesByEntityClassId("FILE", $true)
+		return $global:mFileCategories | Sort-Object -Property "Name" #Ascending is default; no option required
 		#endregion
 	}
-	elseif ($dsWindow.Name -eq "FolderWindow")
-	{
+	elseif ($dsWindow.Name -eq "FolderWindow") {
 		return $vault.CategoryService.GetCategoriesByEntityClassId("FLDR", $true) | Sort-Object -Property "Name" #Ascending is default; no option required
 	}
-	elseif ($dsWindow.Name -eq "CustomObjectWindow")
-	{
+	elseif ($dsWindow.Name -eq "CustomObjectWindow") {
 		return $vault.CategoryService.GetCategoriesByEntityClassId("CUSTENT", $true)
 	}
-	elseif ($dsWindow.Name -eq "CustomObjectClassifiedWindow")
-	{
+	elseif ($dsWindow.Name -eq "CustomObjectClassifiedWindow") {
 		return $vault.CategoryService.GetCategoriesByEntityClassId("CUSTENT", $true)
 	}
 }
 
-function GetNumSchms
-{
-	if ($Prop["_CreateMode"].Value)
-	{
-		try
-		{
+function GetNumSchms {
+	if ($Prop["_CreateMode"].Value) {
+		try {
 			#Adopted from a DocumentService call, which always pulls FILE class numbering schemes
 			[System.Collections.ArrayList]$numSchems = @($vault.NumberingService.GetNumberingSchemes('FILE', 'Activated'))
 
-			if ($numSchems.Count -gt 1)
-			{
+			if ($numSchems.Count -gt 1) {
 				#$numSchems = $numSchems | Sort-Object -Property IsDflt -Descending
 				#region VDS-PDMC-Sample
-					$mWindowName = $dsWindow.Name
-					switch($mWindowName)
-					{
-						"FileWindow"
-						{
-							$_FilteredNumSchems = @()
-							$_Default = $numSchems | Where { $_.IsDflt -eq $true}
-							$_FilteredNumSchems += ($_Default)
-							$dsWindow.FindName("NumSchms").IsEnabled = $true
-							$noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
-							$noneNumSchm.Name = $UIString["LBL77"] # None 
-							$_FilteredNumSchems += $noneNumSchm
-							return $_FilteredNumSchems
-						}
-
-						"FolderWindow" 
-						{
-							#numbering schemes are available for items and files specificly; 
-							#for folders we use the file numbering schemes and filter to these, that have a corresponding name in folder categories
-							$_FolderCats = $vault.CategoryService.GetCategoriesByEntityClassId("FLDR", $true)
-							$_FilteredNumSchems = @()
-							Foreach ($item in $_FolderCats) 
-							{
-								$_temp = $numSchems | Where { $_.Name -eq $item.Name}
-								$_FilteredNumSchems += ($_temp)
-							}
-							#we need an option to unselect a previosly selected numbering; to achieve that we add a virtual one, named "None"
-							$noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
-							$noneNumSchm.Name = "None"
-							$_FilteredNumSchems += ($noneNumSchm)
-
-							return $_FilteredNumSchems
-						}
-
-						"CustomObjectWindow"
-						{
-							$_FilteredNumSchems = $numSchems | Where { $_.Name -eq $Prop["_Category"].Value}
-							return $_FilteredNumSchems
-						}
-
-						"CustomObjectClassifiedWindow"
-						{
-							$_FilteredNumSchems = $numSchems | Where-Object { $_.Name -eq $Prop["_Category"].Value}
-							return $_FilteredNumSchems
-						}
-
-						default
-						{
-							$numSchems = $numSchems | Sort-Object -Property IsDflt -Descending
-							return $numSchems
-						}
+				$mWindowName = $dsWindow.Name
+				switch ($mWindowName) {
+					"FileWindow" {
+						$_FilteredNumSchems = @()
+						$_Default = $numSchems | Where { $_.IsDflt -eq $true }
+						$_FilteredNumSchems += ($_Default)
+						$dsWindow.FindName("NumSchms").IsEnabled = $true
+						$noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
+						$noneNumSchm.Name = $UIString["LBL77"] # None 
+						$_FilteredNumSchems += $noneNumSchm
+						return $_FilteredNumSchems
 					}
+
+					"FolderWindow" {
+						#numbering schemes are available for items and files specificly; 
+						#for folders we use the file numbering schemes and filter to these, that have a corresponding name in folder categories
+						$_FolderCats = $vault.CategoryService.GetCategoriesByEntityClassId("FLDR", $true)
+						$_FilteredNumSchems = @()
+						Foreach ($item in $_FolderCats) {
+							$_temp = $numSchems | Where { $_.Name -eq $item.Name }
+							$_FilteredNumSchems += ($_temp)
+						}
+						#we need an option to unselect a previosly selected numbering; to achieve that we add a virtual one, named "None"
+						$noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
+						$noneNumSchm.Name = "None"
+						$_FilteredNumSchems += ($noneNumSchm)
+
+						return $_FilteredNumSchems
+					}
+
+					"CustomObjectWindow" {
+						$_FilteredNumSchems = $numSchems | Where { $_.Name -eq $Prop["_Category"].Value }
+						return $_FilteredNumSchems
+					}
+
+					"CustomObjectClassifiedWindow" {
+						$_FilteredNumSchems = $numSchems | Where-Object { $_.Name -eq $Prop["_Category"].Value }
+						return $_FilteredNumSchems
+					}
+
+					default {
+						$numSchems = $numSchems | Sort-Object -Property IsDflt -Descending
+						return $numSchems
+					}
+				}
 				#region
 			}
 			Else {
@@ -809,8 +767,7 @@ function GetNumSchms
 			}
 			return $numSchems
 		}
-		catch [System.Exception]
-		{		
+		catch [System.Exception] {		
 			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError($error, "VDS Sample Configuration")
 		}
 	}
@@ -818,45 +775,41 @@ function GetNumSchms
 
 
 # Decides if the NumSchmes field should be visible
-function IsVisibleNumSchems
-{
+function IsVisibleNumSchems {
 	$ret = "Collapsed"
 	$numSchems = $vault.DocumentService.GetNumberingSchemesByType([Autodesk.Connectivity.WebServices.NumSchmType]::Activated)
-	if($numSchems.Length -gt 0)
+	if ($numSchems.Length -gt 0)
 	{	$ret = "Visible" }
 	return $ret
 }
 
 #Decides if the FileName should be enabled, it should only when the NumSchmField isnt
-function ShouldEnableFileName
-{
+function ShouldEnableFileName {
 	$ret = "true"
 	$numSchems = $vault.DocumentService.GetNumberingSchemesByType([Autodesk.Connectivity.WebServices.NumSchmType]::Activated)
-	if($numSchems.Length -gt 0)
+	if ($numSchems.Length -gt 0)
 	{	$ret = "false" }
 	return $ret
 }
 
-function ShouldEnableNumSchms
-{
+function ShouldEnableNumSchms {
 	$ret = "false"
 	$numSchems = $vault.DocumentService.GetNumberingSchemesByType([Autodesk.Connectivity.WebServices.NumSchmType]::Activated)
-	if($numSchems.Length -gt 0)
+	if ($numSchems.Length -gt 0)
 	{	$ret = "true" }
 	return $ret
 }
 
 #define the parametrisation for the number generator here
-function GenerateNumber
-{
+function GenerateNumber {
 	#$dsDiag.Trace(">> GenerateNumber")
 	$selected = $dsWindow.FindName("NumSchms").Text
-	if($selected -eq "") { return "na" }
+	if ($selected -eq "") { return "na" }
 
 	$ns = $global:numSchems | Where-Object { $_.Name.Equals($selected) }
 	switch ($selected) {
 		"Sequential" { $NumGenArgs = @(""); break; }
-		default      { $NumGenArgs = @(""); break; }
+		default { $NumGenArgs = @(""); break; }
 	}
 	#$dsDiag.Trace("GenerateFileNumber($($ns.SchmID), $NumGenArgs)")
 	$vault.DocumentService.GenerateFileNumber($ns.SchmID, $NumGenArgs)
@@ -864,45 +817,40 @@ function GenerateNumber
 }
 
 #define here how the numbering preview should look like
-function GetNumberPreview
-{
+function GetNumberPreview {
 	$selected = $dsWindow.FindName("NumSchms").Text
 	switch ($selected) {
-		"Sequential" { $Prop["_FileName"].Value="???????"; break; }
-		"Short" { $Prop["_FileName"].Value=$Prop["Project"].Value + "-?????"; break; }
-		"Long" { $Prop["_FileName"].Value=$Prop["Project"].Value + "." + $Prop["Material"].Value + "-?????"; break; }
-		default { $Prop["_FileName"].Value="NA" }
+		"Sequential" { $Prop["_FileName"].Value = "???????"; break; }
+		"Short" { $Prop["_FileName"].Value = $Prop["Project"].Value + "-?????"; break; }
+		"Long" { $Prop["_FileName"].Value = $Prop["Project"].Value + "." + $Prop["Material"].Value + "-?????"; break; }
+		default { $Prop["_FileName"].Value = "NA" }
 	}
 }
 
 #Workaround for Property names containing round brackets
 #Xaml fails to parse
-function ItemTitle
-{
-    if ($Prop)
-	{
-       $val = $Prop["_XLTN_TITLE_ITEM_CO"].Value
-	   return $val
-    }
+function ItemTitle {
+	if ($Prop) {
+		$val = $Prop["_XLTN_TITLE_ITEM_CO"].Value
+		return $val
+	}
 }
 
 #Workaround for Property names containing round brackets
 #Xaml fails to parse
-function ItemDescription
-{
-	if($Prop)#Tab gets loaded before the SelectionChanged event gets fired resulting with null Prop. Happens when the vault is started with Change Order as the last view.
-    {
-       $val = $Prop["_XLTN_DESCRIPTION_ITEM_CO"].Value
-	   return $val
-    }
+function ItemDescription {
+	if ($Prop) {
+		#Tab gets loaded before the SelectionChanged event gets fired resulting with null Prop. Happens when the vault is started with Change Order as the last view.
+		$val = $Prop["_XLTN_DESCRIPTION_ITEM_CO"].Value
+		return $val
+	}
 }
 
  
 function m_TemplateChanged {
 		
 	#check if cmbTemplates is empty
-	if ($dsWindow.FindName("TemplateCB").ItemsSource.Count -lt 1)
-	{
+	if ($dsWindow.FindName("TemplateCB").ItemsSource.Count -lt 1) {
 		return
 	}
 	$mContext = $dsWindow.DataContext
@@ -910,56 +858,48 @@ function m_TemplateChanged {
 	$mTemplateFile = $mContext.SelectedTemplate.Name
 	$mTemplate = $mTemplatePath + "/" + $mTemplateFile
 	$mFolder = $vault.DocumentService.GetFolderByPath($mTemplatePath)
-	$mFiles = $vault.DocumentService.GetLatestFilesByFolderId($mFolder.Id,$false)
+	$mFiles = $vault.DocumentService.GetLatestFilesByFolderId($mFolder.Id, $false)
 	$mTemplateFile = $mFiles | Where-Object { $_.Name -eq $mTemplateFile }
 	$Prop["_Category"].Value = $mTemplateFile.Cat.CatName
 	$mCatName = $mTemplateFile.Cat.CatName
 	$dsWindow.FindName("Categories").SelectedValue = $mCatName
-	If ($mCatName) #if something went wrong the user should be able to select a category
-	{
+	If ($mCatName) {
+		#if something went wrong the user should be able to select a category
 		$dsWindow.FindName("Categories").IsEnabled = $false #comment out this line if admins like to release the choice to the user
 	}
 
 	#region navigation & derivation structure
-	If($Prop[($UIString["ADSK-GoToNavigation_Prop01"])]){
-		If($mContext.SelectedTemplate)
-		{
+	If ($Prop[($UIString["ADSK-GoToNavigation_Prop01"])]) {
+		If ($mContext.SelectedTemplate) {
 			$Prop[($UIString["ADSK-GoToNavigation_Prop01"])].Value = $mContext.SelectedTemplate.Name
 		}
 	}
 	#endregion
 }
 
-function m_CategoryChanged 
-{
+function m_CategoryChanged {
 	$mWindowName = $dsWindow.Name
-    switch($mWindowName)
-	{
-		"FileWindow"
-		{
+	switch ($mWindowName) {
+		"FileWindow" {
 			#VDS-PDMC-Sample uses the default numbering scheme for files; GoTo GetNumSchms function to disable this filter incase you'd like to apply numbering per category for files as well
 
 			# write current user name to designer/author fields depending on the category
 			$DesignCats = @("Drawing Inventor", "Drawing AutoCAD", "Part", "Assembly", "Weldment Assembly", "Sheet Metal Part")
 			$OfficeCats = @("Office")	
-			If($DesignCats -contains $Prop["_Category"].Value)
-			{
-				If ($Prop['_XLTN_DESIGNER'].Value -eq $null) 
-				{ 
+			If ($DesignCats -contains $Prop["_Category"].Value) {
+				If ($Prop['_XLTN_DESIGNER'].Value -eq $null) { 
 					$Prop['_XLTN_DESIGNER'].Value = $Vault.AdminService.Session.User.Name
 				}
 			}
 			
-			if($OfficeCats -contains $Prop["_Category"].Value)
-			{
-				If ($Prop['_XLTN_AUTHOR'].Value -eq $null) 
-				{
+			if ($OfficeCats -contains $Prop["_Category"].Value) {
+				If ($Prop['_XLTN_AUTHOR'].Value -eq $null) {
 					$Prop['_XLTN_AUTHOR'].Value = $Vault.AdminService.Session.User.Name
 				}
 			}
 			
 			#Copy Parent Project properites to file properties if exists
-			If($Prop["_XLTN_PROJECT"]){
+			If ($Prop["_XLTN_PROJECT"]) {
 				
 				#build a name/value map assigning each target property name the source's property name
 				$Global:mFld2FileMap = @{ Project = "Name"; 'Project Number' = "Project Number" }
@@ -974,32 +914,28 @@ function m_CategoryChanged
 			
 		}
 
-		"FolderWindow" 
-		{
+		"FolderWindow" {
 			$dsWindow.FindName("NumSchms").SelectedItem = $null
 			$dsWindow.FindName("NumSchms").Visibility = "Collapsed"
 			$dsWindow.FindName("DSNumSchmsCtrl").Visibility = "Collapsed"
 			$dsWindow.FindName("FOLDERNAME").Visibility = "Visible"
 					
 			$Prop["_NumSchm"].Value = $Prop["_Category"].Value
-			IF ($dsWindow.FindName("DSNumSchmsCtrl").Scheme.Name -eq $Prop["_Category"].Value) 
-			{
+			IF ($dsWindow.FindName("DSNumSchmsCtrl").Scheme.Name -eq $Prop["_Category"].Value) {
 				$dsWindow.FindName("DSNumSchmsCtrl").Visibility = "Visible"
 				$dsWindow.FindName("FOLDERNAME").Visibility = "Collapsed"
 			}
-			Else
-			{
+			Else {
 				$Prop["_NumSchm"].Value = "None" #we need to reset in case a user switches back from existing numbering scheme to manual input
 			}
 			
 			#set the start date = today for project category
-			If ($Prop["_Category"].Value -eq $UIString["CAT6"] -and $Prop["_XLTN_DATESTART"] )		
-			{
+			If ($Prop["_Category"].Value -eq $UIString["CAT6"] -and $Prop["_XLTN_DATESTART"] ) {
 				$Prop["_XLTN_DATESTART"].Value = Get-Date -displayhint date
 			}
 
 			#Copy Parent Project properties to this folder's properties
-			If($Prop["_XLTN_PROJECT"]){
+			If ($Prop["_XLTN_PROJECT"]) {
 				
 				#build a name/value map assigning each target property name the source's property name
 				$Global:mFld2FileMap = @{ Project = "Name"; 'Project Number' = "Project Number" }
@@ -1013,21 +949,18 @@ function m_CategoryChanged
 			}
 		}
 
-		"CustomObjectWindow"
-		{
+		"CustomObjectWindow" {
 			#categories are bound to CO type name
 		}
-		default
-		{
+		default {
 			#nothing for 'unknown' new window type names
 		}			
 	} #end switch window
 } #end function m_CategoryChanged
 
 function mHelp ([Int] $mHContext) {
-	Try
-	{
-		Switch ($mHContext){
+	Try {
+		Switch ($mHContext) {
 			500 {
 				$mHPage = "V.2File.html";
 			}
@@ -1044,34 +977,29 @@ function mHelp ([Int] $mHContext) {
 				$mHPage = "Index.html";
 			}
 		}
-		$mHelpTarget = "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\HelpFiles\"+$mHPage
+		$mHelpTarget = "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\HelpFiles\" + $mHPage
 		$mhelpfile = Invoke-Item $mHelpTarget 
 	}
-	Catch
-	{
+	Catch {
 		[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Help Target not found", "Vault VDS-PDMC-Sample Client")
 	}
 }
-function mResetTemplates
-{
+function mResetTemplates {
 	$dsWindow.FindName("TemplateCB").ItemsSource = $dsWindow.DataContext.Templates
 }
 
-function mFldrNameValidation
-{
+function mFldrNameValidation {
 	$rootFolder = $vault.DocumentService.GetFolderByPath($Prop["_FolderPath"].Value)
 	$mFldExist = mFindFolder $Prop["_FolderName"].Value $rootFolder
 
-	If($mFldExist)
-	{
+	If ($mFldExist) {
 		$dsWindow.FindName("FOLDERNAME").ToolTip = "Foldername exists, select a new unique one."
 		$dsWindow.FindName("FOLDERNAME").BorderBrush = "Red"
 		$dsWindow.FindName("FOLDERNAME").BorderThickness = "1,1,1,1"
 		$dsWindow.FindName("FOLDERNAME").Background = "#FFFFDADA"
 		return $false
 	}
-	Else
-	{
+	Else {
 		$dsWindow.FindName("FOLDERNAME").ToolTip = "Foldername is valid, press OK to create."
 		$dsWindow.FindName("FOLDERNAME").BorderBrush = "#FFABADB3" #the default color
 		$dsWindow.FindName("FOLDERNAME").BorderThickness = "0,1,1,0" #the default border top, right
@@ -1080,36 +1008,32 @@ function mFldrNameValidation
 	}
 }
 
-function mFindFolder($FolderName, $rootFolder)
-{
+function mFindFolder($FolderName, $rootFolder) {
 	$FolderPropDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("FLDR")
-    $FolderNamePropDef = $FolderPropDefs | where {$_.SysName -eq "Name"}
-    $srchCond = New-Object 'Autodesk.Connectivity.WebServices.SrchCond'
-    $srchCond.PropDefId = $FolderNamePropDef.Id
-    $srchCond.PropTyp = "SingleProperty"
-    $srchCond.SrchOper = 3 #is equal
-    $srchCond.SrchRule = "Must"
-    $srchCond.SrchTxt = $FolderName
+	$FolderNamePropDef = $FolderPropDefs | where { $_.SysName -eq "Name" }
+	$srchCond = New-Object 'Autodesk.Connectivity.WebServices.SrchCond'
+	$srchCond.PropDefId = $FolderNamePropDef.Id
+	$srchCond.PropTyp = "SingleProperty"
+	$srchCond.SrchOper = 3 #is equal
+	$srchCond.SrchRule = "Must"
+	$srchCond.SrchTxt = $FolderName
 
-    $bookmark = ""
-    $status = $null
-    $totalResults = @()
-    while ($status -eq $null -or $totalResults.Count -lt $status.TotalHits)
-    {
-        $results = $vault.DocumentService.FindFoldersBySearchConditions(@($srchCond),$null, @($rootFolder.Id), $false, [ref]$bookmark, [ref]$status)
+	$bookmark = ""
+	$status = $null
+	$totalResults = @()
+	while ($status -eq $null -or $totalResults.Count -lt $status.TotalHits) {
+		$results = $vault.DocumentService.FindFoldersBySearchConditions(@($srchCond), $null, @($rootFolder.Id), $false, [ref]$bookmark, [ref]$status)
 
-        if ($results -ne $null)
-        {
-            $totalResults += $results
-        }
-        else {break}
-    }
-    return $totalResults;
+		if ($results -ne $null) {
+			$totalResults += $results
+		}
+		else { break }
+	}
+	return $totalResults;
 }
 
 #added by 2022 Update 1 - to resolve issue with cloaked template folders for users, Update 2 added support for Vault Office
-function GetTemplateFolders
-{
+function GetTemplateFolders {
 	$xmlpath = "$env:programdata\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\Configuration\ADSK.QS.File.xml"
 
 	if ($_IsOfficeClient) {
@@ -1124,8 +1048,7 @@ function GetTemplateFolders
 	return $xmldata.DocTypeData.DocTypeInfo | foreach {
 		$path = $_.Path
 		$folder = $folders | where { $_.FullName -eq $path } | Select -index 0
-		if($folder -eq $null)
-		{
+		if ($folder -eq $null) {
 			return
 		}
 		return $_
