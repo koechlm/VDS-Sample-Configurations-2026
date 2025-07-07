@@ -19,6 +19,7 @@
             <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -30,7 +31,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>

@@ -13,7 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
-                <Setter Property="Height" Value="24"></Setter>
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
@@ -25,8 +25,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" 
-                                         VerticalContentAlignment="Center" BorderThickness="0"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" VerticalContentAlignment="Center" BorderThickness="0" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -54,8 +53,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" 
-                                         VerticalContentAlignment="Center" BorderThickness="0"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" VerticalContentAlignment="Center" BorderThickness="0"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -226,10 +224,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <DataGrid x:Name="DSDynCatPropGrid" ToolTip="{Binding UIString[LBL63], FallbackValue='Category Properties'}"
-				ItemsSource="{Binding DynamicProperties}" 
-				AutoGenerateColumns="False" 
-				HeadersVisibility="Column"
-				ScrollViewer.CanContentScroll="True" Margin="0,1,0,0" CanUserReorderColumns="False" >
+				ItemsSource="{Binding DynamicProperties}" AutoGenerateColumns="False" HeadersVisibility="Column"
+				ScrollViewer.CanContentScroll="False" Margin="0,1,0,0" CanUserReorderColumns="False" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding DispName}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="1*" MinWidth="100" IsReadOnly="True">
                         <DataGridTextColumn.HeaderTemplate>

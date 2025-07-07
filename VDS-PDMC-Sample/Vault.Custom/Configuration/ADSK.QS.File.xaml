@@ -18,6 +18,7 @@
             <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -29,7 +30,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -449,7 +450,7 @@
                         <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Grid.Row="9" Height="Auto" Grid.RowSpan="2" BorderThickness="1" />
                         <TextBox Grid.Row="9" Text="{Binding Prop[_XLTN_COMMENTS].Value}" x:Name="Comments" Grid.Column="1" VerticalScrollBarVisibility="Auto" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top" MinHeight="50" MaxHeight="50" Margin="0,1" />
                     </Grid>
-                    <DataGrid x:Name="DSDynamicCategoryProperties" AutoGenerateColumns="False" HeadersVisibility="Column" ItemsSource="{Binding DynamicProperties}" ScrollViewer.CanContentScroll="False" EnableRowVirtualization="False" VerticalAlignment="Top" MinWidth="400" MaxHeight="500" Grid.Column="1" Margin="5,1,0,0" CanUserReorderColumns="False">
+                    <DataGrid x:Name="DSDynamicCategoryProperties" AutoGenerateColumns="False" HeadersVisibility="Column" ItemsSource="{Binding DynamicProperties}" ScrollViewer.CanContentScroll="False" VerticalAlignment="Top" MinWidth="400" MaxHeight="500" Grid.Column="1" Margin="5,1,0,0" CanUserReorderColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding DispName}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="*" MinWidth="140" IsReadOnly="True">
                                 <DataGridTextColumn.HeaderTemplate>

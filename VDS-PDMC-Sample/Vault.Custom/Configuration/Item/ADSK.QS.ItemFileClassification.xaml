@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
-                <Setter Property="Height" Value="24"></Setter>
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
@@ -26,8 +26,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" 
-                                         VerticalContentAlignment="Center" BorderThickness="0"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" VerticalContentAlignment="Center" BorderThickness="0" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
