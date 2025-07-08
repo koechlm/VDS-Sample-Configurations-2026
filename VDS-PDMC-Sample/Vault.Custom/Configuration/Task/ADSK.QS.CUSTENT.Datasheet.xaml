@@ -6,7 +6,7 @@
             xmlns:wpfUtilities="clr-namespace:Autodesk.DataManagement.Client.Framework.Forms.Controls.WPF.Utilities;assembly=Autodesk.DataManagement.Client.Framework.Forms"
             xmlns:winFormTheme="clr-namespace:Autodesk.DataManagement.Client.Framework.Forms.SkinUtils;assembly=Autodesk.DataManagement.Client.Framework.Forms"
             xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
-            x:Name="MainWindow" behaviours:TabTitleBehavior.TabTitle="$UIString[LBL36]">
+            x:Name="MainWindow" behaviours:TabTitleBehavior.TabTitle="$UIString[LBL36]" >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -109,7 +109,6 @@
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" MinWidth="140"/>
@@ -143,7 +142,7 @@
 				ItemsSource="{Binding DynamicProperties}" 
 				AutoGenerateColumns="False" 
 				HeadersVisibility="Column"
-				ScrollViewer.CanContentScroll="True" Margin="0,1,0,0" CanUserReorderColumns="False" >
+				ScrollViewer.CanContentScroll="True" Margin="0,1,0,0" CanUserReorderColumns="False" VerticalAlignment="Top" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding DispName}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="1*" MinWidth="100" IsReadOnly="True">
                         <DataGridTextColumn.HeaderTemplate>
@@ -161,14 +160,6 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-        </Grid>
-        <Grid x:Name="grdComments" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,5,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}"  VerticalAlignment="Top" Width="{Binding ActualWidth, ElementName=lblCategory, Mode=OneWay}"/>
-            <TextBox x:Name="txtComments" Text="{Binding Prop[_XLTN_COMMENTS].Value}" Height="Auto" TextWrapping="Wrap" MinHeight="62" Grid.Column="1" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" IsReadOnly="True"/>
         </Grid>
     </Grid>
 </UserControl>
