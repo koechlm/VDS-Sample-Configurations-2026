@@ -215,7 +215,6 @@
                 <Grid x:Name="grdMain" Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -312,7 +311,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
-                    <Grid x:Name="ButtonGrid" Grid.ColumnSpan="2" Grid.Row="2" Margin="0,15,0,0">
+                    <Grid x:Name="ButtonGrid" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,15,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition />
@@ -335,14 +334,6 @@
                     HorizontalAlignment="Right" Height="24" IsCancel="True" />
                         <Button x:Name="btnHelp" Content="{Binding UIString[MSDCE_BTN1], FallbackValue=Help}" 
                     Command="{Binding PsCmd[mHelp(700)]}" Height="24" ToolTip="F1" Margin="0" Width="80" />
-                    </Grid>
-                    <Grid x:Name="grdComments" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="140"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Height="Auto" BorderThickness="1,1,0,1" VerticalAlignment="Top" Width="{Binding ActualWidth, ElementName=lblCategory, Mode=OneWay}" />
-                        <TextBox x:Name="txtComments" Text="{WPF:ValidatedBinding Prop[_XLTN_COMMENTS].Value}" Height="Auto" TextWrapping="Wrap" MinHeight="62" Grid.Column="1" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="102" VerticalContentAlignment="Top"/>
                     </Grid>
                     <Expander x:Name="expOrgPersLnk" Grid.Column="2" ExpandDirection="Right" IsExpanded="False" Visibility="Collapsed" MaxWidth="380" Grid.RowSpan="3">
                         <Border BorderThickness="1">
@@ -403,7 +394,7 @@
                                 <Label x:Name="lblCreateLnks" Content="{Binding UIString[Adsk.Org.Pers.Link_03], FallbackValue=Create Link(s)}" Height="Auto" Grid.Row="3" Margin="0,1"/>
                                 <CheckBox x:Name="chkBoxCreateLnks" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                             </Grid>
-                        </Border>                        
+                        </Border>
                     </Expander>
                 </Grid>
             </AdornerDecorator>

@@ -7,7 +7,7 @@
         xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
         xmlns:WPF="clr-namespace:CreateObject.WPF;assembly=CreateObject"
              x:Name="MainWindow"
-             behaviours:TabTitleBehavior.TabTitle="$UIString[LBL36]" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" d:DesignHeight="391" d:DesignWidth="1529.4">
+             behaviours:TabTitleBehavior.TabTitle="$UIString[LBL36]" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -111,7 +111,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-        <Grid Margin="0,5,0,0" >
+        <Grid Margin="5" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
@@ -120,8 +120,7 @@
                 <ColumnDefinition Width="2*" MinWidth="140"/>
                 <ColumnDefinition Width="3*" MinWidth="200"/>
             </Grid.ColumnDefinitions>
-            <DockPanel Margin="5,0" LastChildFill="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True">
-                <TreeView VerticalContentAlignment="Center" VerticalAlignment="Top" Width="{Binding ActualWidth, ElementName=grdSysProps, Mode=OneWay}" IsHitTestVisible="False" IsTabStop="False" >
+            <TreeView VerticalContentAlignment="Center" IsHitTestVisible="False" IsTabStop="False" Background="{x:Null}" VerticalAlignment="Center" Margin="5,0,5,0" >
                     <TreeViewItem x:Name="treeViewItemSegment" Header="{Binding Prop[_XLTN_SEGMENT].Value, FallbackValue=Segment}" 
                         IsExpanded="True">
                         <TreeViewItem x:Name="treeViewItemMainGroup" Header="{Binding Prop[_XLTN_MAINGROUP].Value, FallbackValue=MainGroup}" 
@@ -130,9 +129,7 @@
                         </TreeViewItem>
                     </TreeViewItem>
                 </TreeView>
-            </DockPanel>
-            <DockPanel ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Grid.Row="1" Margin="5">
-                <Grid x:Name="grdSysProps">
+                <Grid x:Name="grdSysProps" Margin="5,5,5,5" Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="auto" />
@@ -155,32 +152,37 @@
                     <Label Content="{Binding UIString[LBL34], FallbackValue=Created By}" Grid.Column="0" Grid.Row="4" Height="26" />
                     <TextBox Text="{Binding Prop[_XLTN_CREATED BY].Value}" Grid.Column="1" Grid.Row="4" Margin="0,1" />
                 </Grid>
-            </DockPanel>
-            <DockPanel Margin="5,0,5,5" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" LastChildFill="False" Grid.RowSpan="2" Grid.Column="1">
-                <DataGrid x:Name="dataGrid" 
-                    ItemsSource="{Binding DynamicProperties}" 
-                    AutoGenerateColumns="False" 
-                    HeadersVisibility="Column" 
-                    ScrollViewer.CanContentScroll="True" 
-                    DockPanel.Dock="Top" HorizontalContentAlignment="Stretch">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" MinWidth="140" IsReadOnly="True" CellStyle="{StaticResource DynamicDataGridLabelStyle}">
-                            <DataGridTextColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding DataContext.UIString[LBL64], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" FontWeight="Bold" />
-                                </DataTemplate>
-                            </DataGridTextColumn.HeaderTemplate>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Value}" MinWidth="200" CellStyle="{StaticResource DynamicDataGridCellStyle}"  >
-                            <DataGridTextColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding DataContext.UIString[LBL65], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" FontWeight="Bold" />
-                                </DataTemplate>
-                            </DataGridTextColumn.HeaderTemplate>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
+<Grid
+            x:Name="grdCatProps" Margin="10,0,5,5" ScrollViewer.CanContentScroll="True" Grid.Column="1" Grid.RowSpan="2">
+            <DataGrid
+            VerticalAlignment="Top" ToolTip="{Binding UIString[LBL63], FallbackValue=Category Properties}" x:Name="DSDynCatPropGrid" Margin="0,1,0,0" ItemsSource="{Binding DynamicProperties}" HeadersVisibility="Column" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" CanUserReorderColumns="False" AutoGenerateColumns="False">
+            <DataGrid.Columns
+            >
+            <DataGridTextColumn
+            MinWidth="100" IsReadOnly="True" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Binding="{Binding DispName}">
+            <DataGridTextColumn.HeaderTemplate
+            >
+            <DataTemplate
+            >
+            <TextBlock
+            FontWeight="Bold" Height="22" Text="{Binding DataContext.UIString[LBL64], FallbackValue=Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+            </DataTemplate>
+            </DataGridTextColumn.HeaderTemplate>
+      </DataGridTextColumn>
+            <DataGridTextColumn
+            MinWidth="200" IsReadOnly="True" CellStyle="{StaticResource DynamicDataGridCellStyle}" Binding="{Binding Value}">
+            <DataGridTextColumn.HeaderTemplate
+            >
+            <DataTemplate
+            >
+            <TextBlock
+            FontWeight="Bold" Height="22" Text="{Binding DataContext.UIString[LBL65], FallbackValue=Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+            </DataTemplate>
+            </DataGridTextColumn.HeaderTemplate>
+      </DataGridTextColumn>
+        </DataGrid.Columns>
                 </DataGrid>
-            </DockPanel>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </UserControl>
