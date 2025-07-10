@@ -20,6 +20,7 @@
             <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -31,7 +32,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -354,7 +355,7 @@
             <TabItem x:Name="tabProperties" Header="{Binding UIString[LBL63], FallbackValue='Category Properties'}" >
                 <AdornerDecorator>
                     <Grid x:Name="DSDynCatPropGrid" MinHeight="80" MinWidth="694"
-        			ToolTip="{Binding UIString[LBL63], FallbackValue=Category Properties}">
+        			ToolTip="{Binding UIString[LBL63], FallbackValue=Category Properties}" Margin="0,10,0,0">
                         <DataGrid x:Name="DSDynamicCategoryProperties" 
         				AutoGenerateColumns="False"
         				HeadersVisibility="Column"

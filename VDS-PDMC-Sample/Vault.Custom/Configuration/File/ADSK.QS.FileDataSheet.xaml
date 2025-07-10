@@ -184,7 +184,7 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Label Content="{Binding UIString[LBL73], FallbackValue=System Properties}" FontWeight="Bold"/>
-            <Grid x:Name="grid" ToolTip="{Binding UIString[LBL73], FallbackValue=General Properties}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <Grid x:Name="grid" ToolTip="{Binding UIString[LBL73], FallbackValue=System Properties}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="auto" />
@@ -193,7 +193,6 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -210,11 +209,9 @@
                 <TextBox Text="{Binding Prop[_XLTN_DATE VERSION CREATED].Value}" Grid.Column="1" Grid.Row="4" Margin="0,1" IsReadOnly="True" />
                 <Label Content="{Binding UIString[LBL34], FallbackValue=Created By}" Grid.Column="0" Grid.Row="5"  />
                 <TextBox Text="{Binding Prop[_XLTN_CREATED BY].Value}" Grid.Column="1" Grid.Row="5" Margin="0,1" IsReadOnly="True"  />
-                <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Grid.Row="7" Height="Auto" />
-                <TextBox Grid.Row="7" Text="{Binding Prop[_XLTN_COMMENTS].Value}" x:Name="Comments" Grid.Column="1" VerticalScrollBarVisibility="Auto" MinHeight="50" MaxHeight="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" Height="Auto" IsReadOnly="True" />
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Prop[_XLTN_REVISION].Value}" Margin="0,1" IsReadOnly="True"/>
                 <Label Content="{Binding UIString[LBL12], FallbackValue=Revision}" Grid.Row="2"/>
-                <Border Grid.Row="8" Grid.ColumnSpan="2" Visibility="{Binding IsLoaded, ElementName=image, Mode=OneWay}" Margin="0,5,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                <Border Grid.Row="7" Grid.ColumnSpan="2" Visibility="{Binding IsLoaded, ElementName=image, Mode=OneWay}" Margin="0,5,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
                     <Image x:Name="image"
                         Source="{Binding Prop[_XLTN_THUMBNAIL].Value}" Stretch="None" MinHeight="{Binding ActualHeight, ElementName=image, Mode=OneWay}"/>
                 </Border>

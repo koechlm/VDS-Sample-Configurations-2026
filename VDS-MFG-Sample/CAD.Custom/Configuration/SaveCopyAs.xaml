@@ -20,6 +20,7 @@
             <WPF:ErrorProviderIconConverter x:Key="errorProviderIconConverter"/>
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -34,7 +35,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -465,7 +466,7 @@
                     MinHeight="80" MaxWidth="700" Margin="0,10,0,0" >
             <TabItem x:Name="tabProperties" Header="{Binding UIString[LBL63], FallbackValue= 'Category Properties'}">
                 <AdornerDecorator>
-                    <Grid x:Name="DSDynCatPropGrid" MinHeight="80" MinWidth="694">
+                    <Grid x:Name="DSDynCatPropGrid" MinHeight="80" MinWidth="694" Margin="0,10,0,0">
                         <DataGrid x:Name="DSDynamicCategoryProperties"
             			AutoGenerateColumns="False"
             			HeadersVisibility="Column"

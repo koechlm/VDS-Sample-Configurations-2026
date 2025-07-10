@@ -32,7 +32,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -407,7 +407,7 @@
         				ScrollViewer.CanContentScroll="False"
                         IsReadOnly="True"
                         EnableRowVirtualization="False"
-                        VerticalAlignment="Top"  MinHeight="260" MaxHeight="350" CanUserReorderColumns="False" >
+                        VerticalAlignment="Top"  MinHeight="260" MaxHeight="350" CanUserReorderColumns="False" Margin="0,10,0,0" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding DispName}" 
                                     CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="*" IsReadOnly="True">

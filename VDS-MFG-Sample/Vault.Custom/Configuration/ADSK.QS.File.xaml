@@ -18,6 +18,7 @@
             <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -29,7 +30,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -174,10 +175,9 @@
     <TabControl >
         <TabItem x:Name="tabProperties" Header="{Binding UIString[MSDCE_MultiTab_01], FallbackValue=Properties}">
             <AdornerDecorator>
-                <Grid x:Name="grdMain" Margin="5" MinHeight="300">
+                <Grid x:Name="grdMain" Margin="5" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -194,7 +194,6 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -238,8 +237,6 @@
                         <TextBox Text="{Binding Prop[_XLTN_DATE VERSION CREATED].Value, ConverterCulture={x:Static glob:CultureInfo.CurrentCulture}}" Grid.Row="6" Grid.Column="1" Visibility="{Binding EditMode, Converter={StaticResource BooleanToVisibilityConverter}}" IsReadOnly="True" Margin="0,1"/>
                         <Label Content="{Binding UIString[LBL34], FallbackValue=Created By}" Grid.Column="0" Grid.Row="7" Visibility="{Binding EditMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <TextBox Text="{Binding Prop[_XLTN_CREATED BY].Value}" Grid.Row="7" Grid.Column="1" Visibility="{Binding EditMode, Converter={StaticResource BooleanToVisibilityConverter}}" IsReadOnly="True" Margin="0,1" />
-                        <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Grid.Row="9" Height="Auto" Grid.RowSpan="2" BorderThickness="1" />
-                        <TextBox Grid.Row="9" Text="{Binding Prop[_XLTN_COMMENTS].Value}" x:Name="Comments" Grid.Column="1" VerticalScrollBarVisibility="Auto" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top" MinHeight="50" MaxHeight="50" Margin="0,1" />
                     </Grid>
                     <DataGrid x:Name="DSDynamicCategoryProperties" AutoGenerateColumns="False" HeadersVisibility="Column" ItemsSource="{Binding DynamicProperties}" ScrollViewer.CanContentScroll="False" EnableRowVirtualization="False" VerticalAlignment="Top" MinWidth="400" MaxHeight="500" Grid.Column="1" Margin="5,1,0,0" CanUserReorderColumns="False">
                         <DataGrid.Columns>
@@ -261,7 +258,7 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Expander x:Name="expFilePath" Grid.ColumnSpan="2" Header="{Binding UIString[LBL6], FallbackValue=File Name}" Grid.Row="2" VerticalAlignment="Bottom">
+                    <Expander x:Name="expFilePath" Grid.ColumnSpan="2" Header="{Binding UIString[LBL6], FallbackValue=File Name}" Grid.Row="1" VerticalAlignment="Bottom">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -277,7 +274,7 @@
                             <TextBox x:Name="FILENAME" Text="{WPF:ValidatedBinding Prop[_FileName].Value}" IsTabStop="False" Visibility="{Binding NumSchmFieldsEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=DSNumSchmsCtrl}" Grid.Column="1" IsReadOnly="{Binding EditMode}" />
                         </Grid>
                     </Expander>
-                    <Grid x:Name="ButtonGrid" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,5,2,5">
+                    <Grid x:Name="ButtonGrid" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,2,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition />
@@ -293,7 +290,7 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnEsc" Content="{Binding UIString[BTN2], FallbackValue=Esc}" Command="{Binding CancelWindowCommand, ElementName=FileWindow}" Grid.Column="4" Width="80" HorizontalAlignment="Right" Height="24" IsCancel="True" />
+                        <Button x:Name="btnEsc" Content="{Binding UIString[BTN2], FallbackValue=Cancel}" Command="{Binding CancelWindowCommand, ElementName=FileWindow}" Grid.Column="4" Width="80" HorizontalAlignment="Right" Height="24" IsCancel="True" />
                         <Button x:Name="btnHelp" Content="{Binding UIString[MSDCE_BTN1], FallbackValue=Help}" Command="{Binding PsCmd[mHelp(500)]}" Height="24" ToolTip="F1" Margin="0" Width="80" />
                     </Grid>
                 </Grid>

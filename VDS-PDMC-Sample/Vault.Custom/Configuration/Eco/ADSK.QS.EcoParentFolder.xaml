@@ -175,7 +175,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Height="Auto" BorderThickness="1,1,0,1" VerticalAlignment="Top"/>
-                <TextBox x:Name="txtComments" Text="" Height="Auto" TextWrapping="Wrap" MinHeight="62" Grid.Column="1" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" ScrollViewer.CanContentScroll="True"/>
+                <TextBox x:Name="txtComments" Text="" Height="Auto" TextWrapping="Wrap" MinHeight="62" Grid.Column="1" AcceptsReturn="True"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" ScrollViewer.CanContentScroll="True"/>
             </Grid>
         </Grid>
     </ScrollViewer>
