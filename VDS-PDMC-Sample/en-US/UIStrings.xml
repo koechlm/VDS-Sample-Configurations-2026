@@ -598,6 +598,11 @@
   <UIString ID="bb92906f-75ca-415b-b0c6-242e4e02d58b">Customer Approved Date</UIString>
   <!--Revision Property Tab end-->
 
+  <!--UIStrings for Web Link Property, supporting Markdown text, e.g. [Link](www.autodesk.com)-->
+  <UIString ID="ADSK-WebLink-TT01">Cannot extract link from empty property.</UIString>
+  <UIString ID="ADSK-WebLink-TT02">Click to open link: </UIString>
+  <!--Web Link Property end-->
+  
   <!--<UIString ID=""></UIString>-->
 
 </UIStrings>

@@ -60,6 +60,21 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
+                    <DataTrigger Binding="{Binding Name}" Value="Web Link">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{Binding Text, ElementName=WebLinkDummy}" VerticalContentAlignment="Center" BorderThickness="0" 
+                                             IsReadOnly="True" ToolTip="{Binding Text, ElementName=ToolTipDummy}" 
+                                             Background="Transparent" Foreground="#FF003EFF" Cursor="Hand" TextDecorations="Underline" >
+                                        <TextBox.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.PsCmd[OpenLink -link Web_Link], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
                 </Style.Triggers>
             </Style>
             <Style x:Key="DynamicDataGridLabelStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
@@ -162,6 +177,8 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            <TextBox x:Name="WebLinkDummy" Text="" HorizontalAlignment="Left" Margin="40,93,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" Visibility="Hidden" />
+            <TextBox x:Name="ToolTipDummy" Text="" HorizontalAlignment="Left" Margin="40,93,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" Visibility="Hidden" />
         </Grid>
     </ScrollViewer>
 </UserControl>

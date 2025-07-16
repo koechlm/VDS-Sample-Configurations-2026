@@ -594,6 +594,11 @@
   <UIString ID="c1311f9f-daff-4d62-8f1a-cf949a5e43e2">Freigabe Kunde erforderlich</UIString>
   <UIString ID="4289da0f-984f-47b2-b6ed-ff2cafbe7a9b">Freigabe Kunde von</UIString>
   <UIString ID="bb92906f-75ca-415b-b0c6-242e4e02d58b">Freigabe Kunde Datum</UIString> 
-  <!--Revision Property Tab end-->  
+  <!--Revision Property Tab end-->
+
+  <!--UIStrings for Web Link Property, supporting Markdown text, e.g. [Link](www.autodesk.com)-->
+  <UIString ID="ADSK-WebLink-TT01">Link kann nicht aus leerer Eigenschaft extrahiert werden.</UIString>
+  <UIString ID="ADSK-WebLink-TT02">Klicken zum Öffnen des Links: </UIString>
+  <!--Web Link Property end-->  
 
 </UIStrings>

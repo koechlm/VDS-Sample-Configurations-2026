@@ -97,6 +97,10 @@
   <PropertyTranslation Name="LATESTRELEASEDATE">Letztes Freigabedatum</PropertyTranslation>
   <PropertyTranslation Name="LATESTRELREVISION">Neueste freigegebene Revision</PropertyTranslation>
   <!--Revision Property Tab end-->
+
+  <!--Properties for Web Links-->
+  <PropertyTranslation Name="WEBLINK">Web Link</PropertyTranslation>
+  <!--Properties for Web Links end-->
   
 </PropertyTranslations>
 
