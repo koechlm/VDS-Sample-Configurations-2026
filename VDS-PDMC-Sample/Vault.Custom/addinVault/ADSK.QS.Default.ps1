@@ -399,6 +399,20 @@ function OnTabContextChanged {
 	#$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile) not working in powershell 7.2.0
 	#Just use System.IO.FileInfo as the workaround for powershell 7.2.0
 	$xamlFile = ([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile)).Name
+	
+	# folder and custom objects may have a Web Link property; use Library functions to extract the link and tooltip text
+	if ($Prop["_XLTN_WEBLINK"].Value -ne $nullOrEmpty) {
+		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
+			$dsWindow.FindName("WebLinkDummy").Text = ExtractMarkdownText $Prop["_XLTN_WEBLINK"].Value
+			$dsWindow.FindName("ToolTipDummy").Text = ExtractToolTip $Prop["_XLTN_WEBLINK"].Value	<# Action to perform if the condition is true #>
+		}
+	}
+	else {
+		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
+			$dsWindow.FindName("WebLinkDummy").Text = ""
+			$dsWindow.FindName("ToolTipDummy").Text = $UIString["ADSK-WebLink-TT01"]	<# Action to perform if the condition is true #>
+		}
+	}
 
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
@@ -1054,4 +1068,3 @@ function GetTemplateFolders {
 		return $_
 	}
 }
-

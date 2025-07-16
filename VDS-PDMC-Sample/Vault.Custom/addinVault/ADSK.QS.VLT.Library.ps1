@@ -631,3 +631,56 @@ function mCopyEntACL($SourceEnt, $TargetEnt)
 
 	return $mNewACL
 }
+
+function OpenLink ($link) {
+	# Open the link in the edge browser (msedge.exe), or chrome.exe if preferred
+	if ($link -eq "Web_Link") {
+		try {			 
+			if ($Prop["Web Link"].Value -ne $nullOrEmpty) {
+				$extractedLink = ExtractMarkdownLink -markdownLink $Prop["Web Link"].Value
+				Start-Process msedge.exe "--new-window $($extractedLink)"  -ErrorAction Stop
+			}					
+		}
+		catch {
+			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Failed to open link: $($_.Exception.Message)", "Open Link Error")
+		}
+	}
+}
+
+function ExtractMarkdownText {
+	param (
+        [string]$markdownLink
+    )
+
+    # Use a regex to extract the text inside the square brackets
+	if ($markdownLink -match '^\[(.*?)\]\(.*?\)$') {
+        return $matches[1]
+    } else {
+        return "No valid link found."
+    }
+}
+
+function ExtractMarkdownLink {
+    param (
+        [string]$markdownLink
+    )
+
+    # Use a regex to extract the URL inside the parentheses
+    if ($markdownLink -match '\[.*?\]\((.*?)\)') {
+        return $matches[1]
+    } else {
+        return ""
+    }
+}
+
+function ExtractToolTip {
+	param (
+		[string]$markdownLink
+	)
+	# Use a regex to extract the URL inside the parentheses
+    if ($markdownLink -match '\[.*?\]\((.*?)\)') {
+        return $UIString["ADSK-WebLink-TT02"] + $matches[1]
+    } else {
+		return ""
+	}
+}
