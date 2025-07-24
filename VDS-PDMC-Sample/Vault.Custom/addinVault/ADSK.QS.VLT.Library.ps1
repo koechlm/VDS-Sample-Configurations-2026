@@ -636,8 +636,8 @@ function OpenLink ($link) {
 	# Open the link in the edge browser (msedge.exe), or chrome.exe if preferred
 	if ($link -eq "Web_Link") {
 		try {			 
-			if ($Prop["Web Link"].Value -ne $nullOrEmpty) {
-				$extractedLink = ExtractMarkdownLink -markdownLink $Prop["Web Link"].Value
+			if ($Prop["_XLTN_WEBLINK"].Value -ne $nullOrEmpty) {
+				$extractedLink = ExtractMarkdownLink -markdownLink $Prop["_XLTN_WEBLINK"].Value
 				Start-Process msedge.exe "--new-window $($extractedLink)"  -ErrorAction Stop
 			}					
 		}
@@ -656,7 +656,7 @@ function ExtractMarkdownText {
 	if ($markdownLink -match '^\[(.*?)\]\(.*?\)$') {
         return $matches[1]
     } else {
-        return "No valid link found."
+        return $markdownLink
     }
 }
 
@@ -669,7 +669,7 @@ function ExtractMarkdownLink {
     if ($markdownLink -match '\[.*?\]\((.*?)\)') {
         return $matches[1]
     } else {
-        return ""
+        return $markdownLink
     }
 }
 
@@ -681,6 +681,12 @@ function ExtractToolTip {
     if ($markdownLink -match '\[.*?\]\((.*?)\)') {
         return $UIString["ADSK-WebLink-TT02"] + $matches[1]
     } else {
-		return ""
+		if ($markdownLink.Length -gt 25) {
+			$cutdownvalue = $markdownLink.Substring(0, 25)
+			return $UIString["ADSK-WebLink-TT02"] + $cutdownvalue + "..."
+		} else {
+			return $UIString["ADSK-WebLink-TT02"] + $markdownLink
+		#return ""
+		}
 	}
 }
