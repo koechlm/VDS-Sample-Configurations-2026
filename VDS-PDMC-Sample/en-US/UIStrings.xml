@@ -446,36 +446,36 @@
 
   <!--Classification start-->
     <!--Class Menu Definitions-->
-  <UIString ID="Adsk.Qs.ClassMnu_20">New Class...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_21">Create new Class</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_22">Edit Class...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_23">Edit existing Class</UIString>
-  <!--Segment Menu Definitions-->
-  <UIString ID="Adsk.Qs.ClassMnu_24">New Segment...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_25">Create new Segment</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_26">Edit Segment...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_27">Edit existing Segment</UIString>
-  <!--Main Group Menu Definitions-->
-  <UIString ID="Adsk.Qs.ClassMnu_28">New Main Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_29">Create new Main Group</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_30">Edit Main Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_31">Edit existing Main Group</UIString>
-  <!--Group Menu Definition-->
-  <UIString ID="Adsk.Qs.ClassMnu_32">New Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_33">Create new Group</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_34">Edit Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_35">Edit existing Group</UIString>
-  <!--Sub Group Menu Definition-->
-  <UIString ID="Adsk.Qs.ClassMnu_36">New Sub Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_37">Create new Sub Group</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_38">Edit Sub Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_39">Edit existing Sub Group</UIString>
-  <!-- Class Menu Definitions end-->
-  <UIString ID="Adsk.QS.ClassLevel_00">Segment</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_01">Main Group</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_02">Group</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_03">Sub Group</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_04">Class</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_20">New Class Object...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_21">Create new Class Object</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_22">Edit Class Object...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_23">Edit existing Class Object</UIString>
+  <!--Classification Level 1 Menu Definitions-->
+  <UIString ID="Adsk.Qs.ClassMnu_24">New Class Level 1...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_25">Create new Class Level 1</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_26">Edit Class Level 1...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_27">Edit existing Class Level 1</UIString>
+  <!--Classification Level 2 Menu Definitions-->
+  <UIString ID="Adsk.Qs.ClassMnu_28">New Class Level 2...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_29">Create new Class Level 2</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_30">Edit Class Level 2...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_31">Edit existing Class Level 2</UIString>
+  <!--Classification Menu Definition-->
+  <UIString ID="Adsk.Qs.ClassMnu_32">New Class Level 3...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_33">Create new Class Level 3</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_34">Edit Class Level 3...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_35">Edit existing Class Level 3</UIString>
+  <!--Classification Menu Definition-->
+  <UIString ID="Adsk.Qs.ClassMnu_36">New Class Level 4...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_37">Create new Class Level 4</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_38">Edit Class Level 4...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_39">Edit existing Class Level 4</UIString>
+  <!-- Classification Definitions end-->
+  <UIString ID="Adsk.QS.ClsLevel_01">Class Level 1</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_02">Class Level 2</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_03">Class Level 3</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_04">Class Level 4</UIString>
+  <UIString ID="Adsk.QS.ClsObject">Class Object</UIString>
   <UIString ID="Adsk.QS.Classification_00">Class</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Value</UIString>
@@ -499,7 +499,7 @@
   <UIString ID="ClassTerms_MNU11">Create new term</UIString>
   <UIString ID="ClassTerms_MNU12">Edit Term...</UIString>
   <UIString ID="ClassTerms_MNU13">Edit existing term</UIString>
-  <UIString ID="ClassTerms_00">Term</UIString>
+  <UIString ID="ClassTerms_00">Class Term</UIString>
   <UIString ID="ClassTerms_01">Terms Catalog</UIString>
   <UIString ID="ClassTerms_02">German</UIString>
   <UIString ID="ClassTerms_03">English</UIString>

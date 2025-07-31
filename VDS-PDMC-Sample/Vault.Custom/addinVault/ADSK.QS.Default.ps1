@@ -260,14 +260,14 @@ function InitializeWindow {
 				$_classes = @()
 				Try {
 					#likely not all properties are used...
-					If ($Prop["_XLTN_SEGMENT"].Value.Length -gt 1) {
-						$_classes += $Prop["_XLTN_SEGMENT"].Value
-						If ($Prop["_XLTN_MAINGROUP"].Value.Length -gt 1) {
-							$_classes += $Prop["_XLTN_MAINGROUP"].Value
-							If ($Prop["_XLTN_GROUP"].Value.Length -gt 1) {
-								$_classes += $Prop["_XLTN_GROUP"].Value
-								If ($Prop["_XLTN_SUBGROUP"].Value.Length -gt 1) {
-									$_classes += $Prop["_XLTN_SUBGROUP"].Value
+					If ($Prop["_XLTN_CLSLEVEL1"].Value.Length -gt 1) {
+						$_classes += $Prop["_XLTN_CLSLEVEL1"].Value
+						If ($Prop["_XLTN_CLSLEVEL2"].Value.Length -gt 1) {
+							$_classes += $Prop["_XLTN_CLSLEVEL2"].Value
+							If ($Prop["_XLTN_CLSLEVEL3"].Value.Length -gt 1) {
+								$_classes += $Prop["_XLTN_CLSLEVEL3"].Value
+								If ($Prop["_XLTN_CLSLEVEL4"].Value.Length -gt 1) {
+									$_classes += $Prop["_XLTN_CLSLEVEL4"].Value
 								}
 							}
 						}
@@ -411,6 +411,86 @@ function OnTabContextChanged {
 		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
 			$dsWindow.FindName("WebLinkDummy").Text = ""
 			$dsWindow.FindName("ToolTipDummy").Text = $UIString["ADSK-WebLink-TT01"]	<# Action to perform if the condition is true #>
+		}
+	}
+
+	if ($xamlFile -eq "Adsk.QS.ClassifiedObject.DataSheet.xaml") {
+		
+		# level 1 is not empty for all classification standards
+		$dsWindow.FindName("treeViewClsLevel1").Header = "$($UIString["Adsk.QS.ClsLevel_01"]) -- $($Prop["_XLTN_CLSLEVEL1"].Value)"
+		$dsWindow.FindName("treeViewClsLevel2").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel3").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel4").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel5").Visibility = "Collapsed"
+
+		# activate treeview items per classification level and objecttype
+		$ObjectsToAssign = @($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
+		
+		if ($Prop["_XLTN_CLSLEVEL2"].Value -eq $nullOrEmpty) {
+			# the current object is a level 2 object: fill level 2 only
+			# class objects and structure objects have different labels
+			if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+			}
+			else {
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_NAME"].Value)"
+			}
+			$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+			$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Bold"
+		}
+		else {
+			if ($Prop["_XLTN_CLSLEVEL3"].Value -eq $nullOrEmpty) {
+				# the current object is a level 3 object: fill level 2 and 3
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+				$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+				$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					# class objects and structure objects have different labels
+					if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+						$dsWindow.FindName("treeViewClsLevel3").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+					else {
+						$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+				$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+				$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Bold"
+			}
+			else {
+				if ($Prop["_XLTN_CLSLEVEL4"].Value -eq $nullOrEmpty) {
+					# the current object is a level 4 object: fill level 2, 3 and 4
+					$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+					$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_CLSLEVEL3"].Value)"
+					$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Normal"
+					# class objects and structure objects have different labels
+					if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+						$dsWindow.FindName("treeViewClsLevel4").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+					else {
+						$dsWindow.FindName("treeViewClsLevel4").Header = "$($UIString["Adsk.QS.ClsLevel_04"]) -- $($Prop["_XLTN_NAME"].Value)"
+					}	
+					$dsWindow.FindName("treeViewClsLevel4").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel4").FontWeight = "Bold"
+				}
+				else {
+					# the current object is a level 5 object: fill level 2, 3, 4 and 5
+					$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+					$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_CLSLEVEL3"].Value)"
+					$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel4").Header = "$($UIString["Adsk.QS.ClsLevel_04"]) -- $($Prop["_XLTN_CLSLEVEL4"].Value)"
+					$dsWindow.FindName("treeViewClsLevel4").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel4").FontWeight = "Normal"
+					# level 5 are class objects only
+					$dsWindow.FindName("treeViewClsLevel4").IsExpanded = $true
+					$dsWindow.FindName("treeViewClsLevel5").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"						
+					$dsWindow.FindName("treeViewClsLevel5").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel5").FontWeight = "Bold"
+				}
+			}
 		}
 	}
 

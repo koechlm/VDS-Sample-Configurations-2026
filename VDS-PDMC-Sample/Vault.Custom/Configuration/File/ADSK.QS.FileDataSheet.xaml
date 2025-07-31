@@ -255,7 +255,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="lblActiveClass" Content="{Binding UIString[Adsk.QS.Classification_06], FallbackValue=Active Classification}" Grid.Row="1" />
-                <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Height="24" Text="{Binding Prop[_XLTN_CLASS].Value}" Grid.Row="1" Grid.Column="1" Margin="0,1" />
+                <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Height="24" Text="{Binding Prop[_XLTN_CLSOBJECT].Value}" Grid.Row="1" Grid.Column="1" Margin="0,1" />
                 <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue=Class Properties}" Grid.Row="2" Height="Auto" />
                 <DataGrid x:Name="dtgrdClassProps" Grid.Row="2" AutoGenerateColumns="False" Grid.Column="1"  Grid.ColumnSpan="3" CanUserResizeRows="False" SelectionMode="Single" SelectionUnit="Cell" HeadersVisibility="Column" ColumnHeaderHeight="26" >
                     <DataGrid.Columns>

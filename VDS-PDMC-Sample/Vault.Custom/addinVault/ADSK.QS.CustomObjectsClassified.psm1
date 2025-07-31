@@ -43,7 +43,7 @@ function mInitializeTermCatalog
 			
 			If($mTermCatalogInitialized -ne $true)
 			{
-				If(-not $UIString["ADSK.QS.ClassLevel_00"]) { $UIString = mGetUIStrings } #the psm library might not get the VDS default variable
+				If(-not $UIString["Adsk.QS.ClsLevel_01"]) { $UIString = mGetUIStrings } #the psm library might not get the VDS default variable
 				mAddCoCombo -_CoName "Segment" #enables classification filter for catalog of terms starting with segment
 
 				$dsWindow.FindName("dataGrdTermsFound").add_SelectionChanged({
@@ -145,22 +145,22 @@ function mSearchTerms
 		# If filters are used limit the search to the classification groups. Apply AND conditions
 		If ($mBreadCrumb.Children[1].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[1].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Segment" $mSearchGroupName "AND" #search in Segment class $UIString["Adsk.QS.ClassLevel_00"]
+			$srchConds[$_i]= mCreateClsSearchCond "Segment" $mSearchGroupName "AND" #search in Segment class $UIString["Adsk.QS.ClsLevel_01"]
 			$_i += 1
 		}
 				If ($mBreadCrumb.Children[2].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[2].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Main Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClassLevel_01"]
+			$srchConds[$_i]= mCreateClsSearchCond "Main Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClsLevel_02"]
 			$_i += 1
 		}
 		If ($mBreadCrumb.Children[3].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[3].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClassLevel_02"]
+			$srchConds[$_i]= mCreateClsSearchCond "Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClsLevel_03"]
 			$_i += 1
 		}
 		If ($mBreadCrumb.Children[4].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[4].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Sub Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClassLevel_03"]
+			$srchConds[$_i]= mCreateClsSearchCond "Sub Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClsLevel_04"]
 			$_i += 1
 		}
 		$dsDiag.Trace(" search conditions build")
@@ -641,11 +641,11 @@ function mGetCustomEntityUsesList ($sender) {
 		#[System.Windows.MessageBox]::Show("Currentclass: $_CurrentClass and Level# is $_i")
         switch($_i-1)
 		        {
-			        0 { $mSearchFilter = "Segment"} #$UIString["Adsk.QS.ClassLevel_00"]
-			        1 { $mSearchFilter = "Main Group"} #$UIString["Adsk.QS.ClassLevel_01"]
-			        2 { $mSearchFilter = "Group"} #$UIString["Adsk.QS.ClassLevel_02"]
-					3 { $mSearchFilter = "Sub Group"} #$UIString["Adsk.QS.ClassLevel_03"] 
-					4 { $mSearchFilter = "Class"} #$UIString["Adsk.QS.ClassLevel_04"]
+			        0 { $mSearchFilter = "Segment"} #$UIString["Adsk.QS.ClsLevel_01"]
+			        1 { $mSearchFilter = "Main Group"} #$UIString["Adsk.QS.ClsLevel_02"]
+			        2 { $mSearchFilter = "Group"} #$UIString["Adsk.QS.ClsLevel_03"]
+					3 { $mSearchFilter = "Sub Group"} #$UIString["Adsk.QS.ClsLevel_04"] 
+					4 { $mSearchFilter = "Class"} #$UIString["Adsk.QS.ClsObject"]
 			        default { $mSearchFilter = "*"}
 		        }
 		$_customObjects = mgetCustomEntityList($mSearchFilter) #-_CoName $mSearchFilter

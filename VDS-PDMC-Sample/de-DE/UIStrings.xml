@@ -469,11 +469,11 @@
   <UIString ID="Adsk.Qs.ClassMnu_38">Untergruppe bearbeiten...</UIString>
   <UIString ID="Adsk.Qs.ClassMnu_39">Bestehende Untergruppe bearbeiten</UIString>
   <!-- Class Menu Definitions end-->
-  <UIString ID="Adsk.QS.ClassLevel_00">Sachgebiet</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_01">Hauptgruppe</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_02">Gruppe</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_03">Untergruppe</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_04">Klasse</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_01">Sachgebiet</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_02">Hauptgruppe</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_03">Gruppe</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_04">Untergruppe</UIString>
+  <UIString ID="Adsk.QS.ClsObject">Klasse</UIString>
   <UIString ID="Adsk.QS.Classification_00">Klasse</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Wert</UIString>

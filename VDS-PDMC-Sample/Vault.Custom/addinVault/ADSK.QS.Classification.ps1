@@ -43,18 +43,18 @@ function mInitializeClassificationTab($ParentType, $file)
 
 			$dsWindow.FindName("btnRemoveClass").IsEnabled = $false
 			$dsWindow.FindName("btnSelectClass").IsEnabled = $false
-			if($Prop["_XLTN_CLASS"].Value.Length -lt 1 -and $Prop["_ReadOnly"].Value -eq $false) { 
+			if($Prop["_XLTN_CLSOBJECT"].Value.Length -lt 1 -and $Prop["_ReadOnly"].Value -eq $false) { 
 				$dsWindow.FindName("btnRemoveClass").IsEnabled = $false
 				$dsWindow.FindName("btnSelectClass").IsEnabled = $true
 			}
-			if($Prop["_XLTN_CLASS"].Value.Length -gt 0 -and $Prop["_ReadOnly"].Value -eq $false) 
+			if($Prop["_XLTN_CLSOBJECT"].Value.Length -gt 0 -and $Prop["_ReadOnly"].Value -eq $false) 
 			{ 	
 				$dsWindow.FindName("btnRemoveClass").IsEnabled = $true
 				$dsWindow.FindName("btnSelectClass").IsEnabled = $false
 			}
 
-			if($Prop["_XLTN_CLASS"]){
-				$dsWindow.FindName("txtActiveClass").Text = $Prop["_XLTN_CLASS"].Value
+			if($Prop["_XLTN_CLSOBJECT"]){
+				$dsWindow.FindName("txtActiveClass").Text = $Prop["_XLTN_CLSOBJECT"].Value
 			}
 
 			$Global:mClsTabInitialized = $true
@@ -88,7 +88,7 @@ function mGetFileClsValues
 		$mActiveClass += mGetCustentiesByName($AssignClsWindow.FindName("cmbAvailableClasses").SelectedValue) #-Name $AssignClsWindow.FindName("cmbAvailableClasses").SelectedValue
 	}
 	else{
-		$mActiveClass += mGetCustentiesByName($Prop["_XLTN_CLASS"].Value) #-Name $Prop["_XLTN_CLASS"].Value #Note - custom object names are not unique, only its Number, and we need to handle returning more than one.
+		$mActiveClass += mGetCustentiesByName($Prop["_XLTN_CLSOBJECT"].Value) #-Name $Prop["_XLTN_CLSOBJECT"].Value #Note - custom object names are not unique, only its Number, and we need to handle returning more than one.
 	}
 	if($mActiveClass.Count -eq 1)
 	{
@@ -297,7 +297,7 @@ function mApplyClassification()
 	if ($Global:mFile)
 	{
 		#the function mFindCustent returns a generic list object
-		$Prop["_XLTN_CLASS"].Value = $dsWindow.FindName("txtActiveClass").Text
+		$Prop["_XLTN_CLSOBJECT"].Value = $dsWindow.FindName("txtActiveClass").Text
 		$mActiveClass = @()
 		$mActiveClass += mFindCustent -CustentName $dsWindow.FindName("txtActiveClass").Text -Category "Class" #custom object names should be unique per category
 		If($mActiveClass.Count -eq 1)
@@ -340,7 +340,7 @@ function mRemoveClassification() #applies to $dsWindow
 		{
 			$dsDiag.Trace("...remove class - file found")
 			$mActiveClass = @()
-			$mActiveClass +=  mFindCustent -CustentName $Prop["_XLTN_CLASS"].Value -Category "Class" #custom object names should be unique within a category, only its Number
+			$mActiveClass +=  mFindCustent -CustentName $Prop["_XLTN_CLSOBJECT"].Value -Category "Class" #custom object names should be unique within a category, only its Number
 			If($mActiveClass.Count -eq 1)
 			{
 				$mClsPrpNames = mGetClsPrpNames($mActiveClass.Id) #-ClassId $mActiveClass.Id
@@ -397,7 +397,7 @@ function mAddClsLevelCombo ([String] $ClassLevelName, $ClsLvls) {
     if ($AssignClsWindow.FindName("cmbAvailableClasses").Items.Count -gt 1) {
         $AssignClsWindow.FindName("cmbAvailableClasses").IsDropDownOpen = $true
     }
-    if ($AssignClsWindow.FindName("cmbAvailableClasses").Items.Count -eq 0 -and $Prop["_XLTN_CLASS"].Value -eq "") { 
+    if ($AssignClsWindow.FindName("cmbAvailableClasses").Items.Count -eq 0 -and $Prop["_XLTN_CLSOBJECT"].Value -eq "") { 
         $cmb.IsDropDownOpen = $true 
     }
 
@@ -556,10 +556,10 @@ function mClsLevelCmbSelectionChanged($mSender) {
 		$children--;
 	}
 	Try{
-		# $Prop["_XLTN_SEGMENT"].Value = $mBreadCrumb.Children[1].SelectedItem.Name
-		# $Prop["_XLTN_MAINGROUP"].Value = $mBreadCrumb.Children[2].SelectedItem.Name
-		# $Prop["_XLTN_GROUP"].Value = $mBreadCrumb.Children[3].SelectedItem.Name
-		# $Prop["_XLTN_SUBGROUP"].Value = $mBreadCrumb.Children[4].SelectedItem.Name
+		# $Prop["_XLTN_CLSLEVEL1"].Value = $mBreadCrumb.Children[1].SelectedItem.Name
+		# $Prop["_XLTN_CLSLEVEL2"].Value = $mBreadCrumb.Children[2].SelectedItem.Name
+		# $Prop["_XLTN_CLSLEVEL3"].Value = $mBreadCrumb.Children[3].SelectedItem.Name
+		# $Prop["_XLTN_CLSLEVEL4"].Value = $mBreadCrumb.Children[4].SelectedItem.Name
 	}
 	catch{}
 

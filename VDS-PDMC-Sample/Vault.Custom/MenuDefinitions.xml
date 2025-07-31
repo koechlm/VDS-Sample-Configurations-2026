@@ -229,19 +229,19 @@ MultiSelectEnabled: If true, command is active for multiple selections, can be t
       <Item Name="newClassObject"></Item>
       <Item Name="editClassObject"></Item>
     </CustomObject>
-    <CustomObject Label="$UIString[Adsk.QS.ClassLevel_00]" DeployAsPullDown="False" Location="Segment">
+    <CustomObject Label="$UIString[Adsk.QS.ClsLevel_01]" DeployAsPullDown="False" Location="Segment">
       <Item Name="newSegmentObject"></Item>
       <Item Name="editSegmentObject"></Item>
     </CustomObject>
-    <CustomObject Label="$UIString[Adsk.QS.ClassLevel_01]" DeployAsPullDown="False" Location="Main Group">
+    <CustomObject Label="$UIString[Adsk.QS.ClsLevel_02]" DeployAsPullDown="False" Location="Main Group">
       <Item Name="newMainGroupObject"></Item>
       <Item Name="editMainGroupObject"></Item>
     </CustomObject>
-    <CustomObject Label="$UIString[Adsk.QS.ClassLevel_02]" DeployAsPullDown="False" Location="Group">
+    <CustomObject Label="$UIString[Adsk.QS.ClsLevel_03]" DeployAsPullDown="False" Location="Group">
       <Item Name="newGroupObject"></Item>
       <Item Name="editGroupObject"></Item>
     </CustomObject>
-    <CustomObject Label="$UIString[Adsk.QS.ClassLevel_03]" DeployAsPullDown="False" Location="Sub Group">
+    <CustomObject Label="$UIString[Adsk.QS.ClsLevel_04]" DeployAsPullDown="False" Location="Sub Group">
       <Item Name="newSubGroupObject"></Item>
       <Item Name="editSubGroupObject"></Item>
     </CustomObject>

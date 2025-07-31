@@ -56,11 +56,11 @@
   <!--VDS-PDMC-Sample Extensions end-->
 
   <!--VDS-PDMC-Sample Extension Classification start-->
-  <PropertyTranslation Name="SEGMENT">Sachgebiet</PropertyTranslation>
-  <PropertyTranslation Name="MAINGROUP">Hauptgruppe</PropertyTranslation>
-  <PropertyTranslation Name="GROUP">Gruppe</PropertyTranslation>
-  <PropertyTranslation Name="SUBGROUP">Untergruppe</PropertyTranslation>
-  <PropertyTranslation Name="CLASS">Klasse</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL1">Sachgebiet</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL2">Hauptgruppe</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL3">Gruppe</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL4">Untergruppe</PropertyTranslation>
+  <PropertyTranslation Name="CLSOBJECT">Klasse</PropertyTranslation>
   <!--VDS-PDMC-Sample Extension Classification end-->
 
   <!--CatalogTermsTranslations-->

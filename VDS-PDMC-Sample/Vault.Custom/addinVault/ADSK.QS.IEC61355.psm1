@@ -565,10 +565,10 @@ function mGetIEC61355UsesList ($sender) {
 		#[System.Windows.MessageBox]::Show("Currentclass: $_CurrentClsLevel and Level# is $_i")
         switch($_i -1)
 		        {
-			        0 { $mSearchFilter = "Segment"} #$UIString["Adsk.QS.ClassLevel_00"]
-			        1 { $mSearchFilter = "Main Group"} #$UIString["Adsk.QS.ClassLevel_01"]
-			        2 { $mSearchFilter = "Group"} #$UIString["Adsk.QS.ClassLevel_02"]
-					3 { $mSearchFilter = "Sub Group"} #$UIString["Adsk.QS.ClassLevel_03"] 
+			        0 { $mSearchFilter = "Segment"} #$UIString["Adsk.QS.ClsLevel_01"]
+			        1 { $mSearchFilter = "Main Group"} #$UIString["Adsk.QS.ClsLevel_02"]
+			        2 { $mSearchFilter = "Group"} #$UIString["Adsk.QS.ClsLevel_03"]
+					3 { $mSearchFilter = "Sub Group"} #$UIString["Adsk.QS.ClsLevel_04"] 
 			        default { $mSearchFilter = "*"}
 		        }
 		$_customObjects = mGetIEC61355List -_CoName $mSearchFilter

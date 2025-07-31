@@ -7,7 +7,7 @@
         xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
         xmlns:WPF="clr-namespace:CreateObject.WPF;assembly=CreateObject"
              x:Name="MainWindow"
-             behaviours:TabTitleBehavior.TabTitle="$UIString[LBL36]">
+             behaviours:TabTitleBehavior.TabTitle="$UIString[LBL36]" d:DesignWidth="592.79">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -125,15 +125,28 @@
                     <TreeView.BorderBrush>
                         <SolidColorBrush Color="#FF828790" Opacity="0.25"/>
                     </TreeView.BorderBrush>
-                    <TreeViewItem x:Name="treeViewItemSegment" Header="{Binding Prop[_XLTN_SEGMENT].Value, FallbackValue=Segment}" 
-                        IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewItemMainGroup, Mode=OneWay}">
-                        <TreeViewItem x:Name="treeViewItemMainGroup" Header="{Binding Prop[_XLTN_MAINGROUP].Value, FallbackValue=MainGroup}" 
-                            IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewItemGroup, Mode=OneWay}">
-                            <TreeViewItem x:Name="treeViewItemGroup" Header="{Binding Prop[_XLTN_GROUP].Value, FallbackValue=Group}" 
-                                IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewItemSubgroup, Mode=OneWay}">
-                                <TreeViewItem x:Name="treeViewItemSubgroup" Header="{Binding Prop[_XLTN_SUBGROUP].Value, FallbackValue=SubGroup}" 
-                                    IsExpanded="True" >
-                                    <TreeViewItem x:Name="ThisObject" Header="{Binding Prop[Name].Value, FallbackValue=Object Name}"/>
+                    <TreeViewItem x:Name="treeViewClsLevel1" Header="ClsLevel1" 
+                        IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewClsLevel2, Mode=OneWay}">
+                        <TreeViewItem x:Name="treeViewClsLevel2" 
+                            IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewClsLevel3, Mode=OneWay}">
+                            <TreeViewItem.Header>
+                                <TextBlock x:Name="treeViewClsLevel2Header" Text="ClsLevel2" FontWeight="Normal"/>
+                            </TreeViewItem.Header>
+                            <TreeViewItem x:Name="treeViewClsLevel3" 
+                                IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewClsLevel4, Mode=OneWay}">
+                                <TreeViewItem.Header>
+                                    <TextBlock Text="ClsLevel3" FontWeight="Normal"/>
+                                </TreeViewItem.Header>
+                                <TreeViewItem x:Name="treeViewClsLevel4"
+                                    IsExpanded="{Binding Items.IsEmpty, Converter={StaticResource BoolConvert}, ElementName=treeViewClsLevel5, Mode=OneWay}">
+                                    <TreeViewItem.Header>
+                                        <TextBlock Text="ClsLevel4" FontWeight="Normal"/>
+                                    </TreeViewItem.Header>
+                                    <TreeViewItem x:Name="treeViewClsLevel5">
+                                        <TreeViewItem.Header>
+                                            <TextBlock Text="ClsLevel5" FontWeight="Normal"/>
+                                        </TreeViewItem.Header>
+                                    </TreeViewItem>
                                 </TreeViewItem>
                             </TreeViewItem>
                         </TreeViewItem>

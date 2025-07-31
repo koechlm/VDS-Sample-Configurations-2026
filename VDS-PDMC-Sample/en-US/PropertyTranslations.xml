@@ -52,11 +52,11 @@
   <!--VDS-PDMC-Sample Extensions end-->
 
   <!--VDS-PDMC-Sample Extension Classification start-->
-  <PropertyTranslation Name="SEGMENT">Segment</PropertyTranslation>
-  <PropertyTranslation Name="MAINGROUP">Main Group</PropertyTranslation>
-  <PropertyTranslation Name="GROUP">Group</PropertyTranslation>
-  <PropertyTranslation Name="SUBGROUP">Sub Group</PropertyTranslation>
-  <PropertyTranslation Name="CLASS">Class</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL1">Class Level 1</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL2">Class Level 2</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL3">Class Level 3</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL4">Class Level 4</PropertyTranslation>
+  <PropertyTranslation Name="CLSOBJECT">Class</PropertyTranslation>
   <!--VDS-PDMC-Sample Extension Classification end-->
 
   <!--CatalogTermsTranslations-->
