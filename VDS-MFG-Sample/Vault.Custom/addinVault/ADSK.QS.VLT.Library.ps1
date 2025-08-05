@@ -114,7 +114,7 @@ function mGetCategoryDef ([String] $mEntType, [String] $mDispName)
 }
 
 #update a folder property (single). Parameters: Folder ID, UDP display name and UDP value
-function mUpdateFldrProperties([Long] $FldId, [String] $mDispName, [Object] $mVal)
+function mUpdateFldrProperty([Long] $FldId, [String] $mDispName, [Object] $mVal)
 {
 	$ent_idsArray = @()
 	$ent_idsArray += $FldId
@@ -133,7 +133,7 @@ function mUpdateFldrProperties([Long] $FldId, [String] $mDispName, [Object] $mVa
 }
 
 # update a Custom Object (custent) property (single).
-function mUpdateCustentProperties([Long] $CustentId, [String] $mDispName, [Object] $mVal)
+function mUpdateCustentProperty([Long] $CustentId, [String] $mDispName, [Object] $mVal)
 {
 	$ent_idsArray = @()
 	$ent_idsArray += $CustentId
