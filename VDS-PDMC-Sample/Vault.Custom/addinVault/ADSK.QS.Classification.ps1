@@ -22,14 +22,14 @@ function mInitializeClassificationTab($ParentType, $file)
 		$Global:mAllCustentPropDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("CUSTENT")
 		$Global:mCustentUdpDefs = $Global:mAllCustentPropDefs | Where-Object { $_.IsSys -eq $false}
 		$Global:mCustentDefs = $vault.CustomEntityService.GetAllCustomEntityDefinitions()
-		$Global:mClassCustentDef = $Global:mCustentDefs | Where-Object { $_.DispName -eq "Class"}
+		$Global:mClassCustentDef = $Global:mCustentDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsObject"]}
 		if(-not $Global:mClassCustentDef)
 		{
 			$dsWindow.FindName("txtClassificationStatus").Text = $UIString["Adsk.QS.Classification_13"]
 			$dsWindow.FindName("txtClassificationStatus").Visibility = "Visible"
 		}
 		#configuration info - the custom object names used for the classification structure may vary. Align Custent names of your Vault in UIStrings ADSK.WS.ClassLEver_*
-		$mClsLevelNames = ("Segment", "Main Group", "Group", "Sub Group")
+		$mClsLevelNames = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"])
 		$Global:mClassLevelCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $mClsLevelNames}).Id		
 	}
 
@@ -97,7 +97,7 @@ function mGetFileClsValues
 		$mClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id) #-ClassId $mActiveClass[0].Id
 		$mClsPropTable = @{}
 		
-		$mClsLevelProps = ("Segment", "Main Group", "Group", "Sub Group", "Class", "Standard", "Term DE", "Code", "Comments", "Comments DE")
+		$mClsLevelProps = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], $UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Comments"], $UIString["CommentsDE"])
 
 		#get the file's class property values 
 		$mFileClassProps = $vault.PropertyService.GetProperties("FILE", @($mFile.Id), $mClsPrpNames.Keys)
@@ -110,25 +110,25 @@ function mGetFileClsValues
 				$mClsPropTable.Add($mClsPrpNames[$mClsProp.Key], (($mFileClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val))
 			}
 			if ($dsWindow.Name -eq "FileWindow"){
-				if($mClsPrpNames[$mClsProp.Key] -eq "Segment") { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_01"]) { 
 					$dsWindow.FindName("txtSegment").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtSegment").Text -ne "") {$dsWindow.FindName("txtSegment").Visibility = "Visible"}
 				}
 				
-				if($mClsPrpNames[$mClsProp.Key] -eq "Main Group") { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_02"]) { 
 					$dsWindow.FindName("txtMainGroup").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtMainGroup").Text -ne "") {$dsWindow.FindName("txtMainGroup").Visibility = "Visible"}
 				}
 				
-				if($mClsPrpNames[$mClsProp.Key] -eq "Group") { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_03"]) { 
 					$dsWindow.FindName("txtGroup").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtGroup").Text -ne "") {$dsWindow.FindName("txtGroup").Visibility = "Visible"}
 				}
-				if($mClsPrpNames[$mClsProp.Key] -eq "Sub Group") { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_04"]) { 
 					$dsWindow.FindName("txtSubGroup").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtSubGroup").Text -ne "") {$dsWindow.FindName("txtSubGroup").Visibility = "Visible"}
 				}
-				if($mClsPrpNames[$mClsProp.Key] -eq "Standard") { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsStandard"]) { 
 					$global:mActiveStandard = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 				}
 			}
@@ -157,7 +157,7 @@ function mGetClsDfltValues
 	$mClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id) #-ClassId $mActiveClass[0].Id
 	$mClsPrpValues = mGetClsPrpValues($mActiveClass[0].Id) #-ClassId $mActiveClass[0].Id
 	$mClsPropTable = @{}
-	$mClsLevelProps = ("Segment", "Main Group", "Group","Sub Group" ,"Class", "Standard", "Term DE", "Code", "Comments", "Comments DE")
+	$mClsLevelProps = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"],$UIString["Adsk.QS.ClsLevel_04"] ,$UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], $UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Comments"], $UIString["CommentsDE"])
 
 	if($mActiveClass.Count -eq 1)
 	{
@@ -180,7 +180,7 @@ function mGetClsPrpNames($ClassId) #get Properties added to this class
 	$mClsPropNames = @{}
 	ForEach($mPropInst in $mClsPropInsts)
 	{
-		#add UDPs of the Custom Object "Class" only
+		#add UDPs of the Custom Object $UIString["Adsk.QS.ClsObject"] only
 		If($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId })
 		{
 			$mDispName = ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }).DispName
@@ -195,7 +195,7 @@ function mGetClsPrpValues($ClassId) #get Properties added to this class
 	$mClsPropValues = @{}
 	ForEach($mPropInst in $global:mClsPropInsts)
 	{
-		#add UDPs of the Custom Object "Class" only
+		#add UDPs of the Custom Object $UIString["Adsk.QS.ClsObject"] only
 		If($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId })
 		{
 			$mClsPropValues.Add($mPropInst.PropDefId, $mPropInst.Val)
@@ -218,7 +218,7 @@ function mGetCustentiesByName([String]$Name)
 	$srchConds[0] = $srchCond
 	
 	$srchCond2 = New-Object autodesk.Connectivity.WebServices.SrchCond
-	$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq "Standard" }).Id
+	$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }).Id
 	$srchCond2.SrchOper = 3 #Is exactly (or equals)
 	if (-not $global:mActiveStandard) {
 		$srchCond2.SrchTxt = "*"
@@ -299,10 +299,10 @@ function mApplyClassification()
 		#the function mFindCustent returns a generic list object
 		$Prop["_XLTN_CLSOBJECT"].Value = $dsWindow.FindName("txtActiveClass").Text
 		$mActiveClass = @()
-		$mActiveClass += mFindCustent -CustentName $dsWindow.FindName("txtActiveClass").Text -Category "Class" #custom object names should be unique per category
+		$mActiveClass += mFindCustent -CustentName $dsWindow.FindName("txtActiveClass").Text -Category $UIString["Adsk.QS.ClsObject"] #custom object names should be unique per category
 		If($mActiveClass.Count -eq 1)
 		{
-			$mClsLevelProps = ("Segment", "Main Group", "Group","Sub Group" ,"Class", "Standard", "Term DE", "Code", "Comments", "Comments DE")
+			$mClsLevelProps = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"],$UIString["Adsk.QS.ClsLevel_04"] ,$UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], $UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Comments"], $UIString["CommentsDE"])
 			$mClsPrpNames = mGetClsPrpNames -ClassId $mActiveClass.Id
             $mPropsAdd = @()
             Foreach($mClsProp in $mClsPrpNames.GetEnumerator())
@@ -340,7 +340,7 @@ function mRemoveClassification() #applies to $dsWindow
 		{
 			$dsDiag.Trace("...remove class - file found")
 			$mActiveClass = @()
-			$mActiveClass +=  mFindCustent -CustentName $Prop["_XLTN_CLSOBJECT"].Value -Category "Class" #custom object names should be unique within a category, only its Number
+			$mActiveClass +=  mFindCustent -CustentName $Prop["_XLTN_CLSOBJECT"].Value -Category $UIString["Adsk.QS.ClsObject"] #custom object names should be unique within a category, only its Number
 			If($mActiveClass.Count -eq 1)
 			{
 				$mClsPrpNames = mGetClsPrpNames($mActiveClass.Id) #-ClassId $mActiveClass.Id
@@ -378,6 +378,8 @@ function mRemoveClassification() #applies to $dsWindow
 function mAddClsLevelCombo ([String] $ClassLevelName, $ClsLvls) {
     $children = mGetCustentClsLevelList($ClassLevelName) # -ClassLevelName $ClassLevelName
     if ($null -eq $children) { return }
+	# sort the children by Name, case sensitiv
+	$children = $children | Sort-Object -Property Name -CaseSensitive #-Descending -Unique -Stable
     $mBreadCrumb = $AssignClsWindow.FindName("wrpClassification2")
     $cmb = New-Object System.Windows.Controls.ComboBox
     $cmb.Name = "cmbClsBrdCrmb_" + $mBreadCrumb.Children.Count.ToString()
@@ -410,6 +412,8 @@ function mAddClsLevelCombo ([String] $ClassLevelName, $ClsLvls) {
 function mAddClsLevelCmbChild ($data) {
 	$children = mGetCustentClsLevelUsesList($data) #-mSender $data
 	if($null -eq $children) { return }
+	# sort the children by Name, case sensitive
+	$children = $children | Sort-Object -Property Name -CaseSensitive #-Descending -Unique -Stable
 	#Filter classification levels and classes
 	#mAvlblClsReset
 	$mClassLevelObjects = @() #filtered list for the 4 levels
@@ -471,7 +475,7 @@ function mGetCustentClsLevelList ([String] $ClassLevelName) {
 		$srchConds[0] = $srchCond
 
 		$srchCond2 = New-Object autodesk.Connectivity.WebServices.SrchCond
-		$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq "Standard" }).Id
+		$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }).Id
 		$srchCond2.SrchOper = 3 #equals
 		$srchCond2.SrchTxt = $global:mActiveStandard
 		$srchCond2.PropTyp = [Autodesk.Connectivity.WebServices.PropertySearchType]::SingleProperty
@@ -519,10 +523,10 @@ function mGetCustentClsLevelUsesList ($mSender) {
 		#[System.Windows.MessageBox]::Show("Currentclass: $_CurrentClass and Level# is $_i")
         switch($_i)
 		        {
-			        0 { $mSearchFilter = "Segment"}
-			        1 { $mSearchFilter = "Main Group"}
-			        2 { $mSearchFilter = "Group"}
-					3 { $mSearchFilter = "Sub Group"}
+			        0 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_01"]}
+			        1 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_02"]}
+			        2 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_03"]}
+					3 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_04"]}
 			        default { $mSearchFilter = "*"}
 		        }
 		$_customObjects = mGetCustentClsLevelList -ClassLevelName $mSearchFilter
@@ -572,7 +576,7 @@ function mResetClassSelection
 {
 	$mBreadCrumb = $AssignClsWindow.FindName("wrpClassification2")
 	$children = @()
-	$children += mGetCustentClsLevelList("Segment") #-ClassLevelName "Segment"
+	$children += mGetCustentClsLevelList($UIString["Adsk.QS.ClsLevel_01"]) #-ClassLevelName $UIString["Adsk.QS.ClsLevel_01"]
 	if ($children.Count -eq 0) {
 		[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Could not initialize the classification root - probably your base classes do not match the selected Standard", "VDS Sample -- Classification")
 		return
@@ -656,7 +660,7 @@ function mInitializeCompClassification {
 			
 			if($AssignClsWindow.FindName("wrpClassification2").Children.Count -lt 1){
 				#activate command should not add another combo row, if already classe(s) are selected
-				mAddClsLevelCombo("Segment") #-ClassLevelName "Segment"
+				mAddClsLevelCombo($UIString["Adsk.QS.ClsLevel_01"]) #-ClassLevelName $UIString["Adsk.QS.ClsLevel_01"]
 			}
 		}
 	}

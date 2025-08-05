@@ -32,7 +32,7 @@ function mInitializeTermCatalog
 				}
 				"InventorWindow"
 				{
-					$dsWindow.FindName("mSearchTermText").Text = $Prop["Title"].Value
+					$dsWindow.FindName("mSearchTermText").Text = $Prop["Title"].Value #Inventor has its default property localization
 				}
 				default #applies to all Vault windows
 				{
@@ -44,7 +44,7 @@ function mInitializeTermCatalog
 			If($mTermCatalogInitialized -ne $true)
 			{
 				If(-not $UIString["Adsk.QS.ClsLevel_01"]) { $UIString = mGetUIStrings } #the psm library might not get the VDS default variable
-				mAddCoCombo -_CoName "Segment" #enables classification filter for catalog of terms starting with segment
+				mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] #enables classification filter for catalog of terms starting with segment
 
 				$dsWindow.FindName("dataGrdTermsFound").add_SelectionChanged({
 					param($sender, $SelectionChangedEventArgs)
@@ -112,55 +112,55 @@ function mSearchTerms
 		$_i = 0
 
 		#the default search condition object type is custom object "term"
-		$srchConds[$_i]= mCreateClsSearchCond "Category Name" "Term" "AND" #Search in "Category Name" $UIString["ClassTerms_08"] = "Term" $UIString["ClassTerms_00"]
+		$srchConds[$_i]= mCreateClsSearchCond $UIString["ClassTerms_08"] $UIString["ClassTerms_00"] "AND" #Search in "Category Name" AND "Term" 
 		$_i += 1
 		if($_NumConds -gt 2){
-			$srchConds[$_i]= mCreateClsSearchCond "Name" $mSearchText1 "OR" #Search in Names = main language $UIString["LBL19"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["LBL19"] $mSearchText1 "OR" #Search in Names = main language $UIString["LBL19"]
 			$_i += 1
 		}
 		Else
 		{
-			$srchConds[$_i]= mCreateClsSearchCond "Name" $mSearchText1 "AND" #Search in Names = main language $UIString["LBL19"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["LBL19"] $mSearchText1 "AND" #Search in Names = main language $UIString["LBL19"]
 			$_i += 1
 		}
 		
 		#add other conditions by settings read from dialog
 		If ($dsWindow.FindName("chkDE").IsChecked -eq $true) {
-			$srchConds[$_i ]= mCreateClsSearchCond "Term DE" $mSearchText1 "OR" #$UIString["ClassTerms_09"]
+			$srchConds[$_i ]= mCreateClsSearchCond $UIString["ClassTerms_09"] $mSearchText1 "OR" #Term DE
 			$_i += 1
 		}
 		If ($dsWindow.FindName("chkEN").IsChecked -eq $true) {
-			$srchConds[$_i]= mCreateClsSearchCond "Term EN" $mSearchText1 "OR"  #$UIString["ClassTerms_10"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["ClassTerms_10"] $mSearchText1 "OR"  #Term EN
 			$_i += 1
 		}
 		If ($dsWindow.FindName("chkFR").IsChecked -eq $true) {
-			$srchConds[$_i]= mCreateClsSearchCond "Term FR" $mSearchText1 "OR"  #$UIString["ClassTerms_11"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["ClassTerms_11"] $mSearchText1 "OR"  #Term FR
 			$_i += 1
 		}
 		If ($dsWindow.FindName("chkIT").IsChecked -eq $true) {
-			$srchConds[$_i]= mCreateClsSearchCond "Term IT" $mSearchText1 "OR"  #$UIString["ClassTerms_12"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["ClassTerms_12"] $mSearchText1 "OR"  #Term IT
 			$_i += 1
 		}
 
 		# If filters are used limit the search to the classification groups. Apply AND conditions
 		If ($mBreadCrumb.Children[1].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[1].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Segment" $mSearchGroupName "AND" #search in Segment class $UIString["Adsk.QS.ClsLevel_01"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["Adsk.QS.ClsLevel_01"] $mSearchGroupName "AND"
 			$_i += 1
 		}
 				If ($mBreadCrumb.Children[2].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[2].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Main Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClsLevel_02"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["Adsk.QS.ClsLevel_02"] $mSearchGroupName "AND"
 			$_i += 1
 		}
 		If ($mBreadCrumb.Children[3].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[3].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClsLevel_03"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["Adsk.QS.ClsLevel_03"] $mSearchGroupName "AND"
 			$_i += 1
 		}
 		If ($mBreadCrumb.Children[4].SelectedIndex -ge 0) {
 			$mSearchGroupName = $mBreadCrumb.Children[4].Text
-			$srchConds[$_i]= mCreateClsSearchCond "Sub Group" $mSearchGroupName "AND" #$UIString["Adsk.QS.ClsLevel_04"]
+			$srchConds[$_i]= mCreateClsSearchCond $UIString["Adsk.QS.ClsLevel_04"] $mSearchGroupName "AND"
 			$_i += 1
 		}
 		$dsDiag.Trace(" search conditions build")
@@ -220,10 +220,10 @@ function mSearchTerms
 			$dsDiag.Trace(" ---iterates search result for properties finished") 
 			#create a row for the element and it's properties
 			$row = New-Object CatalogData
-			$row.Term_DE = $props["Term DE"]  #$UIString["ClassTerms_09"]
-			$row.Term_EN = $props["Term EN"]  #$UIString["ClassTerms_10"]
-			$row.Term_FR = $props["Term FR"]  #$UIString["ClassTerms_11"]
-			$row.Term_IT = $props["Term IT"]  #$UIString["ClassTerms_12"]
+			$row.Term_DE = $props[$UIString["ClassTerms_09"]]  # Term DE
+			$row.Term_EN = $props[$UIString["ClassTerms_10"]]  # Term EN
+			$row.Term_FR = $props[$UIString["ClassTerms_11"]]  # Term FR
+			$row.Term_IT = $props[$UIString["ClassTerms_12"]]  # Term IT
 		
 			$_data += $row
 			$dsDiag.Trace("...iterates search result for properties finished.") 
@@ -405,11 +405,14 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 {	
 	$children = mgetCustomEntityList($_CoName) #-_CoName $_CoName
 	If($children -eq $null) { return }
-	
+
+	# sort the children by Name, case sensitive
+	$children = $children | Sort-Object -Property Name -CaseSensitive #-Descending -Unique -Stable
+
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 	$cmb = New-Object System.Windows.Controls.ComboBox
 	$cmb.Name = "cmbClassBreadCrumb_" + $mBreadCrumb.Children.Count.ToString();
-	$cmb.DisplayMemberPath = "Name";
+	$cmb.DisplayMemberPath = $UIString["LBL19"];
 	$cmb.Tooltip = $UIString["ClassTerms_TT01"] #"Suche auf Hierarchieebene begrenzen..."
 	#If (($Prop["_CreateMode"].Value -eq $true) -or ($_Return -eq "Yes")) {$cmb.IsDropDownOpen = $true}
 	$cmb.MinWidth = 140
@@ -481,7 +484,7 @@ function mAddCoComboChild ($data)
 {
 	$children = @()
 	$children = mGetCustomEntityUsesList($data) #-sender $data
-	#$dsDiag.Trace("check data object: $children")
+	If($children.count -eq 0) { return }
 		
 	#Filter classification levels and classes
 	if(-not $Global:mClassLevelCustentDefIds)
@@ -490,7 +493,7 @@ function mAddCoComboChild ($data)
 		$Global:mCustentUdpDefs = $Global:mAllCustentPropDefs | Where-Object { $_.IsSys -eq $false}
 		$Global:mCustentDefs = $vault.CustomEntityService.GetAllCustomEntityDefinitions()
 		#configuration info - the custom object names used for the classification structure may vary. Align Custent names of your Vault in UIStrings ADSK.WS.ClassLEver_*
-		$mClsLevelNames = ("Segment", "Main Group", "Group", "Sub Group", "Class")
+		$mClsLevelNames = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"])
 		$Global:mClassLevelCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $mClsLevelNames}).Id
 	}
 
@@ -500,10 +503,13 @@ function mAddCoComboChild ($data)
 	
 	If($children.count -eq 0) { return }
 
+	# sort the children by Name, case sensitive
+	$children = $children | Sort-Object -Property Name -CaseSensitive #-Descending -Unique -Stable
+	
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 	$cmb = New-Object System.Windows.Controls.ComboBox
 	$cmb.Name = "cmbClassBreadCrumb_" + $mBreadCrumb.Children.Count.ToString();
-	$cmb.DisplayMemberPath = "Name"	
+	$cmb.DisplayMemberPath = $UIString["LBL19"]	
 	$cmb.BorderThickness = "1,1,1,1"
 	$cmb.Margin = "1,0,0,1"
 	$cmb.HorizontalContentAlignment = "Center"
@@ -641,11 +647,11 @@ function mGetCustomEntityUsesList ($sender) {
 		#[System.Windows.MessageBox]::Show("Currentclass: $_CurrentClass and Level# is $_i")
         switch($_i-1)
 		        {
-			        0 { $mSearchFilter = "Segment"} #$UIString["Adsk.QS.ClsLevel_01"]
-			        1 { $mSearchFilter = "Main Group"} #$UIString["Adsk.QS.ClsLevel_02"]
-			        2 { $mSearchFilter = "Group"} #$UIString["Adsk.QS.ClsLevel_03"]
-					3 { $mSearchFilter = "Sub Group"} #$UIString["Adsk.QS.ClsLevel_04"] 
-					4 { $mSearchFilter = "Class"} #$UIString["Adsk.QS.ClsObject"]
+			        0 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_01"]}
+			        1 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_02"]}
+			        2 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_03"]}
+					3 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_04"]}
+					4 { $mSearchFilter = $UIString["Adsk.QS.ClsObject"]}
 			        default { $mSearchFilter = "*"}
 		        }
 		$_customObjects = mgetCustomEntityList($mSearchFilter) #-_CoName $mSearchFilter
@@ -683,15 +689,15 @@ function mCoComboSelectionChanged ($sender) {
 		$children--;
 	}
 	Try{
-		if ($mBreadCrumb.Children[1]) { $Prop["Segment"].Value = $mBreadCrumb.Children[1].SelectedItem.Name }
-		if ($mBreadCrumb.Children[2]) { $Prop["Main Group"].Value = $mBreadCrumb.Children[2].SelectedItem.Name }
-		else { $Prop["Main Group"].Value = "" }
-		if ($mBreadCrumb.Children[3]) { $Prop["Group"].Value = $mBreadCrumb.Children[3].SelectedItem.Name }
-		else { $Prop["Group"].Value = "" }
-		if ($mBreadCrumb.Children[4]) { $Prop["Sub Group"].Value = $mBreadCrumb.Children[4].SelectedItem.Name }
-		else { $Prop["Sub Group"].Value = "" }
-		if ($mBreadCrumb.Children[4]) { $Prop["Class"].Value = $mBreadCrumb.Children[5].SelectedItem.Name }
-		else { $Prop["Class"].Value = "" }
+		if ($mBreadCrumb.Children[1]) { $Prop[$UIString["Adsk.QS.ClsLevel_01"]].Value = $mBreadCrumb.Children[1].SelectedItem.Name }
+		if ($mBreadCrumb.Children[2]) { $Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = $mBreadCrumb.Children[2].SelectedItem.Name }
+		else { $Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = "" }
+		if ($mBreadCrumb.Children[3]) { $Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = $mBreadCrumb.Children[3].SelectedItem.Name }
+		else { $Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = "" }
+		if ($mBreadCrumb.Children[4]) { $Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = $mBreadCrumb.Children[4].SelectedItem.Name }
+		else { $Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = "" }
+		if ($mBreadCrumb.Children[4]) { $Prop[$UIString["Adsk.QS.ClsObject"]].Value = $mBreadCrumb.Children[5].SelectedItem.Name }
+		else { $Prop[$UIString["Adsk.QS.ClsObject"]].Value = "" }
 
 		#write the highest level Custent Id to a text file for post-close event
 		$value = $mBreadCrumb.Children[$children].SelectedItem.Id
@@ -704,13 +710,13 @@ function mCoComboSelectionChanged ($sender) {
 	#don't continue adding children according the classification group level
 	switch($Prop["_Category"].Value)
 	{
-		"Main Group"
+		$UIString["Adsk.QS.ClsLevel_02"]
 		{
 			$dsDiag.Trace("Main group is the object's level; don't add a child. Position $($position)")
 			return
 		}
 		
-		"Group"
+		$UIString["Adsk.QS.ClsLevel_03"]
 		{
 			if($position -eq 2)
 			{
@@ -722,7 +728,7 @@ function mCoComboSelectionChanged ($sender) {
 			}
 		}
 		
-		"Sub Group"
+		$UIString["Adsk.QS.ClsLevel_04"]
 		{
 			if($position -eq 3)
 			{
@@ -734,7 +740,7 @@ function mCoComboSelectionChanged ($sender) {
 			}
 		}
 
-		"Class"
+		$UIString["Adsk.QS.ClsObject"]
 		{
 			if($position -eq 4)
 			{

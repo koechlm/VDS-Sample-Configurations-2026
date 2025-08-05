@@ -167,6 +167,7 @@
   <!--Vault user Defined Properties Displaynames for dynamic properties-->
   <!--use to change display name for localization or user friendly naming-->
   <UIString ID="Comments">Comments</UIString>
+  <UIString ID="CommentsDE">Comments DE</UIString>
   <UIString ID="Manager">Manager</UIString>
   <UIString ID="Subject">Subject</UIString>
   <UIString ID="CreateUserName">Created By</UIString>
@@ -476,6 +477,8 @@
   <UIString ID="Adsk.QS.ClsLevel_03">Class Level 3</UIString>
   <UIString ID="Adsk.QS.ClsLevel_04">Class Level 4</UIString>
   <UIString ID="Adsk.QS.ClsObject">Class Object</UIString>
+  <UIString ID="Adsk.QS.ClsStandard">Standard</UIString>
+  <UIString ID="Adsk.QS.ClsCode">Code</UIString>
   <UIString ID="Adsk.QS.Classification_00">Class</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Value</UIString>

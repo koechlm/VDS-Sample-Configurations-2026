@@ -77,7 +77,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Segment">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 1">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -87,7 +87,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Main Group">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 2">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -97,7 +97,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Group">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 3">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -107,7 +107,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Sub Group">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 4">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
