@@ -28,7 +28,7 @@ function mInitializeClassificationTab($ParentType, $file)
 			$dsWindow.FindName("txtClassificationStatus").Text = $UIString["Adsk.QS.Classification_13"]
 			$dsWindow.FindName("txtClassificationStatus").Visibility = "Visible"
 		}
-		#configuration info - the custom object names used for the classification structure may vary. Align Custent names of your Vault in UIStrings ADSK.WS.ClassLEver_*
+		#configuration info - the custom object names used for the classification structure may vary. Align Custent names of your Vault in UIStrings ADSK.QS.ClassLevel_*
 		$mClsLevelNames = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"])
 		$Global:mClassLevelCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $mClsLevelNames}).Id		
 	}
@@ -97,8 +97,7 @@ function mGetFileClsValues
 		$mClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id) #-ClassId $mActiveClass[0].Id
 		$mClsPropTable = @{}
 		
-		$mClsLevelProps = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], $UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Comments"], $UIString["CommentsDE"])
-
+		$mClsLevelProps = ($Prop["_XLTN_CLSLEVEL1"].Name, $Prop["_XLTN_CLSLEVEL2"].Name, $Prop["_XLTN_CLSLEVEL3"].Name, $Prop["_XLTN_CLSLEVEL4"].Name, $Prop["_XLTN_CLSOBJECT"].Name, $Prop["_XLTN_CLSSTANDARD"].Name, $Prop["_XLTN_TERM-DE"].Name, $Prop["_XLTN_TERM-EN"].Name, $Prop["_XLTN_TERM-FR"].Name, $Prop["_XLTN_TERM-IT"].Name, $Prop["_XLTN_CLSCODE"].Name, $Prop["_XLTN_COMMENTS"].Name, $Prop["_XLTN_COMMENTS-DE"].Name)
 		#get the file's class property values 
 		$mFileClassProps = $vault.PropertyService.GetProperties("FILE", @($mFile.Id), $mClsPrpNames.Keys)
 		$mClassProps = $vault.PropertyService.GetProperties("CUSTENT", @($mActiveClass[0].Id), $mClsPrpNames.Keys)
@@ -110,25 +109,25 @@ function mGetFileClsValues
 				$mClsPropTable.Add($mClsPrpNames[$mClsProp.Key], (($mFileClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val))
 			}
 			if ($dsWindow.Name -eq "FileWindow"){
-				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_01"]) { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $Prop["_XLTN_CLSLEVEL1"].Name) { 
 					$dsWindow.FindName("txtSegment").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtSegment").Text -ne "") {$dsWindow.FindName("txtSegment").Visibility = "Visible"}
 				}
 				
-				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_02"]) { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $Prop["_XLTN_CLSLEVEL2"].Name) { 
 					$dsWindow.FindName("txtMainGroup").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtMainGroup").Text -ne "") {$dsWindow.FindName("txtMainGroup").Visibility = "Visible"}
 				}
 				
-				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_03"]) { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $Prop["_XLTN_CLSLEVEL3"].Name) { 
 					$dsWindow.FindName("txtGroup").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtGroup").Text -ne "") {$dsWindow.FindName("txtGroup").Visibility = "Visible"}
 				}
-				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_04"]) { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $Prop["_XLTN_CLSLEVEL4"].Name) { 
 					$dsWindow.FindName("txtSubGroup").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 					if($dsWindow.FindName("txtSubGroup").Text -ne "") {$dsWindow.FindName("txtSubGroup").Visibility = "Visible"}
 				}
-				if($mClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsStandard"]) { 
+				if($mClsPrpNames[$mClsProp.Key] -eq $Prop["_XLTN_CLSSTANDARD"].Name) { 
 					$global:mActiveStandard = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key)}).Val
 				}
 			}
@@ -157,7 +156,7 @@ function mGetClsDfltValues
 	$mClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id) #-ClassId $mActiveClass[0].Id
 	$mClsPrpValues = mGetClsPrpValues($mActiveClass[0].Id) #-ClassId $mActiveClass[0].Id
 	$mClsPropTable = @{}
-	$mClsLevelProps = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"],$UIString["Adsk.QS.ClsLevel_04"] ,$UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], $UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Comments"], $UIString["CommentsDE"])
+	$mClsLevelProps = ($Prop["_XLTN_CLSLEVEL1"].Name, $Prop["_XLTN_CLSLEVEL2"].Name, $Prop["_XLTN_CLSLEVEL3"].Name, $Prop["_XLTN_CLSLEVEL4"].Name, $Prop["_XLTN_CLSOBJECT"].Name, $Prop["_XLTN_CLSSTANDARD"].Name, $Prop["_XLTN_TERM-DE"].Name, $Prop["_XLTN_TERM-EN"].Name, $Prop["_XLTN_TERM-FR"].Name, $Prop["_XLTN_TERM-IT"].Name, $Prop["_XLTN_CLSCODE"].Name, $Prop["_XLTN_COMMENTS"].Name, $Prop["_XLTN_COMMENTS-DE"].Name)
 
 	if($mActiveClass.Count -eq 1)
 	{
@@ -218,7 +217,7 @@ function mGetCustentiesByName([String]$Name)
 	$srchConds[0] = $srchCond
 	
 	$srchCond2 = New-Object autodesk.Connectivity.WebServices.SrchCond
-	$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }).Id
+	$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq $Prop["_XLTN_CLSSTANDARD"].Name }).Id
 	$srchCond2.SrchOper = 3 #Is exactly (or equals)
 	if (-not $global:mActiveStandard) {
 		$srchCond2.SrchTxt = "*"
@@ -302,7 +301,7 @@ function mApplyClassification()
 		$mActiveClass += mFindCustent -CustentName $dsWindow.FindName("txtActiveClass").Text -Category $UIString["Adsk.QS.ClsObject"] #custom object names should be unique per category
 		If($mActiveClass.Count -eq 1)
 		{
-			$mClsLevelProps = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"],$UIString["Adsk.QS.ClsLevel_04"] ,$UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], $UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Comments"], $UIString["CommentsDE"])
+			$mClsLevelProps = ($Prop["_XLTN_CLSLEVEL1"].Name, $Prop["_XLTN_CLSLEVEL2"].Name, $Prop["_XLTN_CLSLEVEL3"].Name, $Prop["_XLTN_CLSLEVEL4"].Name, $Prop["_XLTN_CLSOBJECT"].Name, $Prop["_XLTN_CLSSTANDARD"].Name, $Prop["_XLTN_TERM-DE"].Name, $Prop["_XLTN_TERM-EN"].Name, $Prop["_XLTN_TERM-FR"].Name, $Prop["_XLTN_TERM-IT"].Name, $Prop["_XLTN_CLSCODE"].Name, $Prop["_XLTN_COMMENTS"].Name, $Prop["_XLTN_COMMENTS-DE"].Name)
 			$mClsPrpNames = mGetClsPrpNames -ClassId $mActiveClass.Id
             $mPropsAdd = @()
             Foreach($mClsProp in $mClsPrpNames.GetEnumerator())
