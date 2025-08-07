@@ -401,9 +401,9 @@ function m_SelectTerm {
 #endregion CatalogLookUp
 
 #region BreadCrumb ClassSelection
-function mAddCoCombo ([String] $_CoName, $_classes) 
+function mAddCoCombo ([String] $_CoName, $_Standard, $_classes) 
 {	
-	$children = mgetCustomEntityList($_CoName) #-_CoName $_CoName
+	$children = mgetCustomEntityList $_CoName $_Standard #-_CoName $_CoName
 	If($children -eq $null) { return }
 
 	# sort the children by Name, case sensitive
@@ -411,9 +411,9 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 	$cmb = New-Object System.Windows.Controls.ComboBox
-	$cmb.Name = "cmbClassBreadCrumb_" + $mBreadCrumb.Children.Count.ToString();
-	$cmb.DisplayMemberPath = $UIString["LBL19"];
-	$cmb.Tooltip = $UIString["ClassTerms_TT01"] #"Suche auf Hierarchieebene begrenzen..."
+	$cmb.Name = "cmbClassBreadCrumb_" + $mBreadCrumb.Children.Count.ToString()
+	$cmb.DisplayMemberPath = $UIString["LBL19"]
+	$cmb.Tooltip = $UIString["ClassTerms_TT01"]
 	#If (($Prop["_CreateMode"].Value -eq $true) -or ($_Return -eq "Yes")) {$cmb.IsDropDownOpen = $true}
 	$cmb.MinWidth = 140
 	$cmb.HorizontalContentAlignment = "Center"
@@ -429,7 +429,7 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 	{
 		"CustomObjectClassifiedWindow"
 		{
-			If (($Prop["_CreateMode"].Value -eq $true) -or ($_Return -eq "Yes")) {$cmb.IsDropDownOpen = $true}
+			#If (($Prop["_CreateMode"].Value -eq $true) -or ($_Return -eq "Yes")) {$cmb.IsDropDownOpen = $true}
 		}
 		default
 		{
@@ -438,7 +438,9 @@ function mAddCoCombo ([String] $_CoName, $_classes)
 	}
 	$cmb.add_SelectionChanged({
 			param($sender,$e)
-			$dsDiag.Trace("1. SelectionChanged, Sender = $sender, $e")
+			#$dsDiag.Trace("1. SelectionChanged, Sender = $sender, $e")
+			$dsWindow.FindName("cmb_ClsStd").IsEnabled = $false
+			$dsWindow.FindName("cmb_ClsStd").Tooltip = "Reset (X) the classification if you need to switch the standard."
 			mCoComboSelectionChanged($sender) #-sender $sender
 		});
 
@@ -588,24 +590,13 @@ function mAddCoComboChild ($data)
 	#endregion
 } #addCoComboChild
 
-function mgetCustomEntityList ([String] $_CoName) {
+function mgetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 	try {
-		$dsDiag.Trace(">> mgetCustomEntityList started")
-		$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 1
-		$srchCond = New-Object autodesk.Connectivity.WebServices.SrchCond
-		$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("CUSTENT")
-		$propNames = @("CustomEntityName")
-		$propDefIds = @{}
-		foreach($name in $propNames) {
-			$propDef = $propDefs | Where-Object { $_.SysName -eq $name }
-			$propDefIds[$propDef.Id] = $propDef.DispName
-		}
-		$srchCond.PropDefId = $propDef.Id
-		$srchCond.SrchOper = 3
-		$srchCond.SrchTxt = $_CoName
-		$srchCond.PropTyp = [Autodesk.Connectivity.WebServices.PropertySearchType]::SingleProperty
-		$srchCond.SrchRule = [Autodesk.Connectivity.WebServices.SearchRuleType]::Must
-		$srchConds[0] = $srchCond
+		$dsDiag.Trace(">> mgetCustomEntityList started")		
+		$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 2		
+		$srchConds[0] = mCreateClsSearchCond "Category Name" $Prop["_XLTN_CLSLEVEL1"].Name "AND" # note - for any reason, the "Category Name can't be replaced by a variable"
+		$srchConds[1] = mCreateClsSearchCond $Prop["_XLTN_CLSSTANDARD"].Name $_Standard "AND"
+
 		$srchSort = New-Object autodesk.Connectivity.WebServices.SrchSort
 		$searchStatus = New-Object autodesk.Connectivity.WebServices.SrchStatus
 		$bookmark = ""
@@ -630,6 +621,7 @@ function mgetCustomEntityList ([String] $_CoName) {
 				break;
 			}
 		}
+		$dsDiag.Inspect("mResultAll")
 		return $mResultAll
 	}
 	catch { 
@@ -702,7 +694,6 @@ function mCoComboSelectionChanged ($sender) {
 		#write the highest level Custent Id to a text file for post-close event
 		$value = $mBreadCrumb.Children[$children].SelectedItem.Id
 		$value | Out-File "$($env:appdata)\Autodesk\DataStandard 2026\mParentId.txt"
-
 	}
 	catch{}
 	$dsDiag.Trace("---combo selection = $_selected, Position $position")
@@ -759,7 +750,7 @@ function mCoComboSelectionChanged ($sender) {
 	}
 }
 
-function mResetClassFilter
+function mResetClassFilter([Bool] $ShowWarning = $true)
 {
     $dsDiag.Trace(">> Reset Filter started...")
 	$mWindowName = $dsWindow.Name
@@ -771,18 +762,27 @@ function mResetClassFilter
 				{
 					try
 					{
-						$Global:_Return = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning($UIString["ClassTerms_MSG01"], $UIString["ClassTerms_01"], "YesNo")
-						If($_Return -eq "No") { return }
+						if ($ShowWarning -eq $true)
+						{
+							$Global:_Return = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning($UIString["ClassTerms_MSG01"], $UIString["ClassTerms_01"], "YesNo")
+							If($_Return -eq "No") { return }
+						}
+						else {
+							$_Return = "Yes" # simulate that the user has clicked "Yes" to reset the filter
+						}
 					}
 					catch
 					{
 						$dsDiag.Trace("Error - Reset Terms Classification Filter")
 					}
-			}
+				}
+
 				If (($Prop["_CreateMode"].Value -eq $true) -or ($_Return -eq "Yes"))
 				{
 					$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 					$mBreadCrumb.Children[1].SelectedIndex = -1
+					$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
+					$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
 				}
 			}
 			default

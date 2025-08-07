@@ -369,20 +369,11 @@ function InitializeWindow {
 	#region CatalogTerm
 	If ($dsWindow.FindName("expTermSearch")) {			
 		Try {
-			Import-Module -FullyQualifiedName "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\ADSK.QS.CustomObjectsClassified.psm1"
+			Import-Module -FullyQualifiedName "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\ADSK.QS.CustentClassification.psm1"
 		}
 		catch {}
 	}
 	#endregionCatalogTerm
-
-	#region IEC61355
-	If ($dsWindow.FindName("expIEC61355")) {			
-		Try {
-			Import-Module -FullyQualifiedName "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\ADSK.QS.IEC61355.psm1"
-		}
-		catch {}
-	}
-	#endregion IEC61355
 
 	InitializeFileNameValidation #do this at the end of all other event initializations
 	
