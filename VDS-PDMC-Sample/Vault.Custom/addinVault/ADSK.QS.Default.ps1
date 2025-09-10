@@ -83,8 +83,8 @@ function InitializeTabWindow {
 }
 
 function InitializeWindow {	      
-	#$dsDiag.ShowLog()
-	#$dsDiag.Clear()
+	# $dsDiag.ShowLog()
+	# $dsDiag.Clear()
 
 	#begin rules applying commonly
 	$Prop["_Category"].add_PropertyChanged({
@@ -226,34 +226,39 @@ function InitializeWindow {
 				$dsWindow.Title = "New $($Prop["_Category"].Value)..."
 
 				#synchronize property with CO name
-				if ($Prop["_Category"].Value -eq "Class") {
+				if ($Prop["_Category"].Value -eq $UIString["Adsk.QS.ClsObject"]) {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-							$Prop["Class"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-						})
+						$Prop["_XLTN_CLSOBJECT"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+					})
 
-					$Prop["Class"].add_PropertyChanged({
-							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Class"].Value
-						})
+					$Prop["_XLTN_CLSOBJECT"].add_PropertyChanged({
+						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["_XLTN_CLSOBJECT"].Value
+					})
 				}
 
-				if ($Prop["_Category"].Value -eq "Term") {
+				if ($Prop["_Category"].Value -eq $UIString["ClassTerms_00"]) {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-							$Prop["Term EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-						})
+						$Prop["_XLTN_TERM-EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+					})
 
-					$Prop["Term EN"].add_PropertyChanged({
-							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Term EN"].Value
-						})
+					$Prop["_XLTN_TERM-EN"].add_PropertyChanged({
+						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["_XLTN_TERM-EN"].Value
+					})
 				}
+
+				# enable standard selection
+				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
+				$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
+				#$dsWindow.FindName("cmb_ClsStd").IsDropDownOpen = $true
 			}
 
 			#region EditMode
 			IF ($Prop["_EditMode"].Value -eq $true) {
 				if ($Prop["_ReadOnly"].Value -eq $true) {
-					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value) - $($UIString["LBL26"])"
+					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["_XLTN_NAME"].Value) - $($UIString["LBL26"])"
 				}
 				else {
-					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value)"
+					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["_XLTN_NAME"].Value)"
 				}
 
 				#read existing classification elements
@@ -274,10 +279,29 @@ function InitializeWindow {
 					}
 				}
 				catch {}
+				
+				$dsWindow.FindName("cmb_ClsStd").Text = $Prop["_XLTN_CLSSTANDARD"].Value
+				mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $Prop["_XLTN_CLSSTANDARD"].Value -_classes $_classes #enables classification for class objects
 			}
 			#endregion EditMode
-			mAddCoCombo -_CoName "Segment" -_classes $_classes #enables classification for class objects
-			# ToDo: createmode: activate last used classification
+						
+			If ($Prop["_CreateMode"].Value -eq $true) {
+				
+				$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({					
+					param($sender, $e)
+
+					$mBreadCrumb = $dsWindow.FindName("wrpClassification")
+					$children = $mBreadCrumb.Children.Count - 1					
+					while ($children -gt 0 ) {
+						$cmb = $mBreadCrumb.Children[$children]
+						$mBreadCrumb.UnregisterName($cmb.Name) #unregister the name to correct for later addition/registration
+						$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
+						$children--;
+					}
+
+					mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $sender.SelectedItem.content #-_classes $_classes #enables classification for class objects
+				})								
+			}
 			
 		}
 		#endregion CustomObjectClassifiedWindow

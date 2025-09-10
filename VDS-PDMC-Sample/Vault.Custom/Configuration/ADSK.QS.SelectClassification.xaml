@@ -210,11 +210,12 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="Classification Standard"/>
-                <ComboBox x:Name="cmb_ClsStd" SelectedIndex="2" VerticalAlignment="Center" Grid.Column="1" Margin="0" Height="26">
+                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
+                <ComboBox x:Name="cmb_ClsStd" SelectedIndex="2" VerticalAlignment="Center" Grid.Column="1" Margin="0">
                     <ComboBoxItem x:Name="IEC61355" Content="IEC 61355"/>
                     <ComboBoxItem x:Name="eClass" Content="eCl@ss"/>
                     <ComboBoxItem x:Name="Company" Content="PDMC-Sample"/>
+                    <ComboBoxItem x:Name="Uniclass" Content="Uniclass" />
                 </ComboBox>
             </Grid>
         </Border>
