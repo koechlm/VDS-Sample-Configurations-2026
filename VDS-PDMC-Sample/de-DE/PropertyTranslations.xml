@@ -61,6 +61,9 @@
   <PropertyTranslation Name="CLSLEVEL3">Gruppe</PropertyTranslation>
   <PropertyTranslation Name="CLSLEVEL4">Untergruppe</PropertyTranslation>
   <PropertyTranslation Name="CLSOBJECT">Klasse</PropertyTranslation>
+  <PropertyTranslation Name="CLSSTANDARD">Norm</PropertyTranslation>
+  <PropertyTranslation Name="CLSCODE">Schlüssel</PropertyTranslation>
+  <PropertyTranslation Name="COMMENTS-DE">Kommentare DE</PropertyTranslation>
   <!--VDS-PDMC-Sample Extension Classification end-->
 
   <!--CatalogTermsTranslations-->

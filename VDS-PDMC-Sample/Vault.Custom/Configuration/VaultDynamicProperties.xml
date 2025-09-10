@@ -406,7 +406,7 @@
     <DynamicProperty>AKN Date Removed</DynamicProperty>
     <DynamicProperty>A-Drive Date Published</DynamicProperty>
     <DynamicProperty>A-Drive Link</DynamicProperty>
-    <DynamicProperty>A-Drive Date Removed</DynamicProperty>    
+    <DynamicProperty>A-Drive Date Removed</DynamicProperty>
     <DynamicProperty>Channel Tech Date Published</DynamicProperty>
     <DynamicProperty>Channel Tech Link</DynamicProperty>
     <DynamicProperty>Channel Tech Date Removed</DynamicProperty>
@@ -429,49 +429,6 @@
     <DynamicProperty>Street address</DynamicProperty>
     <DynamicProperty>Web link</DynamicProperty>
   </DynamicPropertiesCategory>
-  <DynamicPropertiesCategory Category="Class" Type="CustomObject">
-    <DynamicProperty>Segment</DynamicProperty>
-    <DynamicProperty>Main Group</DynamicProperty>
-    <DynamicProperty>Group</DynamicProperty>
-    <DynamicProperty>Sub Group</DynamicProperty>
-    <DynamicProperty>Class</DynamicProperty>
-  </DynamicPropertiesCategory>
-  <DynamicPropertiesCategory Category="Sub Group" Type="CustomObject">
-    <DynamicProperty>Segment</DynamicProperty>
-    <DynamicProperty>Main Group</DynamicProperty>
-    <DynamicProperty>Group</DynamicProperty>
-    <DynamicProperty>Standard</DynamicProperty>
-    <DynamicProperty>Code</DynamicProperty>
-    <DynamicProperty>Comments</DynamicProperty>
-    <DynamicProperty>Comments DE</DynamicProperty>
-  </DynamicPropertiesCategory>
-  <DynamicPropertiesCategory Category="Term" Type="CustomObject">
-    <DynamicProperty>Segment</DynamicProperty>
-    <DynamicProperty>Main Group</DynamicProperty>
-    <DynamicProperty>Group</DynamicProperty>
-    <DynamicProperty>Sub Group</DynamicProperty>
-    <DynamicProperty>Term EN</DynamicProperty>
-    <DynamicProperty>Term DE</DynamicProperty>
-    <DynamicProperty>Term FR</DynamicProperty>
-    <DynamicProperty>Term IT</DynamicProperty>
-    <DynamicProperty>Ident Number</DynamicProperty>
-  </DynamicPropertiesCategory>
-  <DynamicPropertiesCategory Category="Main Group" Type="CustomObject">
-    <DynamicProperty>Segment</DynamicProperty>
-    <DynamicProperty>Standard</DynamicProperty>
-    <DynamicProperty>Code</DynamicProperty>
-    <DynamicProperty>Comments</DynamicProperty>
-    <DynamicProperty>Comments DE</DynamicProperty>
-  </DynamicPropertiesCategory>
-  <DynamicPropertiesCategory Category="Group" Type="CustomObject">
-    <DynamicProperty>Segment</DynamicProperty>
-    <DynamicProperty>Main Group</DynamicProperty>
-    <DynamicProperty>Term DE</DynamicProperty>
-    <DynamicProperty>Standard</DynamicProperty>
-    <DynamicProperty>Code</DynamicProperty>
-    <DynamicProperty>Comments</DynamicProperty>
-    <DynamicProperty>Comments DE</DynamicProperty>
-  </DynamicPropertiesCategory>
   <DynamicPropertiesCategory Category="Presentation" Type="File">
     <DynamicProperty>Title</DynamicProperty>
     <DynamicProperty>Description</DynamicProperty>
@@ -479,5 +436,35 @@
     <DynamicProperty>Designer</DynamicProperty>
     <DynamicProperty>Source File</DynamicProperty>
     <DynamicProperty Hidden="True">Application Version</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Class Object" Type="CustomObject">
+    <DynamicProperty>Class</DynamicProperty>
+    <DynamicProperty>Code</DynamicProperty>
+    <DynamicProperty>Standard</DynamicProperty>
+    <DynamicProperty>Class Level 1</DynamicProperty>
+    <DynamicProperty>Class Level 2</DynamicProperty>
+    <DynamicProperty>Class Level 3</DynamicProperty>
+    <DynamicProperty>Class Level 4</DynamicProperty>
+    <DynamicProperty>Term EN</DynamicProperty>
+    <DynamicProperty>Term DE</DynamicProperty>
+    <DynamicProperty>Term FR</DynamicProperty>
+    <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Comments DE</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Class Term" Type="CustomObject">
+    <DynamicProperty>Code</DynamicProperty>
+    <DynamicProperty>Standard</DynamicProperty>
+    <DynamicProperty>Is Manual Entry</DynamicProperty>
+    <DynamicProperty>Class Level 1</DynamicProperty>
+    <DynamicProperty>Class Level 2</DynamicProperty>
+    <DynamicProperty>Class Level 3</DynamicProperty>
+    <DynamicProperty>Class Level 4</DynamicProperty>
+    <DynamicProperty>Term EN</DynamicProperty>
+    <DynamicProperty>Term DE</DynamicProperty>
+    <DynamicProperty>Term FR</DynamicProperty>
+    <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Comments DE</DynamicProperty>    
   </DynamicPropertiesCategory>
 </DynamicProperties>

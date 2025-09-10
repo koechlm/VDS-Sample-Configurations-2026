@@ -495,6 +495,8 @@
   <UIString ID="Adsk.QS.Classification_13">The custom workspace 'Classes' is not available. Contact your Administrator.</UIString>
   <UIString ID="Adsk.QS.Classification_14">Classification of Primary Linked File</UIString>
   <UIString ID="Adsk.QS.Classification_15">Read-Only: Values derive from breadcrumb selection</UIString>
+  <UIString ID="Adsk.QS.ClsTT_01">Select a classification standard.</UIString>
+  <UIString ID="Adsk.QS.ClsTT_02">Reset (X) the classification if you need to switch the standard.</UIString>
   <!--Classification end-->
 
   <!--CatalogTermsTranslations-->

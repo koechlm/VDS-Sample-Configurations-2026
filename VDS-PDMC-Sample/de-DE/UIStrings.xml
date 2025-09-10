@@ -476,7 +476,7 @@
   <UIString ID="Adsk.QS.ClsLevel_04">Untergruppe</UIString>
   <UIString ID="Adsk.QS.ClsObject">Klasse</UIString>
   <UIString ID="Adsk.QS.ClsStandard">Norm</UIString>
-  <UIString ID="Adsk.QS.ClsCode">Code</UIString>
+  <UIString ID="Adsk.QS.ClsCode">Schlüssel</UIString>
   <UIString ID="Adsk.QS.Classification_00">Klasse</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Wert</UIString>
@@ -493,6 +493,8 @@
   <UIString ID="Adsk.QS.Classification_13">Der Benutzerdefinierte Arbeitsbereich 'Klassen' steht nicht zur Verfügung. Wenden Sie sich an ihren Administrator.</UIString>
   <UIString ID="Adsk.QS.Classification_14">Klassifizierung d. primär verknüpften Datei</UIString>
   <UIString ID="Adsk.QS.Classification_15">Schreibgeschützt: Wert wird aus Hierarchiepfad übernommen</UIString>
+  <UIString ID="Adsk.QS.ClsTT_01">Wählen Sie eine Klassifizierungsnorm.</UIString>
+  <UIString ID="Adsk.QS.ClsTT_02">Setzen Sie die Klassifizierung zurück (X), wenn Sie die Norm ändern wollen.</UIString>
   <!--Classification end-->
 
   <!--CatalogTermsTranslations-->
