@@ -300,9 +300,9 @@ function InitializeWindow {
 					}
 
 					mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $sender.SelectedItem.content #-_classes $_classes #enables classification for class objects
+
 				})								
 			}
-			
 		}
 		#endregion CustomObjectClassifiedWindow
 		

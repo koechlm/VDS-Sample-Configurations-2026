@@ -14,7 +14,6 @@ class CatalogData {
 	[string]$Term_IT
 }
 
-
 function mInitializeTermCatalog {
      
 	If ($dsWindow.FindName("expTermSearch")) {      							
@@ -378,6 +377,7 @@ function m_SelectTerm {
 #endregion CatalogLookUp
 
 #region BreadCrumb ClassSelection
+
 function mAddCoCombo ([String] $_CoName, $_Standard, $_classes) {	
 	$children = mgetCustomEntityList $_CoName $_Standard #-_CoName $_CoName
 	If ($children -eq $null) { return }
@@ -496,6 +496,7 @@ function mAddCoComboChild ($data) {
 			$cmb.IsDropDownOpen = $true
 		}
 	}
+
 	$cmb.add_SelectionChanged({
 			param($sender, $e)
 			$dsDiag.Trace("next. SelectionChanged, Sender = $sender")
@@ -571,7 +572,6 @@ function mgetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 				break;
 			}
 		}
-		#$dsDiag.Inspect("mResultAll")
 		return $mResultAll
 	}
 	catch { 
@@ -620,6 +620,15 @@ function mGetCustomEntityUsesList ($sender) {
 function mCoComboSelectionChanged ($sender) {
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 	[int]$position = $sender.Name.Split('_')[1]
+
+	switch ($position) {
+		1 { $Global:_BC1 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
+		2 { $Global:_BC2 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
+		3 { $Global:_BC3 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
+		4 { $Global:_BC4 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
+		Default {}
+	}
+	
 	$children = $mBreadCrumb.Children.Count - 1
 	while ($children -gt $position ) {
 		$cmb = $mBreadCrumb.Children[$children]
