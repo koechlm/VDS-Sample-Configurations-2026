@@ -479,6 +479,7 @@
   <UIString ID="Adsk.QS.ClsObject">Class Object</UIString>
   <UIString ID="Adsk.QS.ClsStandard">Standard</UIString>
   <UIString ID="Adsk.QS.ClsCode">Code</UIString>
+  <UIString ID="Adsk.QS.ClsLevelCode">Level Code</UIString>
   <UIString ID="Adsk.QS.Classification_00">Class</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Value</UIString>

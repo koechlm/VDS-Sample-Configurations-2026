@@ -378,6 +378,16 @@ function m_SelectTerm {
 
 #region BreadCrumb ClassSelection
 
+<# class breadCrumbMetaData{
+	[hashtable]$level1_meta;
+	[hashtable]$level2_meta;
+	[hashtable]$level3_meta;
+	[hashtable]$level4_meta;
+	[hashtable]$classObj_meta;
+	[hashtable]$classTrm_meta;
+} #>
+
+
 function mAddCoCombo ([String] $_CoName, $_Standard, $_classes) {	
 	$children = mgetCustomEntityList $_CoName $_Standard #-_CoName $_CoName
 	If ($children -eq $null) { return }
@@ -460,7 +470,7 @@ function mAddCoComboChild ($data) {
 		$Global:mCustentUdpDefs = $Global:mAllCustentPropDefs | Where-Object { $_.IsSys -eq $false }
 		$Global:mCustentDefs = $vault.CustomEntityService.GetAllCustomEntityDefinitions()
 		#configuration info - the custom object names used for the classification structure may vary. Align Custent names of your Vault in UIStrings ADSK.WS.ClassLEver_*
-		$mClsLevelNames = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"])
+		$Global:mClsLevelNames = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], $UIString["Adsk.QS.ClsLevel_04"])
 		$Global:mClassLevelCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $mClsLevelNames }).Id
 	}
 
@@ -496,6 +506,9 @@ function mAddCoComboChild ($data) {
 			$cmb.IsDropDownOpen = $true
 		}
 	}
+
+	# create a global list of all level items' meta data
+	#$Global:_breadCrumbMetaData = New-Object breadCrumbMetaData
 
 	$cmb.add_SelectionChanged({
 			param($sender, $e)
@@ -572,6 +585,8 @@ function mgetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 				break;
 			}
 		}
+		#$dsDiag.Inspect("mResultAll")
+
 		return $mResultAll
 	}
 	catch { 
@@ -628,7 +643,7 @@ function mCoComboSelectionChanged ($sender) {
 		4 { $Global:_BC4 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
 		Default {}
 	}
-	
+						
 	$children = $mBreadCrumb.Children.Count - 1
 	while ($children -gt $position ) {
 		$cmb = $mBreadCrumb.Children[$children]
@@ -637,14 +652,45 @@ function mCoComboSelectionChanged ($sender) {
 		$children--;
 	}
 	Try {
-		if ($mBreadCrumb.Children[1]) { $Prop[$UIString["Adsk.QS.ClsLevel_01"]].Value = $mBreadCrumb.Children[1].SelectedItem.Name }
-		if ($mBreadCrumb.Children[2]) { $Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = $mBreadCrumb.Children[2].SelectedItem.Name }
-		else { $Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = "" }
-		if ($mBreadCrumb.Children[3]) { $Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = $mBreadCrumb.Children[3].SelectedItem.Name }
-		else { $Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = "" }
-		if ($mBreadCrumb.Children[4]) { $Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = $mBreadCrumb.Children[4].SelectedItem.Name }
-		else { $Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = "" }
-		if ($mBreadCrumb.Children[4]) { $Prop[$UIString["Adsk.QS.ClsObject"]].Value = $mBreadCrumb.Children[5].SelectedItem.Name }
+		#fill properties
+		if ($mBreadCrumb.Children[1]) { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_01"]].Value = $mBreadCrumb.Children[1].SelectedItem.Name			
+			$_x1 = $_BC1[$mBreadCrumb.Children[1].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)"
+		}
+		else {
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = $null
+		}
+		if ($mBreadCrumb.Children[2]) { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = $mBreadCrumb.Children[2].SelectedItem.Name 
+			$_x2 = $_BC2[$mBreadCrumb.Children[2].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)"
+		}
+		else { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = ""
+		}
+		if ($mBreadCrumb.Children[3]) { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = $mBreadCrumb.Children[3].SelectedItem.Name 
+			$_x3 = $_BC3[$mBreadCrumb.Children[3].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)"
+		}
+		else { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = ""
+		}
+		if ($mBreadCrumb.Children[4]) { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = $mBreadCrumb.Children[4].SelectedItem.Name 
+			$_x4 = $_BC4[$mBreadCrumb.Children[4].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)_$($_x4)"
+		}
+		else { 
+			$Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = ""
+		}
+		if ($mBreadCrumb.Children[5]) { 
+			
+			$dsDiag.Inspect()
+			$Prop[$UIString["Adsk.QS.ClsObject"]].Value = $mBreadCrumb.Children[5].SelectedItem.Name 
+			#$_x5 = $_BC4[$mBreadCrumb.Children[5].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)_$($_x4)"}
 		else { $Prop[$UIString["Adsk.QS.ClsObject"]].Value = "" }
 
 		#write the highest level Custent Id to a text file for post-close event
@@ -712,6 +758,15 @@ function mResetClassFilter([Bool] $ShowWarning = $true) {
 				# don't allow to change the Standard - the breadcrump selection is bound to the assigned standard
 				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $false
 			}
+
+			#reset the class level driven property values
+			$Global:mClsLevelNames | ForEach-Object {
+				Try {
+					$Prop[$_].Value = ""
+				}
+				catch {}
+			}
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = ""
 		}
 		default {
 			$mBreadCrumb = $dsWindow.FindName("wrpClassification")

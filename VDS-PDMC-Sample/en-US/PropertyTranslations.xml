@@ -59,6 +59,7 @@
   <PropertyTranslation Name="CLSOBJECT">Class</PropertyTranslation>
   <PropertyTranslation Name="CLSSTANDARD">Standard</PropertyTranslation>
   <PropertyTranslation Name="CLSCODE">Code</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVELCODE">Level Code</PropertyTranslation>
   <PropertyTranslation Name="COMMENTS-DE">Comments DE</PropertyTranslation>
   <!--VDS-PDMC-Sample Extension Classification end-->
 
