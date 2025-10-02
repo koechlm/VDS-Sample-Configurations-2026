@@ -655,32 +655,40 @@ function mCoComboSelectionChanged ($sender) {
 		#fill properties
 		if ($mBreadCrumb.Children[1]) { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_01"]].Value = $mBreadCrumb.Children[1].SelectedItem.Name			
-			$_x1 = $_BC1[$mBreadCrumb.Children[1].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
-			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)"
+			$_x1 = $_BC1[$mBreadCrumb.Children[1].SelectedItem.Num][$UIString["Adsk.QS.ClsLevelCode"]]
+			if (($null -ne $_x1) -and ($_x1 -ne "")) {				
+				$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)"
+			}
 		}
 		else {
 			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = $null
 		}
 		if ($mBreadCrumb.Children[2]) { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = $mBreadCrumb.Children[2].SelectedItem.Name 
-			$_x2 = $_BC2[$mBreadCrumb.Children[2].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
-			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)"
+			$_x2 = $_BC2[$mBreadCrumb.Children[2].SelectedItem.Num][$UIString["Adsk.QS.ClsLevelCode"]]
+			if ($null -ne $_x2 -and $_x2 -ne "") {
+				$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)"
+			}
 		}
 		else { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_02"]].Value = ""
 		}
 		if ($mBreadCrumb.Children[3]) { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = $mBreadCrumb.Children[3].SelectedItem.Name 
-			$_x3 = $_BC3[$mBreadCrumb.Children[3].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
-			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)"
+			$_x3 = $_BC3[$mBreadCrumb.Children[3].SelectedItem.Num][$UIString["Adsk.QS.ClsLevelCode"]]
+			if ($null -ne $_x3 -and $_x3 -ne "") {
+				$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)"
+			}
 		}
 		else { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_03"]].Value = ""
 		}
 		if ($mBreadCrumb.Children[4]) { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = $mBreadCrumb.Children[4].SelectedItem.Name 
-			$_x4 = $_BC4[$mBreadCrumb.Children[4].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
-			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)_$($_x4)"
+			$_x4 = $_BC4[$mBreadCrumb.Children[4].SelectedItem.Num][$UIString["Adsk.QS.ClsLevelCode"]]
+			if ($null -ne $_x4 -and $_x4 -ne "") {
+				$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)_$($_x4)"
+			}
 		}
 		else { 
 			$Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = ""

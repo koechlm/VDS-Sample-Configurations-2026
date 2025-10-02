@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ReleasePackages/Installer
+/VDS-PDMC-Sample/Vault.Custom/addinVault/ADSK.QS.NameValidationCustent.ps1trial
