@@ -1,0 +1,383 @@
+﻿<WPF:MainWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:WPF="clr-namespace:CreateObject.WPF;assembly=CreateObject"
+        xmlns:wpfUtilities="clr-namespace:Autodesk.DataManagement.Client.Framework.Forms.Controls.WPF.Utilities;assembly=Autodesk.DataManagement.Client.Framework.Forms"
+        xmlns:winFormTheme="clr-namespace:Autodesk.DataManagement.Client.Framework.Forms.SkinUtils;assembly=Autodesk.DataManagement.Client.Framework.Forms"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Style="{DynamicResource ThemedWindowStyle}"
+        x:Name="AssignClsWindow"
+        Title="VDS-PDMC-Sample | Select Classification . . ." Topmost="True" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight"  VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ResizeMode="NoResize">
+    <WPF:MainWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/Autodesk.DataManagement.Client.Framework.Forms;component/Controls/WPF/ControlTemplates/MergedResources.xaml" />-->
+            </ResourceDictionary.MergedDictionaries>
+            <WPF:IsMoreThanZeroConverter x:Key="MoreThanZeroConverter"/>
+            <WPF:InverseBoolConverter x:Key="BoolConvert"/>
+            <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
+            <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
+                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                    </Trigger>
+                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static DataGrid.FocusBorderBrushKey}}" />
+                    </Trigger>
+                    <DataTrigger Binding="{Binding Typ}" Value="String">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Typ}" Value="DateTime">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <DatePicker SelectedDate="{WPF:ValidatedBinding Value}" SelectedDateFormat="Short" BorderThickness="0"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Typ}" Value="Numeric">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value, StringFormat=N}" BorderThickness="0" Height="25" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Typ}" Value="Bool">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <ComboBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0">
+                                        <ComboBoxItem Content="True" />
+                                        <ComboBoxItem Content="False" />
+                                    </ComboBox>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ListValues.Count, Converter={StaticResource MoreThanZeroConverter}}" Value="True">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <ComboBox ItemsSource="{Binding ListValues}" Text="{WPF:ValidatedBinding Value}" IsEditable="{Binding EnforceListValues, Converter={StaticResource BoolConvert}}" BorderThickness="0" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Name}" Value="Material">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value, StringFormat=N}" BorderThickness="0" 
+                                        CharacterCasing="{Binding Case}" IsReadOnly="True" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Name}" Value="Part Number">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value, StringFormat=N}" BorderThickness="0" 
+                                        CharacterCasing="{Binding Case}" IsReadOnly="True" ToolTip="System generated" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Name}" Value="Teilenummer">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value, StringFormat=N}" BorderThickness="0" 
+                                    CharacterCasing="{Binding Case}" IsReadOnly="True" ToolTip="System generated" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Name}" Value="Class">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0"
+                                    ToolTip="{Binding DataContext.UIString[], FallbackValue=Select the document tag for automatic naming, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                                    IsReadOnly="False" IsTabStop="True"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="DynamicDataGridLabelStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
+                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="IsHitTestVisible" Value="False"/>
+            </Style>
+            <!--#region themed styles for VE dialog standard controls-->
+            <Style x:Key="DataStandardLabelStyle" TargetType="{x:Type Label}" BasedOn="{StaticResource ThemedLabelStyle}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="#ff0000" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource DataStandardLabelStyle}"/>
+            <Style x:Key="DataStandardTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource ThemedTextBoxStyle}">
+                <Setter Property="Height" Value="24" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Padding" Value="4,0,0,0"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource DataStandardTextBoxStyle}">
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}" />
+                        <Setter Property="BorderBrush" Value="Red" />
+                    </Trigger>
+                    <Trigger Property="Validation.HasError" Value="false"/>
+                    <DataTrigger Binding="{Binding IsReadOnly, RelativeSource={RelativeSource Self}}" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowColorKey}}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="DataStandardComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ThemedComboBoxStyle}"/>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource DataStandardComboBoxStyle}"/>
+            <Style x:Key="DocTypeStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource DataStandardComboBoxStyle}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding EditMode}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="TemplateCbStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource DataStandardComboBoxStyle}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CreateMode}" Value="True">
+                        <Setter Property="ItemsSource" Value="{Binding Templates}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding EditMode}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Visibility, ElementName=TemplateTB}" Value="Visible">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ThemedComboBoxItemStyle}"/>
+            <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource ThemedDatePickerStyle}"/>
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource ThemedBaseControlStyle}"/>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ThemedButtonStyle}" />
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource ThemedCheckBoxStyle}"/>
+            <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource ThemedContextMenu}"/>
+            <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource ThemedDataGridStyle}"/>
+            <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource ThemedGroupBoxStyle}"/>
+            <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource ThemedExpanderStyle}" />
+            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource ThemedRadioButtonBaseStyle}"/>
+            <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource ThemedScrollViewerStyle}" />
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ThemedTextBlockStyle}"/>
+            <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource ThemedTabControlStyle}"/>
+            <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource ThemedListBoxStyle}" />
+            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ThemedListBoxItemStyle}"/>
+            <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource ThemedTreeViewStyle}"/>
+            <Style TargetType="{x:Type Border}" BasedOn="{StaticResource ThemedBorderStyle}"/>
+            <!--#endregion themed styles for VE dialog standard controls-->
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <DataTemplate x:Key="TreeViewItemItemTemplate1">
+                <Grid/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </WPF:MainWindow.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,2" >
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
+                <ComboBox x:Name="cmb_ClsStd" Text="{Binding Prop[_XLTN_CLSSTANDARD]}" SelectedValue="{Binding Prop[_XLTN_CLSSTANDARD]}" SelectedIndex="0" VerticalAlignment="Center" Grid.Column="1" Margin="0" MinWidth="140" ItemsSource="{Binding Text, ElementName=cmb_ClsStd}">
+                </ComboBox>
+                <Grid Grid.Row="1" Margin="0,5,0,10" Height="22" MinWidth="140" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnResetClsLevels" Grid.Column="0" Content="Reset" Margin="5,0,5,0" Padding="5,1,5,1" >
+                    </Button>
+                    <ComboBox x:Name="cmbClsLevel1" Grid.Column="1" Margin="2,0,2,0" MinWidth="140"/>
+                    <ComboBox x:Name="cmbClsLevel2" Grid.Column="2" Margin="2,0,2,0" MinWidth="140"/>
+                    <ComboBox x:Name="cmbClsLevel3" Grid.Column="3" Margin="2,0,2,0" MinWidth="140"/>
+                    <ComboBox x:Name="cmbClsLevel4" Grid.Column="4" Margin="2,0,2,0" MinWidth="140"/>
+                </Grid>
+            </Grid>
+        </Border>
+        <Grid Grid.ColumnSpan="3" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TreeView Margin="10,0,0,0">
+                <TreeViewItem x:Name="trvClssLevel1" Header="Class Level 1" IsExpanded="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Class Object"/>
+                        <ComboBox Grid.Column="1" MinWidth="140" Height="22"/>
+                        <Label Content="Class Term" Grid.Row="1"/>
+                        <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
+                    </Grid>
+                    <TreeViewItem x:Name="trvClsLevel2" Header="Class Level 2" IsExpanded="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Class Object"/>
+                            <ComboBox Grid.Column="1" MinWidth="140" Height="22"/>
+                            <Label Content="Class Term" Grid.Row="1"/>
+                            <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
+                        </Grid>
+                        <TreeViewItem x:Name="trvClsLevel3" Header="Class Level 3" IsExpanded="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Class Object"/>
+                                <ComboBox Grid.Column="1" Height="22"/>
+                                <Label Content="Class Term" Grid.Row="1"/>
+                                <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
+                            </Grid>
+                            <TreeViewItem x:Name="trvClsLevel4" Header="Class Level 4" IsExpanded="True">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Class Object"/>
+                                    <ComboBox Grid.Column="1" MinWidth="140" Margin="0,0,10,0" Height="22"/>
+                                    <Label Content="Class Term" Grid.Row="1"/>
+                                    <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Margin="0,0,10,0" Height="22"/>
+                                </Grid>
+                            </TreeViewItem>
+                        </TreeViewItem>
+                    </TreeViewItem>
+                </TreeViewItem>
+            </TreeView>
+            <Grid Grid.Column="1" Margin="10,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Class Object" MinWidth="637" MinHeight="282" >
+                    <DataGrid x:Name="dtgrdClsObjProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ClassPropName1" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="140">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn x:Name="ClassPropValue1" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}"  Width="*" MinWidth="140">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="Class Term" MinWidth="637" MinHeight="282" Grid.Row="1">
+                    <DataGrid x:Name="dtgrdClsTermProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ClassPropName2" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="140">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn x:Name="ClassPropValue2" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}"  Width="*" MinWidth="140">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Margin="10,0,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid x:Name="grdClassificationBtns_2" Grid.ColumnSpan="2" Margin="0,10,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="Copy Term -&gt; Title Values (Multi-Languages)" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="True"/>
+                <Button x:Name="btnHelp2" Content="{Binding UIString[MSDCE_BTN1], FallbackValue=Help}" 
+                    Command="{Binding PsCmd[mHelp(500)]}" ToolTip="F1" Margin="0" Width="80" Height="24" />
+                <Button x:Name="btnSelectClass1" Content="{Binding UIString[], FallbackValue=Select Classification}"  Command="{Binding PsCmd[mSelectClassification]}" Grid.Column="3" BorderThickness="1" Padding="5,1" IsEnabled="False" Height="24"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</WPF:MainWindow>
