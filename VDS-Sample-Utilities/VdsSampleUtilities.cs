@@ -29,9 +29,172 @@ using System.Drawing;
 namespace VdsSampleUtilities
 {
     /// <summary>
+    /// Provide System.Text.Encoding not in VDS PowerShell 2026 runtime
+    /// </summary>
+    public class TextEncoding 
+    {
+        /// <summary>
+        /// Return the byte value using Systems.Text.Encoding.UTF8
+        /// </summary>
+        /// <param name="String"></param>
+        /// <returns></returns>
+        public byte[] UTF8GetBytes(string String)
+        {
+            // use the system.text.encoding ASCII.GetByte() method
+            if (string.IsNullOrEmpty(String))
+                throw new ArgumentException("Input string cannot be null or empty.", nameof(String));
+
+            // Convert string to UTF8 bytes
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(String);
+
+            // Return the first byte (or handle as needed)
+            return bytes;
+        }
+        /// <summary>
+        /// Return the byte value using Systems.Text.Encoding.ASCII
+        /// </summary>
+        /// <param name="String"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public byte[] ASCIIGetBytes(string String)
+        {
+            // use the system.text.encoding ASCII.GetByte() method
+            if (string.IsNullOrEmpty(String))
+                throw new ArgumentException("Input string cannot be null or empty.", nameof(String));
+
+            // Convert string to ASCII bytes
+            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(String);
+
+            // Return the first byte (or handle as needed)
+            return bytes;
+        }
+
+        // create similare mothods for string to integer and integer to string conversions
+        /// <summary>
+        /// Return the string value using Systems.Text.Encoding.UTF8
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public string UTF8GetString(byte[] bytes)
+        {
+            // use the system.text.encoding ASCII.GetString() method
+            if (bytes == null || bytes.Length == 0)
+                throw new ArgumentException("Input byte array cannot be null or empty.", nameof(bytes));
+            // Convert bytes to UTF8 string
+            string result = System.Text.Encoding.UTF8.GetString(bytes);
+            // Return the resulting string
+            return result;
+        }
+
+        /// <summary>
+        /// Return the string value using Systems.Text.Encoding.ASCII
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public string ASCIIGetString(byte[] bytes)
+        {
+            // use the system.text.encoding ASCII.GetString() method
+            if (bytes == null || bytes.Length == 0)
+                throw new ArgumentException("Input byte array cannot be null or empty.", nameof(bytes));
+            // Convert bytes to ASCII string
+            string result = System.Text.Encoding.ASCII.GetString(bytes);
+            // Return the resulting string
+            return result;
+        }
+    }
+
+
+    /// <summary>
+    /// Provides methods for converting between different data types.
+    /// </summary>
+    public class Convert
+    {
+        /// <summary>
+        /// Convert integer to string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int ToInt32(string value)
+        {
+            return System.Convert.ToInt32(value);
+        }
+
+        /// <summary>
+        /// Convert string to integer
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string Int32ToString(int value)
+        {
+            return System.Convert.ToString(value);
+        }
+
+        /// <summary>
+        /// Convert string to long integer
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public long ToInt64(string value)
+        {
+            return System.Convert.ToInt64(value);
+        }
+
+        /// <summary>
+        /// Convert long integer to string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string Int64ToString(long value)
+        {
+            return System.Convert.ToString(value);
+        }
+
+        /// <summary>
+        /// Convert string to double
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public double ToDouble(string value)
+        {
+            return System.Convert.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Convert double to string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string DoubleToString(double value)
+        {
+            return System.Convert.ToString(value);
+        }
+
+        /// <summary>
+        /// Convert byte array to Base64 string 
+        /// </summary>
+        /// <param name="byteArray"></param>
+        /// <returns></returns>
+        public string ToBase64String(byte[] byteArray)
+        {
+            return System.Convert.ToBase64String(byteArray);
+        }
+
+        /// <summary>
+        /// Convert Base64 string to byte array
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public byte[] FromBase64String(string s)
+        {
+            return System.Convert.FromBase64String(s);
+        }
+    }
+
+    /// <summary>
     /// Class representing a node in the tree structure of file dependencies.
     /// </summary>
-
     public class TreeNode
     {
         private Connection? _con;
