@@ -144,6 +144,103 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="T:VdsSampleUtilities.TextEncoding">
+            <summary>
+            Provide System.Text.Encoding not in VDS PowerShell 2026 runtime
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.TextEncoding.UTF8GetBytes(System.String)">
+            <summary>
+            Return the byte value using Systems.Text.Encoding.UTF8
+            </summary>
+            <param name="String"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.TextEncoding.ASCIIGetBytes(System.String)">
+            <summary>
+            Return the byte value using Systems.Text.Encoding.ASCII
+            </summary>
+            <param name="String"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:VdsSampleUtilities.TextEncoding.UTF8GetString(System.Byte[])">
+            <summary>
+            Return the string value using Systems.Text.Encoding.UTF8
+            </summary>
+            <param name="bytes"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:VdsSampleUtilities.TextEncoding.ASCIIGetString(System.Byte[])">
+            <summary>
+            Return the string value using Systems.Text.Encoding.ASCII
+            </summary>
+            <param name="bytes"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="T:VdsSampleUtilities.Convert">
+            <summary>
+            Provides methods for converting between different data types.
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.ToInt32(System.String)">
+            <summary>
+            Convert integer to string
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.Int32ToString(System.Int32)">
+            <summary>
+            Convert string to integer
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.ToInt64(System.String)">
+            <summary>
+            Convert string to long integer
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.Int64ToString(System.Int64)">
+            <summary>
+            Convert long integer to string
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.ToDouble(System.String)">
+            <summary>
+            Convert string to double
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.DoubleToString(System.Double)">
+            <summary>
+            Convert double to string
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.ToBase64String(System.Byte[])">
+            <summary>
+            Convert byte array to Base64 string 
+            </summary>
+            <param name="byteArray"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VdsSampleUtilities.Convert.FromBase64String(System.String)">
+            <summary>
+            Convert Base64 string to byte array
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
         <member name="T:VdsSampleUtilities.TreeNode">
             <summary>
             Class representing a node in the tree structure of file dependencies.
