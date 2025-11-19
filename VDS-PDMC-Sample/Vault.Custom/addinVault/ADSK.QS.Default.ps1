@@ -595,8 +595,6 @@ function OnTabContextChanged {
 	}
 	#endregion documentstructure
 	
-	#powerPLM Tabs run separated script
-	OnTabContextChanged_Fusion360Manage
 }
 
 function GetNewCustomObjectName {
