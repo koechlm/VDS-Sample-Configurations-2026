@@ -15,32 +15,110 @@ class mBom {
 }
 
 function mGetMdlStates($fileID) {
-		
+	
 	$global:mFileBOM = $vault.DocumentService.GetBOMByFileId($fileID)
-	#$dsDiag.Inspect("mFileBOM")
+
+	# get UIStrings for localization
+	$UIStrings = mGetUIStrings
+
+	# Get the file to determine its CAD provider
+	$mFile = $vault.DocumentService.GetFileById($fileID)
+	
+	# Read the Provider property to determine if it's Inventor or SolidWorks
+	$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId('FILE')
+	$providerPropDef = $propDefs | Where-Object {$_.SysName -eq 'Provider'}
+	
+	$mCadProvider = "Unknown"
+	if ($providerPropDef) {
+		$providerProp = $vault.PropertyService.GetProperties('FILE', @($fileID), @($providerPropDef.Id))[0]
+		$providerValue = $providerProp.Val
+		
+		if ($providerValue -like "*Inventor*") {
+			$mCadProvider = "Inventor"
+		}
+		elseif ($providerValue -like "*SolidWorks*") {
+			$mCadProvider = "SolidWorks"
+		}
+	}
+	
 	$MsArray = @()
-	$MsArray += $mFileBom.CompArray | Where-Object { $_.XRefId -eq -1 -and ($_.UniqueId -like "MS:*" -or $_.Name -match "\[.*\]") } # model state BOMs are internal component BOMs
+	
+	# Filter components based on CAD provider
+	if ($mCadProvider -eq "SolidWorks") {
+		# SolidWorks configurations: XRefId = -1 AND UniqueId contains "@"
+		$MsArray += $mFileBom.CompArray | Where-Object { 
+			$_.XRefId -eq -1 -and $_.UniqueId -ne $null -and $_.UniqueId.Contains("@")
+		}
+	}
+	elseif ($mCadProvider -eq "Inventor") {
+		# Inventor model states: XRefId = -1 AND (UniqueId starts with "MS:" OR Name matches [...])
+		$MsArray += $mFileBom.CompArray | Where-Object { 
+			$_.XRefId -eq -1 -and (
+				($_.UniqueId -ne $null -and $_.UniqueId -like "MS:*") -or 
+				($_.Name -ne $null -and $_.Name -match "\[.*\]")
+			)
+		}
+	}
 	
 	if ($MsArray.Count -gt 1) {
 		$mMdlStates = @{}
 		$MsArray | ForEach-Object { 
 			$mName = ""
-			if ($_.Name -match "\[.*\]") {
-				$mName = "[Primary]"
+			
+			if ($mCadProvider -eq "SolidWorks") {
+				# Extract SolidWorks configuration name
+				# Format: "ConfigName@AssemblyName.SLDASM"
+				if ($_.Name -ne $null) {
+					$nameParts = $_.Name.Split("@")
+					if ($nameParts.Length -eq 2 -and $nameParts[1] -eq $mFile.Name) {
+						$mName = $nameParts[0]
+					}
+					else {
+						$mName = $_.Name
+					}
+				}
 			}
-			if ($_.Name -like "* (*)") {
-				#get the model state name
-				$mName = $_.Name.Split(" (")[1]
-				$mName = $mName.Substring(0, $mName.Length - 1)					
-			}	#add the primary state name		
-
-			$mMdlStates.Add($mName, $_.Id)		
+			elseif ($mCadProvider -eq "Inventor") {
+				# Extract Inventor model state name
+				if ($_.Name -match "\[.*\]") {
+					$mName = "[Primary]"
+				}
+				if ($_.Name -like "* (*)") {
+					# Extract name from format: "AssemblyName (ModelStateName)"
+					$startIndex = $_.Name.IndexOf(" (")
+					$endIndex = $_.Name.IndexOf(")")
+					if ($startIndex -ge 0 -and $endIndex -gt $startIndex) {
+						$mName = $_.Name.Substring($startIndex + 2, $endIndex - $startIndex - 2)
+					}
+				}
+			}
+			
+			if (-not [string]::IsNullOrEmpty($mName)) {
+				try {
+					$mMdlStates.Add($mName, $_.Id)
+				}
+				catch {
+					# Handle duplicate names
+					$dsDiag.Trace("Duplicate variant name: $mName")
+				}
+			}
 		}
-		#sort the model states by name
+		
+		# Sort and display model states/configurations
 		$mMdlStates = $mMdlStates.GetEnumerator() | Sort-Object Name		
 		$dsWindow.FindName("cmbModelStates").ItemsSource = $mMdlStates
 		$dsWindow.FindName("cmbModelStates").SelectedIndex = 0
 		$dsWindow.FindName("cmbModelStates").IsEnabled = $true
+		
+		# Update the label based on CAD provider
+		if ($dsWindow.FindName("lblBomVariant")) {
+			if ($mCadProvider -eq "SolidWorks") {
+				$dsWindow.FindName("lblBomVariant").Content = $UIStrings["ADSK.TS.CAD-BOM05"] # "Configuration:"]
+			}
+			else {
+				$dsWindow.FindName("lblBomVariant").Content = $UIStrings["ADSK.TS.CAD-BOM03"] # "Model State:"]
+			}
+		}
 	}
 	else {
 		$dsWindow.FindName("cmbModelStates").IsEnabled = $false

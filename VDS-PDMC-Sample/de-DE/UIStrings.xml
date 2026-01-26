@@ -262,6 +262,7 @@
   <UIString ID="MSDCE_CAD-BOM02">Achtung - Gewählte Komponente enthält keine CAD-BOM Daten.</UIString>
   <UIString ID="ADSK.TS.CAD-BOM03">Modellzustand</UIString>
   <UIString ID="ADSK.TS.CAD-BOM04">Finde</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM05">Konfiguration</UIString>
   <!--VDS-PDMC-Sample CAD-BOM end-->
 
   <!--VDS-PDMC-Sample Inventor Dialog-->

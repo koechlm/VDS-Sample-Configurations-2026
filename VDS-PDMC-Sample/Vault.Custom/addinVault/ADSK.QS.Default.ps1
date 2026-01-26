@@ -433,6 +433,12 @@ function OnTabContextChanged {
 			}
 		}
 
+		# read configuration names for sldasm files
+		if ($file.Name -match "\.sldasm$" ) {
+			$_MsArray = @()
+			$_MsArray += mGetMdlStates($file.id)
+		}
+
 		#read the primary BOM
 		try {
 			$bom = @(GetFileBOM $file.id 0)
