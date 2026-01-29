@@ -70,7 +70,7 @@
                 <ColumnDefinition Width="305"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="{Binding UIString[ADSK.TS.CAD-BOM03], FallbackValue='Model State'}"/>
+            <Label x:Name="lblBomVariant" Content="{Binding UIString[ADSK.TS.CAD-BOM03], FallbackValue='Model State'}"/>
             <ComboBox x:Name="cmbModelStates" Width="Auto" MinWidth="200" VerticalAlignment="Center" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value" MaxWidth="300" HorizontalAlignment="Left"/>
             <Button x:Name="btnCadBomClear" IsEnabled="False" Command="{Binding PsCmd[CadBomClearButton_Click]}" Grid.Column="2" Content="  X  " Foreground="Red" FontWeight="Bold" HorizontalAlignment="Right" Margin="20,1,0,1" ToolTip="Clear search text"/>
             <TextBox x:Name="txtCadBomSearch" Grid.Column="3" TextWrapping="Wrap" Text="" IsReadOnly="False" MaxWidth="300"/>
