@@ -5,7 +5,6 @@ function InitializeWindow
     $dsWindow.Title = SetWindowTitle		
     InitializeCategory
     InitializeNumSchm
-    # set a preference for suggested Vault path, e.g. the model's path for a drawing or the last used one
     SetFolderPath
     InitializeFileNameValidation
 	#end rules applying commonly
@@ -27,7 +26,7 @@ function InitializeWindow
 }
 
 function SetFolderPath() {
-	# set a preference for the suggested Vault path, otherwise preset the last used folder
+    # set a preference for the suggested Vault path, otherwise preset the last used folder
     $DC = $dsWindow.DataContext
     if (-not [String]::IsNullOrEmpty($DC.PathAndFileNameHandler.SuggestedVaultPath)) {
         $Prop["Folder"].Value = $DC.PathAndFileNameHandler.SuggestedVaultPath 
@@ -36,7 +35,6 @@ function SetFolderPath() {
         SetFolderByLastSelectedPath
     }
 }
-
 function SetFolderByLastSelectedPath() {
     $rootFolder = GetVaultRootFolder
     if($rootFolder -eq $null){
@@ -119,10 +117,41 @@ function InitializeCategory()
 
 function InitializeNumSchm()
 {
-	#Adopted from a DocumentService call, which always pulls FILE class numbering schemes
-	$global:numSchems = @($vault.NumberingService.GetNumberingSchemes('FILE', 'Activated')) 
-    if ($Prop["_CreateMode"].Value)
-    {
+	# Create a new NumSchm element with Name = "None"
+	$noneNumSchm = New-Object Autodesk.Connectivity.WebServices.NumSchm
+	$noneNumSchm.Name = $UIString["LBL77"]
+
+	# Get the numbering schemes
+	$schemes = $vault.NumberingService.GetNumberingSchemes('FILE', 'Activated')
+	
+	$defaultScheme = $null;
+	
+	if ($schemes -and $schemes.Count -gt 0)
+	{
+	
+		$defaultScheme = $schemes | Where-Object { $_.IsDflt }
+		
+		# Prepend the new element
+		$global:numSchems = @($noneNumSchm) + $schemes
+	}
+	else
+	{
+		$global:numSchems = $schemes;
+	}
+
+	
+	if ($Prop["_CreateMode"].Value)
+	{
+		#Set Default scheme if exist 
+		if($defaultScheme)
+		{
+			$Prop["_NumSchm"].Value = $defaultScheme.Name
+		}
+		else 
+		{
+			$Prop["_NumSchm"].Value = $noneNumSchm.Name
+		}
+		
 		if (-not $Prop["_SaveCopyAsMode"].Value)
 		{
 			$Prop["_Category"].add_PropertyChanged({
@@ -135,10 +164,6 @@ function InitializeNumSchm()
                     }
 				}	
 			})
-        }
-		else
-        {
-            $Prop["_NumSchm"].Value = "None"
         }
     }
 }
@@ -208,24 +233,14 @@ function SetWindowTitle
 function GetNumSchms
 {
 	$specialFiles = @(".DWG",".IDW",".IPN")
-    if ($specialFiles -contains $Prop["_FileExt"].Value -and !$Prop["_GenerateFileNumber4SpecialFiles"].Value)
-    {
-        return $null
-    }
+	if ($specialFiles -contains $Prop["_FileExt"].Value -and !$Prop["_GenerateFileNumber4SpecialFiles"].Value)
+	{
+		return $null
+	}
 	if (-Not $Prop["_EditMode"].Value)
-    {
-		if ($numSchems.Count -gt 1)
-		{
-			$numSchems = $numSchems | Sort-Object -Property IsDflt -Descending
-		}
-        if ($Prop["_SaveCopyAsMode"].Value)
-        {
-            $noneNumSchm = New-Object 'Autodesk.Connectivity.WebServices.NumSchm'
-            $noneNumSchm.Name = $UIString["LBL77"]
-            return $numSchems += $noneNumSchm
-        }    
-        return $numSchems
-    }
+	{
+		return $numSchems
+	}
 }
 
 function GetCategories
