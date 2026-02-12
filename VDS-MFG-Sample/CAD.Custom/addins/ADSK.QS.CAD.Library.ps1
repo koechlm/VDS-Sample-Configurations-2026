@@ -36,7 +36,7 @@ function mGetAllFolderProperties ([long] $FldID)
 		$propDefIds += $_.Id
 	}	
 	$mEntIDs = @()
-	$mEntIDs += $mFldID
+	$mEntIDs += $FldID
 	$mPropertyInstances = $vault.PropertyService.GetProperties("FLDR", $mEntIDs, $propDefIds)	
 	Foreach($mPropInst in $mPropertyInstances){		
 		$Name = ($mFldrPropDefs | Where-Object {$_.Id -eq $mPropInst.PropDefId}).DispName
@@ -100,14 +100,14 @@ function mGetNewFileParentFldrByCat ([string] $Category) {
 		$mPath = $mPath.Replace("//", "/")
 		$mFld = $vault.DocumentService.GetFolderByPath($mPath)
 		#the loop to get the next parent project category folder; skip if you don't look for projects
-		IF ($mFld.Cat.CatName -eq $UIString[$Category]) { $mFldrFound = $true }
+		IF ($mFld.Cat.CatName -eq $Category) { $mFldrFound = $true }
 		ElseIf ($mPath -ne "$/") {
 			Do {
 				$mParID = $mFld.ParID
 				$mFld = $vault.DocumentService.GetFolderByID($mParID)
-				IF ($mFld.Cat.CatName -eq $UIString[$Category]) { $mFldrFound = $true }
+				IF ($mFld.Cat.CatName -eq $Category) { $mFldrFound = $true }
 			} 
-			Until (($mFld.Cat.CatName -eq $UIString[$Category]) -or ($mFld.FullName -eq "$"))
+			Until (($mFld.Cat.CatName -eq $Category) -or ($mFld.FullName -eq "$"))
 		}	
 	}
 	catch { 
