@@ -31,7 +31,7 @@ namespace VdsSampleUtilities
     /// <summary>
     /// Provide System.Text.Encoding not in VDS PowerShell 2026 runtime
     /// </summary>
-    public class TextEncoding 
+    public class TextEncoding
     {
         /// <summary>
         /// Return the byte value using Systems.Text.Encoding.UTF8
@@ -651,6 +651,436 @@ namespace VdsSampleUtilities
                 }
             }
         }
+
+        #region CAD-BOM methods
+        /// <summary>
+        /// Represents a single row in a Bill of Materials (BOM)
+        /// </summary>
+        public class BomRow
+        {
+            public int Position { get; set; }
+            public string? PartNumber { get; set; }
+            public string? ComponentType { get; set; }
+            public float Quantity { get; set; }
+            public string? Name { get; set; }
+            public byte[]? Thumbnail { get; set; }
+            public string? Title { get; set; }
+            public string? Description { get; set; }
+            public string? Material { get; set; }
+        }
+
+        /// <summary>
+        /// Represents a Bill of Materials containing multiple BOM items
+        /// </summary>
+        public class Bom
+        {
+            public List<BomRow> BOMItems { get; set; } = new List<BomRow>();
+        }
+
+        /// <summary>
+        /// Get model states or configurations from a file's BOM structure
+        /// </summary>
+        /// <param name="conn">Vault connection</param>
+        /// <param name="fileId">File ID to get model states from</param>
+        /// <returns>Dictionary of model state names and their IDs</returns>
+        public Dictionary<string, long> GetModelStates(Connection conn, long fileId)
+        {
+            var mFileBOM = conn.WebServiceManager.DocumentService.GetBOMByFileId(fileId);
+            var mFile = conn.WebServiceManager.DocumentService.GetFileById(fileId);
+
+            var propDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE");
+            var providerPropDef = propDefs.FirstOrDefault(n => n.SysName == "Provider");
+
+            string mCadProvider = "Unknown";
+            if (providerPropDef != null)
+            {
+                var providerProp = conn.WebServiceManager.PropertyService.GetProperties("FILE", new long[] { fileId }, new long[] { providerPropDef.Id })[0];
+                var providerValue = providerProp.Val?.ToString();
+
+                if (providerValue?.Contains("Inventor") == true)
+                {
+                    mCadProvider = "Inventor";
+                }
+                else if (providerValue?.Contains("SolidWorks") == true)
+                {
+                    mCadProvider = "SolidWorks";
+                }
+            }
+
+            var msArray = new List<BOMComp>();
+
+            if (mCadProvider == "SolidWorks")
+            {
+                msArray = mFileBOM.CompArray.Where(c =>
+                    c.XRefId == -1 &&
+                    c.UniqueId != null &&
+                    c.UniqueId.Contains("@")
+                ).ToList();
+            }
+            else if (mCadProvider == "Inventor")
+            {
+                msArray = mFileBOM.CompArray.Where(c =>
+                    c.XRefId == -1 && (
+                        (c.UniqueId != null && c.UniqueId.StartsWith("MS:")) ||
+                        (c.Name != null && System.Text.RegularExpressions.Regex.IsMatch(c.Name, @"\[.*\]"))
+                    )
+                ).ToList();
+
+                // Add the first component as [Primary] if it's not already in the list
+                if (mFileBOM.CompArray.Length > 0)
+                {
+                    var firstComp = mFileBOM.CompArray[0];
+                    if (firstComp.XRefId == -1 && !msArray.Contains(firstComp))
+                    {
+                        msArray.Insert(0, firstComp);
+                    }
+                }
+            }
+
+            var mMdlStates = new Dictionary<string, long>();
+
+            if (msArray.Count > 1)
+            {
+                foreach (var comp in msArray)
+                {
+                    string mName = "";
+
+                    if (mCadProvider == "SolidWorks")
+                    {
+                        if (comp.Name != null)
+                        {
+                            var nameParts = comp.Name.Split('@');
+                            if (nameParts.Length == 2 && nameParts[1] == mFile.Name)
+                            {
+                                mName = nameParts[0];
+                            }
+                            else
+                            {
+                                mName = comp.Name;
+                            }
+                        }
+                    }
+                    else if (mCadProvider == "Inventor")
+                    {
+                        if (comp.Name != null && comp.Name.Contains(" (") && comp.Name.Contains(")"))
+                        {
+                            int startIndex = comp.Name.IndexOf(" (");
+                            int endIndex = comp.Name.IndexOf(")");
+                            if (startIndex >= 0 && endIndex > startIndex)
+                            {
+                                mName = comp.Name.Substring(startIndex + 2, endIndex - startIndex - 2);
+                            }
+                        }
+                        else
+                        {
+                            mName = "[Primary]";
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(mName) && !mMdlStates.ContainsKey(mName))
+                    {
+                        mMdlStates.Add(mName, comp.Id);
+                    }
+                }
+            }
+
+            return mMdlStates;
+        }
+
+        /// <summary>
+        /// Get the BOM structure for a file
+        /// </summary>
+        /// <param name="conn">Vault connection</param>
+        /// <param name="fileId">File ID</param>
+        /// <param name="bomCompId">BOM Component ID (use root component or model state ID)</param>
+        /// <returns>List of BOM items</returns>
+        public List<BomRow> GetFileBOM(Connection conn, long fileId, long bomCompId)
+        {
+            var propDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE");
+            var thumbnailPropDef = propDefs.FirstOrDefault(n => n.SysName == "Thumbnail");
+
+            var mFileBom = conn.WebServiceManager.DocumentService.GetBOMByFileId(fileId);
+
+            var cldIds = new List<long>();
+            var instances = mFileBom.InstArray.Where(i => i.ParId == bomCompId).ToList();
+
+            foreach (var inst in instances)
+            {
+                var comp = mFileBom.CompArray.FirstOrDefault(c => c.Id == inst.CldId);
+                if (comp != null && comp.XRefId != -1)
+                {
+                    cldIds.Add(comp.XRefId);
+                }
+            }
+
+            var bomItems = new List<BomRow>();
+
+            if (cldIds.Count > 0)
+            {
+                var cldBoms = conn.WebServiceManager.DocumentService.GetBOMByFileIds(cldIds.ToArray());
+                var schm = mFileBom.SchmArray.FirstOrDefault(s => s.SchmTyp == SchemeTypeEnum.Structured && s.RootCompId == bomCompId);
+                int cldBomCounter = 0;
+
+                foreach (var inst in instances)
+                {
+                    var bomItem = new BomRow();
+                    long cldId = inst.CldId;
+
+                    var comp = mFileBom.CompArray.FirstOrDefault(c => c.Id == cldId);
+                    if (comp == null) continue;
+
+                    // Skip if component has phantom/reference structure (unless instance overrides to Normal)
+                    if ((comp.BOMStruct == ACW.BOMStructureEnum.Phantom ||
+                         comp.BOMStruct == ACW.BOMStructureEnum.DynamicPhantom ||
+                         comp.BOMStruct == ACW.BOMStructureEnum.Reference) &&
+                        inst.BOMStructOverde != ACW.BOMStructureOverrideEnum.Normal)
+                    {
+                        continue;
+                    }
+
+                    // Skip if instance explicitly overrides to phantom/reference
+                    if (inst.BOMStructOverde == ACW.BOMStructureOverrideEnum.Phantom ||
+                        inst.BOMStructOverde == ACW.BOMStructureOverrideEnum.DynamicPhantom ||
+                        inst.BOMStructOverde == ACW.BOMStructureOverrideEnum.Reference)
+                    {
+                        continue;
+                    }
+
+                    bomItem.Quantity = (float)(inst.QuantOverde == -1 ? inst.Quant : inst.QuantOverde);
+
+                    // 
+                    var occur = mFileBom.SchmOccArray.FirstOrDefault(o => o.SchmId == schm?.Id && o.Id == inst.SchemeOccurrenceId);
+                    if (occur != null)
+                    {
+                        // bomItem.Position = occur.DtlId;
+                        // Convert the string DtlId to int safely
+                        if (int.TryParse(occur.DtlId, out int position))
+                        {
+                            bomItem.Position = position;
+                        }
+                        else
+                        {
+                            bomItem.Position = (int)occur.Id; // or another default/fallback value as appropriate
+                        }
+                    }
+
+                    Autodesk.Connectivity.WebServices.BOM cldBom;
+                    if (comp.XRefId == -1)
+                    {
+                        cldBom = mFileBom;
+                    }
+                    else
+                    {
+                        cldBom = cldBoms[cldBomCounter++];
+                    }
+
+                    string uniqueId = comp.UniqueId;
+                    var cldComp = cldBom.CompArray.FirstOrDefault(c => c.UniqueId == uniqueId && c.XRefId == -1);
+                    if (cldComp == null && cldBom.CompArray.Length > 0)
+                    {
+                        cldComp = cldBom.CompArray[0];
+                    }
+
+                    if (cldComp != null)
+                    {
+                        bomItem.Name = cldComp.Name;
+                        bomItem.ComponentType = cldComp.CompTyp.ToString();
+
+                        var cldCompAttrArray = cldBom.CompAttrArray.Where(ca => ca.CompId == cldComp.Id).ToArray();
+                        if (cldCompAttrArray.Length == 0)
+                        {
+                            cldCompAttrArray = cldBom.CompAttrArray;
+                        }
+
+                        var propPartNumber = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Part Number");
+                        if (propPartNumber != null)
+                        {
+                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == propPartNumber.Id);
+                            if (prop != null)
+                            {
+                                bomItem.PartNumber = prop.Val;
+                            }
+                        }
+
+                        if (cldComp.CompTyp != ComponentTypeEnum.Virtual)
+                        {
+                            if (thumbnailPropDef != null && cldBomCounter > 0 && cldBomCounter <= cldIds.Count)
+                            {
+                                var thumbnailProp = conn.WebServiceManager.PropertyService.GetProperties("FILE",
+                                    new long[] { cldIds[cldBomCounter - 1] },
+                                    new long[] { thumbnailPropDef.Id })[0];
+                                bomItem.Thumbnail = thumbnailProp.Val as byte[];
+                            }
+                        }
+
+                        var titleProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Title");
+                        if (titleProp != null)
+                        {
+                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == titleProp.Id);
+                            if (prop != null)
+                            {
+                                bomItem.Title = prop.Val;
+                            }
+                        }
+
+                        var descProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Description");
+                        if (descProp != null)
+                        {
+                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == descProp.Id);
+                            if (prop != null)
+                            {
+                                bomItem.Description = prop.Val;
+                            }
+                        }
+
+                        var matProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Material");
+                        if (matProp != null)
+                        {
+                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == matProp.Id);
+                            if (prop != null)
+                            {
+                                bomItem.Material = prop.Val;
+                            }
+                        }
+                    }
+
+                    bomItems.Add(bomItem);
+                }
+            }
+
+            return bomItems.OrderBy(b => b.Position).ToList();
+        }
+
+        /// <summary>
+        /// Search for a file by part number
+        /// </summary>
+        /// <param name="conn">Vault connection</param>
+        /// <param name="partNumber">Part number to search for</param>
+        /// <returns>First file found with matching part number, or null if not found</returns>
+        public ACW.File? SearchFileByPartNumber(Connection conn, string partNumber)
+        {
+            var srchCond = new SrchCond();
+            var propDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE");
+            var propDef = propDefs.FirstOrDefault(n => n.SysName == "PartNumber");
+
+            if (propDef == null) return null;
+
+            srchCond.PropDefId = propDef.Id;
+            srchCond.SrchOper = 3;
+            srchCond.SrchTxt = partNumber;
+            srchCond.PropTyp = PropertySearchType.SingleProperty;
+            srchCond.SrchRule = SearchRuleType.Must;
+
+            var searchStatus = new SrchStatus();
+            var srchSort = new SrchSort();
+            string bookmark = "";
+            var resultAll = new List<ACW.File>();
+
+            while (searchStatus.TotalHits == 0 || resultAll.Count < searchStatus.TotalHits)
+            {
+                var resultPage = conn.WebServiceManager.DocumentService.FindFilesBySearchConditions(
+                    new[] { srchCond },
+                    new[] { srchSort },
+                    new[] { conn.WebServiceManager.DocumentService.GetFolderRoot().Id },
+                    true,
+                    true,
+                    ref bookmark,
+                    out searchStatus);
+
+                if (searchStatus.IndxStatus != IndexingStatus.IndexingComplete &&
+                    searchStatus.IndxStatus != IndexingStatus.IndexingContent)
+                {
+                    break;
+                }
+
+                if (resultPage != null && resultPage.Length > 0)
+                {
+                    resultAll.AddRange(resultPage);
+                }
+                else
+                {
+                    break;
+                }
+
+                break;
+            }
+
+            return resultAll.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Navigate to a file in Vault Explorer by part number
+        /// </summary>
+        /// <param name="conn">Vault connection</param>
+        /// <param name="partNumber">Part number of the file to navigate to</param>
+        /// <param name="vaultApplication">Vault Application instance</param>
+        public void GoToCadBomCompFile(Connection conn, string partNumber, object vaultApplication)
+        {
+            var mFile = SearchFileByPartNumber(conn, partNumber);
+            if (mFile != null)
+            {
+                var mExplorerUtil = ACET.ExplorerLoader.GetExplorerUtil((Autodesk.Connectivity.Explorer.Extensibility.IApplication)vaultApplication);
+                var mFileIteration = new FileIteration(conn, mFile);
+                mExplorerUtil.GoToEntity(mFileIteration);
+            }
+        }
+
+        /// <summary>
+        /// Navigate to an item in Vault Explorer by part number
+        /// </summary>
+        /// <param name="conn">Vault connection</param>
+        /// <param name="partNumber">Part number of the item to navigate to</param>
+        /// <param name="vaultApplication">Vault Application instance</param>
+        public void GoToCadBomCompItem(Connection conn, string partNumber, object vaultApplication)
+        {
+            var mFile = SearchFileByPartNumber(conn, partNumber);
+            if (mFile != null)
+            {
+                var items = conn.WebServiceManager.ItemService.GetItemsByFileId(mFile.Id);
+                if (items != null && items.Length > 0)
+                {
+                    var mExplorerUtil = ACET.ExplorerLoader.GetExplorerUtil((Autodesk.Connectivity.Explorer.Extensibility.IApplication)vaultApplication);
+                    var mItemRevision = new ItemRevision(conn, items[0]);
+                    mExplorerUtil.GoToEntity(mItemRevision);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Filter BOM list based on search text
+        /// </summary>
+        /// <param name="bomList">Original BOM list</param>
+        /// <param name="searchText">Text to filter by</param>
+        /// <returns>Filtered BOM list</returns>
+        public List<BomRow> FilterBOMList(List<BomRow> bomList, string searchText)
+        {
+            if (string.IsNullOrEmpty(searchText) || bomList == null)
+            {
+                return bomList ?? new List<BomRow>();
+            }
+
+            if (searchText.Contains("*"))
+            {
+                return bomList;
+            }
+
+            var escapedSearchText = System.Text.RegularExpressions.Regex.Escape(searchText);
+            var regex = new System.Text.RegularExpressions.Regex(escapedSearchText,
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            return bomList.Where(row =>
+                regex.IsMatch(row.PartNumber ?? "") ||
+                regex.IsMatch(row.Name ?? "") ||
+                regex.IsMatch(row.Title ?? "") ||
+                regex.IsMatch(row.Description ?? "") ||
+                regex.IsMatch(row.Material ?? "") ||
+                regex.IsMatch(row.ComponentType ?? "") ||
+                regex.IsMatch(row.Position.ToString()) ||
+                regex.IsMatch(row.Quantity.ToString())
+            ).ToList();
+        }
+
+        #endregion CAD-BOM methods
 
     }
 

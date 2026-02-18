@@ -28,7 +28,7 @@ namespace VdsSampleUtilities
         /// 
         /// </summary>
         [XmlElement("SettingName")]
-        public string mSettingName;
+        public string mSettingName = string.Empty;
 
         #region for future use
         //[XmlElement("OutputPath")]
@@ -68,16 +68,23 @@ namespace VdsSampleUtilities
         {
             Settings retVal = new Settings();
 
-
             string codeFolder = Util.GetAssemblyPath();
             string xmlPath = Path.Combine(codeFolder, "Settings.xml");
+
+            if (!File.Exists(xmlPath))
+            {
+                return retVal;
+            }
 
             using (System.IO.StreamReader reader = new System.IO.StreamReader(xmlPath))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                retVal = (Settings)serializer.Deserialize(reader);
+                var deserialized = serializer.Deserialize(reader);
+                if (deserialized is Settings settings)
+                {
+                    retVal = settings;
+                }
             }
-
 
             return retVal;
         }
