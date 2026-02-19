@@ -9,6 +9,7 @@ using ACW = Autodesk.Connectivity.WebServices;
 using ACWT = Autodesk.Connectivity.WebServicesTools;
 using VDF = Autodesk.DataManagement.Client.Framework;
 using Autodesk.Connectivity.Explorer.Extensibility;
+using VDSSampleUtilities.Properties;
 
 
 namespace VdsSampleUtilities
@@ -29,7 +30,7 @@ namespace VdsSampleUtilities
             //Describe admin command item
             CommandItem mAdminCmd = new CommandItem("Command.VdsSampleAdmin", "VDS-Sample-Administration...")
             {                
-                Image = Properties.Resources.Open_Settings_16_Light
+                Image = Resources.Open_Settings_16_Light
             };
             mAdminCmd.Execute += mAdminCmd_Execute;
 
@@ -63,12 +64,12 @@ namespace VdsSampleUtilities
                 if (mCurrentTheme == VDF.Forms.SkinUtils.Theme.Light.ToString())
                 {
                     mAdminWindow.LookAndFeel.SetSkinStyle(VDF.Forms.SkinUtils.CustomThemeSkins.LightThemeName);
-                    mAdminWindow.IconOptions.Image = Properties.Resources.Open_Settings_16_Light;
+                    mAdminWindow.IconOptions.Image = Resources.Open_Settings_16_Light;
                 }
                 if (mCurrentTheme == VDF.Forms.SkinUtils.Theme.Dark.ToString())
                 {
                     mAdminWindow.LookAndFeel.SetSkinStyle(VDF.Forms.SkinUtils.CustomThemeSkins.DarkThemeName);
-                    mAdminWindow.IconOptions.Image = Properties.Resources.Open_Settings_16_Dark;
+                    mAdminWindow.IconOptions.Image = Resources.Open_Settings_16_Dark;
                 }
                 if (mCurrentTheme == VDF.Forms.SkinUtils.Theme.Default.ToString())
                 {

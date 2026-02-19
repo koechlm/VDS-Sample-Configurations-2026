@@ -496,11 +496,15 @@ function OnTabContextChanged {
 
 		# exit if the file.Name doesn't match either *.iam or *.sldasm as the following code is only for Inventor and SolidWorks files; for other CAD files, just read the primary BOM as there is no model state or configuration concept
 		if ($file.Name -notmatch "\.iam$" -and $file.Name -notmatch "\.sldasm$") { return }
-
+	
 		#read the primary BOM
+		$errorMessage = ""
 		try {
-			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
+			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0, [ref] $errorMessage)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
 			$dsWindow.FindName("bomList").ItemsSource = $bom
+			if ($errorMessage -ne "") {
+				[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowMessage($errorMessage, "Data Standard – CAD-BOM", [Autodesk.DataManagement.Client.Framework.Forms.Currency.ButtonConfiguration]::Ok)
+			}
 		}
 		catch {
 			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
@@ -516,15 +520,18 @@ function OnTabContextChanged {
 					}
 					else {
 						try {
-							$mMdlStateBom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId)) #($file.id, $mModelStateId)
+							$mMdlStateBom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $errorMessage)) #($file.id, $mModelStateId)
 							$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+							if ($errorMessage -ne "") {
+								[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowMessage($errorMessage, "Data Standard – CAD-BOM", [Autodesk.DataManagement.Client.Framework.Forms.Currency.ButtonConfiguration]::Ok)
+							}							
 							#update the global bom list to restore clearing the search text box
 							$global:currentBOMList = $mMdlStateBom
 							#clear the search text box as the grid content has changed
 							CadBomClearButton_Click
 						}
 						catch {
-							<#Do this if a terminating exception happens#>
+							[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
 						}
 					
 					}
