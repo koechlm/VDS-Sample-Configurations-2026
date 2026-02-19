@@ -801,151 +801,158 @@ namespace VdsSampleUtilities
 
             var mFileBom = conn.WebServiceManager.DocumentService.GetBOMByFileId(fileId);
 
-            var cldIds = new List<long>();
-            var instances = mFileBom.InstArray.Where(i => i.ParId == bomCompId).ToList();
+            var bomItems = new List<BomRow>();
 
-            foreach (var inst in instances)
+            var schm = mFileBom.SchmArray.FirstOrDefault(s => s.SchmTyp == SchemeTypeEnum.Structured && s.RootCompId == bomCompId);
+            if (schm == null)
             {
-                var comp = mFileBom.CompArray.FirstOrDefault(c => c.Id == inst.CldId);
+                return bomItems;
+            }
+
+            var occurrences = mFileBom.SchmOccArray.Where(o => o.SchmId == schm.Id).ToList();
+
+            var cldIds = new List<long>();
+            foreach (var occur in occurrences)
+            {
+                var comp = mFileBom.CompArray.FirstOrDefault(c => c.Id == occur.CompId);
                 if (comp != null && comp.XRefId != -1)
                 {
                     cldIds.Add(comp.XRefId);
                 }
             }
 
-            var bomItems = new List<BomRow>();
-
+            ACW.BOM[]? cldBoms = null;
             if (cldIds.Count > 0)
             {
-                var cldBoms = conn.WebServiceManager.DocumentService.GetBOMByFileIds(cldIds.ToArray());
-                var schm = mFileBom.SchmArray.FirstOrDefault(s => s.SchmTyp == SchemeTypeEnum.Structured && s.RootCompId == bomCompId);
-                int cldBomCounter = 0;
+                cldBoms = conn.WebServiceManager.DocumentService.GetBOMByFileIds(cldIds.ToArray());
+            }
 
-                foreach (var inst in instances)
+            int cldBomCounter = 0;
+
+            foreach (var occur in occurrences)
+            {
+                var comp = mFileBom.CompArray.FirstOrDefault(c => c.Id == occur.CompId);
+                if (comp == null) continue;
+
+                var inst = mFileBom.InstArray.FirstOrDefault(i => i.CldId == occur.CompId);
+                if (inst == null) continue;
+                if (inst.UniqueId.IsNullOrEmpty()) {
+                    // we need to find the phantom assembly that contains the instance matching the current occurrence, as the instance on the root assembly is not always populated with the uniqueId and quantity information.
+                    var phantomOccur = mFileBom.SchmOccArray.FirstOrDefault(o => o.SchmId == schm.Id && o.CompId == occur.CompId);
+                    if (phantomOccur != null)
+                    {
+                        var phantomInst = mFileBom.InstArray.FirstOrDefault(i => i.CldId == phantomOccur.CompId);
+                        if (phantomInst != null && !phantomInst.UniqueId.IsNullOrEmpty())
+                        {
+                            inst = phantomInst;
+                        }
+                    }
+                }
+                ;
+
+
+
+                var bomItem = new BomRow();
+
+                bomItem.Quantity = (float)(inst.QuantOverde == -1 ? inst.Quant : inst.QuantOverde);
+
+                if (int.TryParse(occur.DtlId, out int position))
                 {
-                    var bomItem = new BomRow();
-                    long cldId = inst.CldId;
+                    bomItem.Position = position;
+                }
+                else
+                {
+                    bomItem.Position = (int)occur.Id;
+                }
 
-                    var comp = mFileBom.CompArray.FirstOrDefault(c => c.Id == cldId);
-                    if (comp == null) continue;
-
-                    // Skip if component has phantom/reference structure (unless instance overrides to Normal)
-                    if ((comp.BOMStruct == ACW.BOMStructureEnum.Phantom ||
-                         comp.BOMStruct == ACW.BOMStructureEnum.DynamicPhantom ||
-                         comp.BOMStruct == ACW.BOMStructureEnum.Reference) &&
-                        inst.BOMStructOverde != ACW.BOMStructureOverrideEnum.Normal)
-                    {
-                        continue;
-                    }
-
-                    // Skip if instance explicitly overrides to phantom/reference
-                    if (inst.BOMStructOverde == ACW.BOMStructureOverrideEnum.Phantom ||
-                        inst.BOMStructOverde == ACW.BOMStructureOverrideEnum.DynamicPhantom ||
-                        inst.BOMStructOverde == ACW.BOMStructureOverrideEnum.Reference)
-                    {
-                        continue;
-                    }
-
-                    bomItem.Quantity = (float)(inst.QuantOverde == -1 ? inst.Quant : inst.QuantOverde);
-
-                    // 
-                    var occur = mFileBom.SchmOccArray.FirstOrDefault(o => o.SchmId == schm?.Id && o.Id == inst.SchemeOccurrenceId);
-                    if (occur != null)
-                    {
-                        // bomItem.Position = occur.DtlId;
-                        // Convert the string DtlId to int safely
-                        if (int.TryParse(occur.DtlId, out int position))
-                        {
-                            bomItem.Position = position;
-                        }
-                        else
-                        {
-                            bomItem.Position = (int)occur.Id; // or another default/fallback value as appropriate
-                        }
-                    }
-
-                    Autodesk.Connectivity.WebServices.BOM cldBom;
-                    if (comp.XRefId == -1)
-                    {
-                        cldBom = mFileBom;
-                    }
-                    else
+                ACW.BOM cldBom;
+                if (comp.XRefId == -1)
+                {
+                    cldBom = mFileBom;
+                }
+                else
+                {
+                    if (cldBoms != null && cldBomCounter < cldBoms.Length)
                     {
                         cldBom = cldBoms[cldBomCounter++];
                     }
-
-                    string uniqueId = comp.UniqueId;
-                    var cldComp = cldBom.CompArray.FirstOrDefault(c => c.UniqueId == uniqueId && c.XRefId == -1);
-                    if (cldComp == null && cldBom.CompArray.Length > 0)
+                    else
                     {
-                        cldComp = cldBom.CompArray[0];
+                        continue;
                     }
-
-                    if (cldComp != null)
-                    {
-                        bomItem.Name = cldComp.Name;
-                        bomItem.ComponentType = cldComp.CompTyp.ToString();
-
-                        var cldCompAttrArray = cldBom.CompAttrArray.Where(ca => ca.CompId == cldComp.Id).ToArray();
-                        if (cldCompAttrArray.Length == 0)
-                        {
-                            cldCompAttrArray = cldBom.CompAttrArray;
-                        }
-
-                        var propPartNumber = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Part Number");
-                        if (propPartNumber != null)
-                        {
-                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == propPartNumber.Id);
-                            if (prop != null)
-                            {
-                                bomItem.PartNumber = prop.Val;
-                            }
-                        }
-
-                        if (cldComp.CompTyp != ComponentTypeEnum.Virtual)
-                        {
-                            if (thumbnailPropDef != null && cldBomCounter > 0 && cldBomCounter <= cldIds.Count)
-                            {
-                                var thumbnailProp = conn.WebServiceManager.PropertyService.GetProperties("FILE",
-                                    new long[] { cldIds[cldBomCounter - 1] },
-                                    new long[] { thumbnailPropDef.Id })[0];
-                                bomItem.Thumbnail = thumbnailProp.Val as byte[];
-                            }
-                        }
-
-                        var titleProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Title");
-                        if (titleProp != null)
-                        {
-                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == titleProp.Id);
-                            if (prop != null)
-                            {
-                                bomItem.Title = prop.Val;
-                            }
-                        }
-
-                        var descProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Description");
-                        if (descProp != null)
-                        {
-                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == descProp.Id);
-                            if (prop != null)
-                            {
-                                bomItem.Description = prop.Val;
-                            }
-                        }
-
-                        var matProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Material");
-                        if (matProp != null)
-                        {
-                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == matProp.Id);
-                            if (prop != null)
-                            {
-                                bomItem.Material = prop.Val;
-                            }
-                        }
-                    }
-
-                    bomItems.Add(bomItem);
                 }
+
+                string uniqueId = comp.UniqueId;
+                var cldComp = cldBom.CompArray.FirstOrDefault(c => c.UniqueId == uniqueId && c.XRefId == -1);
+                if (cldComp == null && cldBom.CompArray.Length > 0)
+                {
+                    cldComp = cldBom.CompArray[0];
+                }
+
+                if (cldComp != null)
+                {
+                    bomItem.Name = cldComp.Name;
+                    bomItem.ComponentType = cldComp.CompTyp.ToString();
+
+                    var cldCompAttrArray = cldBom.CompAttrArray.Where(ca => ca.CompId == cldComp.Id).ToArray();
+                    if (cldCompAttrArray.Length == 0)
+                    {
+                        cldCompAttrArray = cldBom.CompAttrArray;
+                    }
+
+                    var propPartNumber = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Part Number");
+                    if (propPartNumber != null)
+                    {
+                        var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == propPartNumber.Id);
+                        if (prop != null)
+                        {
+                            bomItem.PartNumber = prop.Val;
+                        }
+                    }
+
+                    if (cldComp.CompTyp != ComponentTypeEnum.Virtual)
+                    {
+                        if (thumbnailPropDef != null && comp.XRefId != -1 && cldBomCounter > 0 && cldBomCounter <= cldIds.Count)
+                        {
+                            var thumbnailProp = conn.WebServiceManager.PropertyService.GetProperties("FILE",
+                                new long[] { cldIds[cldBomCounter - 1] },
+                                new long[] { thumbnailPropDef.Id })[0];
+                            bomItem.Thumbnail = thumbnailProp.Val as byte[];
+                        }
+                    }
+
+                    var titleProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Title");
+                    if (titleProp != null)
+                    {
+                        var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == titleProp.Id);
+                        if (prop != null)
+                        {
+                            bomItem.Title = prop.Val;
+                        }
+                    }
+
+                    var descProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Description");
+                    if (descProp != null)
+                    {
+                        var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == descProp.Id);
+                        if (prop != null)
+                        {
+                            bomItem.Description = prop.Val;
+                        }
+                    }
+
+                    var matProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Material");
+                    if (matProp != null)
+                    {
+                        var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == matProp.Id);
+                        if (prop != null)
+                        {
+                            bomItem.Material = prop.Val;
+                        }
+                    }
+                }
+
+                bomItems.Add(bomItem);
             }
 
             return bomItems.OrderBy(b => b.Position).ToList();
