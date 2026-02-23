@@ -520,6 +520,7 @@ function OnTabContextChanged {
 					}
 					else {
 						try {
+							$errorMessage = ""
 							$mMdlStateBom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $errorMessage)) #($file.id, $mModelStateId)
 							$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
 							if ($errorMessage -ne "") {
@@ -531,7 +532,7 @@ function OnTabContextChanged {
 							CadBomClearButton_Click
 						}
 						catch {
-							[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
+							[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Error in CAD-BOM script handling switch of model state or configuration.", "Data Standard – CAD-BOM")
 						}
 					
 					}
