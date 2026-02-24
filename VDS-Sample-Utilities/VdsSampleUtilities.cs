@@ -1250,20 +1250,41 @@ namespace VdsSampleUtilities
                     var funcProp = parentBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
                     if (funcProp != null)
                     {
-                        var instProp = parentBom.InstPropArray.FirstOrDefault(i => i.InstId == occur.Id);
-                        if (instProp != null)
+                        // we need to lookup the instances matching the current occurrence that have an instance property with funcProp.PropId
+                        if (parentBom.InstArray.Length >= 1)
                         {
-                            bomItem.FunctionalDesignation = instProp.Val;
-                        }
-                        else // no instance property, check for a component property
-                        {
-                            var compProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
-                            if (compProp != null)
+
+                            var instArrayMatch = parentBom.InstArray.FirstOrDefault(i => i.SchemeOccurrenceId == occur.Id);
+                            if (instArrayMatch != null)
                             {
-                                var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == compProp.Id);
-                                if (prop != null)
+                                var instProp = parentBom.InstPropArray.FirstOrDefault(p => p.InstId == instArrayMatch.Id);
+                                if (instProp != null && instProp.PropId == funcProp.Id)
                                 {
-                                    bomItem.FunctionalDesignation = prop.Val;
+                                    bomItem.FunctionalDesignation = instProp.Val;
+                                }
+                                else // no instance property, check for a component property
+                                {
+                                    var compProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
+                                    if (compProp != null)
+                                    {
+                                        var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == compProp.Id);
+                                        if (prop != null)
+                                        {
+                                            bomItem.FunctionalDesignation = prop.Val;
+                                        }
+                                    }
+                                }
+                            }
+                            else // no matching instance array, check for a component property
+                            {
+                                var compProp = cldBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
+                                if (compProp != null)
+                                {
+                                    var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == compProp.Id);
+                                    if (prop != null)
+                                    {
+                                        bomItem.FunctionalDesignation = prop.Val;
+                                    }
                                 }
                             }
                         }
