@@ -60,28 +60,34 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.ColumnSpan="4" Margin="0,0,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="305"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="lblBomVariant" Content="{Binding UIString[ADSK.TS.CAD-BOM03], FallbackValue='Model State'}"/>
-            <ComboBox x:Name="cmbModelStates" Width="Auto" MinWidth="200" VerticalAlignment="Center" Grid.Column="1" DisplayMemberPath="Key" SelectedValuePath="Value" MaxWidth="300" HorizontalAlignment="Left"/>
-            <Button x:Name="btnCadBomClear" IsEnabled="False" Command="{Binding PsCmd[CadBomClearButton_Click]}" Grid.Column="2" Content="  X  " Foreground="Red" FontWeight="Bold" HorizontalAlignment="Right" Margin="20,1,0,1" ToolTip="Clear search text"/>
-            <TextBox x:Name="txtCadBomSearch" Grid.Column="3" TextWrapping="Wrap" Text="" IsReadOnly="False" MaxWidth="300"/>
-            <Button x:Name="btnCadBomFind" Command="{Binding PsCmd[CadBomSearchButton_Click]}" Grid.Column="4" HorizontalAlignment="Left" Content="{Binding UIString[ADSK.TS.CAD-BOM04], FallbackValue='Find'}" MinWidth="60" Margin="0,1,0,1" ToolTip="Search and filter the grid"/>
+            <Label x:Name="lblBomType" Content="{Binding UIString[ADSK.TS.CAD-BOM06], FallbackValue=BOM Type}"/>
+            <TextBox x:Name="txtBomType" Grid.Column="1" Text=""/>
+            <Label x:Name="lblBomVariant" Content="{Binding UIString[ADSK.TS.CAD-BOM03],FallbackValue=Model State}" Grid.Column="2" Margin="20,0,0,0"/>
+            <ComboBox x:Name="cmbBomVariants" Width="200" MinWidth="200" VerticalAlignment="Center" Grid.Column="3" DisplayMemberPath="Key" SelectedValuePath="Value" MaxWidth="300" HorizontalAlignment="Left" Height="22"/>
+            <Button x:Name="btnCadBomClear" IsEnabled="False" Command="{Binding PsCmd[CadBomClearButton_Click]}" Grid.Column="4" Content="  X  " Foreground="Red" FontWeight="Bold" HorizontalAlignment="Right" ToolTip="Clear search text" Width="25"/>
+            <TextBox x:Name="txtCadBomSearch" Grid.Column="5" TextWrapping="Wrap" Text="" IsReadOnly="False" MaxWidth="300" Margin="0,1,0,1"/>
+            <Button x:Name="btnCadBomFind" Command="{Binding PsCmd[CadBomSearchButton_Click]}" Grid.Column="6" HorizontalAlignment="Center" Content="{Binding UIString[ADSK.TS.CAD-BOM04], FallbackValue=Find}" MinWidth="60" Margin="0,1,0,1" ToolTip="Search and filter the grid" Width="60"/>
         </Grid>
-        <DataGrid x:Name="bomList" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto" Grid.Row="1" Grid.ColumnSpan="4" IsSynchronizedWithCurrentItem="True">
+        <TextBox x:Name="txtStatus" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" Grid.ColumnSpan="4" VerticalContentAlignment="Stretch" Background="#FFFFFFE1" Foreground="Black"/>
+        <DataGrid x:Name="bomList" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto" Grid.Row="2" Grid.ColumnSpan="4" IsSynchronizedWithCurrentItem="True">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="Auto" Header="{Binding DataContext.UIString[LBL58], FallbackValue=Preview}">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[LBL58], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            <TextBlock Text="{Binding DataContext.UIString[LBL58],FallbackValue=Thumbnail, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -93,63 +99,56 @@
                 <DataGridTextColumn x:Name="clmPosition" Binding="{Binding Position}" SortDirection="Ascending">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[LBL15], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            <TextBlock Text="{Binding DataContext.UIString[LBL15], FallbackValue=Pos, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 <DataGridTextColumn x:Name="clmPartNumber" Binding="{Binding PartNumber}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[PartNumber], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            <TextBlock Text="{Binding DataContext.UIString[PartNumber], FallbackValue=Part Number, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 <DataGridTextColumn x:Name="clmQuantity" Binding="{Binding Quantity}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[LBL17], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            <TextBlock Text="{Binding DataContext.UIString[LBL17], FallbackValue=Quantity, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 <DataGridTextColumn x:Name="clmComponentType" Binding="{Binding ComponentType}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[LBL18], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            <TextBlock Text="{Binding DataContext.UIString[LBL18], FallbackValue=Component Type, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 <DataGridTextColumn x:Name="clmMaterial" Binding="{Binding Material}" >
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[Material], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            <TextBlock Text="{Binding DataContext.UIString[Material], FallbackValue=Material, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <!-- <DataGridTextColumn x:Name="clmName" Binding="{Binding Name}" Width="*">
-                    <DataGridTextColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[LBL19], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
-                        </DataTemplate>
-                    </DataGridTextColumn.HeaderTemplate>
-                </DataGridTextColumn> -->
                 <DataGridTextColumn x:Name="clmTitle" Binding="{Binding Title}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[Title], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                            <TextBlock Text="{Binding DataContext.UIString[Title], FallbackValue=Title, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn x:Name="clmDescription" Binding="{Binding Description}" Width="*">
+                <DataGridTextColumn x:Name="clmDescription" Binding="{Binding Description}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[Description], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                            <TextBlock Text="{Binding DataContext.UIString[Description], FallbackValue=Description, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
                 <DataGridTextColumn x:Name="clmFunctionalDesignation" Binding="{Binding FunctionalDesignation}" Width="*">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.UIString[FunctionalDesignation], FallbackValue = 'Functional Designation', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                            <TextBlock Text="{Binding DataContext.UIString[ADSK.TS.CAD-BOM09], FallbackValue = 'Functional Designation', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
@@ -161,12 +160,10 @@
                             <Image Width="16" Height="16" StretchDirection="DownOnly">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\File Store_16.png" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
                                                 <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\File Store_16.png" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\File Store_16.png" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -179,12 +176,10 @@
                             <Image Width="16" Height="16" StretchDirection="DownOnly">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\Item_16.png" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
                                                 <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\Item_16.png" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                <Setter Property="Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\Item_16.png" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

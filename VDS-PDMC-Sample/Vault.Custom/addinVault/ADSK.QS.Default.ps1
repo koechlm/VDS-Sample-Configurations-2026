@@ -438,11 +438,17 @@ function OnTabContextChanged {
 		#check for model state BOMs;  
 		# model state names and BOMComp Id are the key value pairs of the combobox
 		$dsWindow.FindName("bomList").ItemsSource = $null
-		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
-		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
-		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
+		$dsWindow.FindName("cmbBomVariants").ItemsSource = $null
+		$dsWindow.FindName("cmbBomVariants").SelectedIndex = -1
+		$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
 		#reset the search text box
 		$dsWindow.FindName("txtCadBomSearch").Text = ""
+		# reset the status text bar (errors and warnings)
+		$dsWindow.FindName("txtStatus").Text = ""
+		$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+		# reset the BOM type display
+		$dsWindow.Findname("lblBomType").Visibility = "Collapsed"
+		$dsWindow.Findname("txtBomType").Visibility = "Collapsed"
 
 		# we will capture model states or configuration names and comp Ids in an array and bind to the combobox; the model state BOM will be read based on the selected model state or configuration
 		$_MsArray = @()
@@ -475,13 +481,17 @@ function OnTabContextChanged {
 		# Sort and display model states/configurations
 		if ($_MsArray.Count -gt 0) {
 			$mMdlStates = $_MsArray.GetEnumerator() | Sort-Object Name		
-			$dsWindow.FindName("cmbModelStates").ItemsSource = $mMdlStates
-			$dsWindow.FindName("cmbModelStates").SelectedIndex = 0
-			$dsWindow.FindName("cmbModelStates").IsEnabled = $true	
+			$dsWindow.FindName("cmbBomVariants").ItemsSource = $mMdlStates
+			$dsWindow.FindName("cmbBomVariants").SelectedIndex = 0
+			$dsWindow.FindName("cmbBomVariants").IsEnabled = $true
+			$dsWindow.FindName("cmbBomVariants").Visibility = "Visible"
+			$dsWindow.FindName("lblBomVariant").Visibility = "Visible"
 		}
 		else {
-			$dsWindow.FindName("cmbModelStates").ItemsSource = $null		
-			$dsWindow.FindName("cmbModelStates").IsEnabled = $false
+			$dsWindow.FindName("cmbBomVariants").ItemsSource = $null		
+			$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
+			$dsWindow.FindName("cmbBomVariants").Visibility = "Collapsed"
+			$dsWindow.FindName("lblBomVariant").Visibility = "Collapsed"
 		}
 		
 		# Update the label based on CAD provider
@@ -497,59 +507,101 @@ function OnTabContextChanged {
 		# exit if the file.Name doesn't match either *.iam or *.sldasm as the following code is only for Inventor and SolidWorks files; for other CAD files, just read the primary BOM as there is no model state or configuration concept
 		if ($file.Name -notmatch "\.iam$" -and $file.Name -notmatch "\.sldasm$") { return }
 	
-		#read the primary BOM
+		#read the primary BOM, GetFileBOM will return a structured BOM if available
 		$errorMessage = ""
+		$structured = $false
+		$dsWindow.FindName("txtBomType").Text = "" #reset the BOM type text box before reading the BOM, as the GetFileBOM may return error and not update the BOM type; this will avoid showing wrong BOM type from previous file selection
 		try {
-			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0, [ref] $errorMessage)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
+			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0, [ref] $structured, [ref] $errorMessage)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
 			$dsWindow.FindName("bomList").ItemsSource = $bom
+			$global:currentBOMList = $bom # keep a global copy of the original bom list for later use in reset search filtering
 			if ($errorMessage -ne "") {
-				[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowMessage($errorMessage, "Data Standard – CAD-BOM", [Autodesk.DataManagement.Client.Framework.Forms.Currency.ButtonConfiguration]::Ok)
+				$dsWindow.FindName("txtStatus").Text = $errorMessage
+				$dsWindow.FindName("txtStatus").Visibility = "Visible"
+				$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+				$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+			}
+			else {
+				$dsWindow.FindName("txtStatus").Text = ""
+				$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+			
+				if ($bom.Count -gt 0) {
+					$dsWindow.FindName("lblBomType").Visibility = "Visible"
+					$dsWindow.FindName("txtBomType").Visibility = "Visible"
+				
+					if ($structured -eq $true) {
+						$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+					}
+					else {
+						$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+					}
+				}
+				else {
+					$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+					$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+				}
 			}
 		}
 		catch {
-			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
+			$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, contact your administrator if it continues or relates to a specific assembly only."
+			$dsWindow.FindName("txtStatus").Visibility = "Visible"			
 		}
 
 		# read model state BOMs on demand;		
-		if ($dsWindow.FindName("cmbModelStates").ItemsSource.Count -gt 0) {
+		if ($dsWindow.FindName("cmbBomVariants").ItemsSource.Count -gt 0) {
 			# add a selection changed event to the combobox
-			$dsWindow.FindName("cmbModelStates").add_SelectionChanged({
-					$mModelStateId = $dsWindow.FindName("cmbModelStates").SelectedValue
-					if ($dsWindow.FindName("cmbModelStates").SelectedIndex -eq -1) {
+			$dsWindow.FindName("cmbBomVariants").add_SelectionChanged({
+					$mModelStateId = $dsWindow.FindName("cmbBomVariants").SelectedValue
+					if ($dsWindow.FindName("cmbBomVariants").SelectedIndex -eq -1) {
 						$dsWindow.FindName("bomList").ItemsSource = $null
 					}
 					else {
 						try {
 							$errorMessage = ""
-							$mMdlStateBom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $errorMessage)) #($file.id, $mModelStateId)
-							$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+							$structured = $false
+							$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $structured, [ref] $errorMessage)) #($file.id, $mModelStateId)
+							$dsWindow.FindName("bomList").ItemsSource = $bom # model state BOMs are internal component BOMs
 							if ($errorMessage -ne "") {
-								[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowMessage($errorMessage, "Data Standard – CAD-BOM", [Autodesk.DataManagement.Client.Framework.Forms.Currency.ButtonConfiguration]::Ok)
-							}							
+								$dsWindow.FindName("txtStatus").Text = $errorMessage
+								$dsWindow.FindName("txtStatus").Visibility = "Visible"
+								$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+								$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+							}
+							else {
+								$dsWindow.FindName("txtStatus").Text = ""
+								$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+			
+								if ($bom.Count -gt 0) {
+									$dsWindow.FindName("lblBomType").Visibility = "Visible"
+									$dsWindow.FindName("txtBomType").Visibility = "Visible"
+				
+									if ($structured -eq $true) {
+										$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+									}
+									else {
+										$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+									}
+								}
+								else {
+									$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+									$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+								}
+							}
 							#update the global bom list to restore clearing the search text box
-							$global:currentBOMList = $mMdlStateBom
+							$global:currentBOMList = $bom
 							#clear the search text box as the grid content has changed
 							CadBomClearButton_Click
 						}
 						catch {
-							[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Error in CAD-BOM script handling switch of model state or configuration.", "Data Standard – CAD-BOM")
-						}
-					
+							$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, contact your administrator if it continues or relates to a specific assembly only."
+							$dsWindow.FindName("txtStatus").Visibility = "Visible"
+						}					
 					}
 				})
 		}
+		return
+	}
 
-		$global:mFileBOM = $null #clear the global variable to release the grid content
-		return
-	}
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml") {
-		$items = $vault.ItemService.GetItemsByIds(@($vaultContext.SelectedObject.Id))
-		$item = $items[0]
-		$itemids = @($item.Id)
-		$assocFiles = @(GetAssociatedFiles $itemids $([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile).DirectoryName))
-		$dsWindow.FindName("AssoicatedFiles").ItemsSource = $assocFiles
-		return
-	}
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDataSheet.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)

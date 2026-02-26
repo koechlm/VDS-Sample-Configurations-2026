@@ -264,6 +264,10 @@
   <UIString ID="ADSK.TS.CAD-BOM03">Model State</UIString>
   <UIString ID="ADSK.TS.CAD-BOM04">Find</UIString>
   <UIString ID="ADSK.TS.CAD-BOM05">Configuration</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM06">BOM Type:</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM07">Model Data</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM08">Structured</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM09">Functional Designation</UIString>
   <!--VDS-PDMC-Sample CAD-BOM end-->
 
   <!--VDS-PDMC-Sample Inventor Dialog-->

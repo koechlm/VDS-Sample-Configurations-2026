@@ -852,14 +852,14 @@ namespace VdsSampleUtilities
         }
 
         /// <summary>
-        /// Get the BOM structure for a file
+        /// Read the structured BOM (Inventor BOM: Structured = Enabled)
         /// </summary>
         /// <param name="conn">Vault connection</param>
         /// <param name="fileId">File ID</param>
         /// <param name="bomCompId">BOM Component ID (use root component or model state ID)</param>
         /// <param name="returnMessage"></param>
         /// <returns>List of BOM items</returns>
-        public List<BomRow> GetFileBOM(Connection conn, long fileId, long bomCompId, ref string returnMessage)
+        public List<BomRow> GetFileBOM(Connection conn, long fileId, long bomCompId, ref bool structured, ref string returnMessage)
         {
             var bomItems = new List<BomRow>();
             ACW.BOM? mFileBom = null;
@@ -878,15 +878,14 @@ namespace VdsSampleUtilities
             if (mFileBom == null)
             {
                 returnMessage = "The file does not contain item data; use 'Extract Item Data' to update." +
-                    "\n\nNote - iAssembly Factories don't display BOM data; select a member file instead.";
+                    " Note - iAssembly Factories don't display BOM data; select a member file instead.";
                 return bomItems;
             }
 
             // return a message if the BOM exists without any active BOM rows
             if (mFileBom.InstArray.Length == 0)
             {
-                returnMessage = "The file does not have active BOM rows." +
-                    "\n\nNote - iAssembly Factories don't display BOM data; select a member file instead.";
+                returnMessage = "The file does not have active BOM rows.";
                 return bomItems;
             }
 
@@ -902,12 +901,13 @@ namespace VdsSampleUtilities
 
                 // if a structured BOM scheme is found for the given component ID, read the structured BOM (Inventor BOM: Structured = Enabled)
                 ReadStructuredBom(conn, mFileBom, schm, bomItems);
-
+                structured = true;
             }
             else
             {
                 // if no structured scheme is found, attempt to read the Model BOM structure (Inventor BOM: Model)
                 ReadModelBom(conn, mFileBom, bomItems);
+                structured = false;
             }
 
             // reset previously used variable to prevent unintended reuse
@@ -918,13 +918,12 @@ namespace VdsSampleUtilities
 
 
         /// <summary>
-        /// Read the model BOM structure (non-structured BOM data)
-        /// Replicates the functionality of FileBOM.ps1:GetFileBOM
+        /// Read the model BOM
         /// </summary>
         /// <param name="conn">Vault connection</param>
-        /// <param name="fileBom">BOM object retrieved from DocumentService.GetBOMByFileId</param>
+        /// <param name="parentBom">BOM object retrieved from DocumentService.GetBOMByFileId</param>
         /// <param name="bomItems">List to populate with BOM items</param>
-        private void ReadModelBom(Connection conn, ACW.BOM fileBom, List<BomRow> bomItems)
+        private void ReadModelBom(Connection conn, ACW.BOM parentBom, List<BomRow> bomItems)
         {
             var propDefs = conn.WebServiceManager.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE");
             var thumbnailPropDef = propDefs.FirstOrDefault(n => n.SysName == "Thumbnail");
@@ -932,7 +931,7 @@ namespace VdsSampleUtilities
             var cldIds = new List<long>();
 
             // Get child IDs from instances where ParId equals 0
-            var topLevelInsts = fileBom.InstArray?.Where(i => i.ParId == 0).ToList();
+            var topLevelInsts = parentBom.InstArray?.Where(i => i.ParId == 0).ToList();
             if (topLevelInsts == null || !topLevelInsts.Any())
             {
                 return;
@@ -940,7 +939,7 @@ namespace VdsSampleUtilities
 
             foreach (var inst in topLevelInsts)
             {
-                var comp = fileBom.CompArray?.FirstOrDefault(c => c.Id == inst.CldId);
+                var comp = parentBom.CompArray?.FirstOrDefault(c => c.Id == inst.CldId);
                 if (comp != null && comp.XRefId != -1)
                 {
                     cldIds.Add(comp.XRefId);
@@ -953,7 +952,7 @@ namespace VdsSampleUtilities
             }
 
             ACW.BOM[]? cldBoms = conn.WebServiceManager.DocumentService.GetBOMByFileIds(cldIds.ToArray());
-            var schm = fileBom.SchmArray?.FirstOrDefault(s => s.SchmTyp == SchemeTypeEnum.Structured && s.RootCompId == 0);
+            var schm = parentBom.SchmArray?.FirstOrDefault(s => s.SchmTyp == SchemeTypeEnum.Structured && s.RootCompId == 0);
 
             int cldBomCounter = 0;
 
@@ -964,12 +963,12 @@ namespace VdsSampleUtilities
 
                 bomItem.Quantity = (float)(inst.QuantOverde == -1 ? inst.Quant : inst.QuantOverde);
 
-                var comp = fileBom.CompArray?.FirstOrDefault(c => c.Id == cldId);
+                var comp = parentBom.CompArray?.FirstOrDefault(c => c.Id == cldId);
                 if (comp == null) continue;
 
                 if (schm != null)
                 {
-                    var occur = fileBom.SchmOccArray?.FirstOrDefault(o => o.SchmId == schm.Id && o.CompId == cldId);
+                    var occur = parentBom.SchmOccArray?.FirstOrDefault(o => o.SchmId == schm.Id && o.CompId == cldId);
                     if (occur != null)
                     {
                         bomItem.Position = int.TryParse(occur.DtlId, out int pos) ? pos : (int)occur.Id;
@@ -983,7 +982,7 @@ namespace VdsSampleUtilities
                 ACW.BOM cldBom;
                 if (comp.XRefId == -1)
                 {
-                    cldBom = fileBom;
+                    cldBom = parentBom;
                 }
                 else
                 {

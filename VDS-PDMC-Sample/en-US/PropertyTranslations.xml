@@ -48,7 +48,8 @@
   
   <!--VDS-PDMC-Sample Extensions start-->
   <PropertyTranslation Name ="ORGANISATION">Organisation</PropertyTranslation>
-  <PropertyTranslation Name="COMPANY">Company</PropertyTranslation>
+  <PropertyTranslation Name ="COMPANY">Company</PropertyTranslation>
+  <PropertyTranslation Name ="FUNCTIONALDES">Functional Designation</PropertyTranslation>
   <!--VDS-PDMC-Sample Extensions end-->
 
   <!--VDS-PDMC-Sample Extension Classification start-->
