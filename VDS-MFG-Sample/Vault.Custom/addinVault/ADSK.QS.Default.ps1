@@ -397,6 +397,9 @@ function OnTabContextChanged
 		# reset the status text bar (errors and warnings)
 		$dsWindow.FindName("txtStatus").Text = ""
 		$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+		# reset the BOM type display
+		$dsWindow.Findname("lblBomType").Visibility = "Collapsed"
+		$dsWindow.Findname("txtBomType").Visibility = "Collapsed"
 
 		# we will capture model states or configuration names and comp Ids in an array and bind to the combobox; the model state BOM will be read based on the selected model state or configuration
 		$_MsArray = @()
@@ -462,15 +465,32 @@ function OnTabContextChanged
 		try {
 			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0, [ref] $structured, [ref] $errorMessage)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
 			$dsWindow.FindName("bomList").ItemsSource = $bom
+			$global:currentBOMList = $bom # keep a global copy of the original bom list for later use in reset search filtering
 			if ($errorMessage -ne "") {
 				$dsWindow.FindName("txtStatus").Text = $errorMessage
 				$dsWindow.FindName("txtStatus").Visibility = "Visible"
-			}
-			if ($structured -eq $true) {
-				$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+				$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+				$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
 			}
 			else {
-				$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+				$dsWindow.FindName("txtStatus").Text = ""
+				$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+			
+				if ($bom.Count -gt 0) {
+					$dsWindow.FindName("lblBomType").Visibility = "Visible"
+					$dsWindow.FindName("txtBomType").Visibility = "Visible"
+				
+					if ($structured -eq $true) {
+						$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+					}
+					else {
+						$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+					}
+				}
+				else {
+					$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+					$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+				}
 			}
 		}
 		catch {
@@ -490,20 +510,36 @@ function OnTabContextChanged
 						try {
 							$errorMessage = ""
 							$structured = $false
-							$mMdlStateBom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $structured, [ref] $errorMessage)) #($file.id, $mModelStateId)
-							$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
-							if ($errorMessage -ne "") {								
+							$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $structured, [ref] $errorMessage)) #($file.id, $mModelStateId)
+							$dsWindow.FindName("bomList").ItemsSource = $bom # model state BOMs are internal component BOMs
+							if ($errorMessage -ne "") {
 								$dsWindow.FindName("txtStatus").Text = $errorMessage
 								$dsWindow.FindName("txtStatus").Visibility = "Visible"
-							}
-							if ($structured -eq $true) {
-								$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+								$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+								$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
 							}
 							else {
-								$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
-							}						
+								$dsWindow.FindName("txtStatus").Text = ""
+								$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+			
+								if ($bom.Count -gt 0) {
+									$dsWindow.FindName("lblBomType").Visibility = "Visible"
+									$dsWindow.FindName("txtBomType").Visibility = "Visible"
+				
+									if ($structured -eq $true) {
+										$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+									}
+									else {
+										$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+									}
+								}
+								else {
+									$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+									$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+								}
+							}
 							#update the global bom list to restore clearing the search text box
-							$global:currentBOMList = $mMdlStateBom
+							$global:currentBOMList = $bom
 							#clear the search text box as the grid content has changed
 							CadBomClearButton_Click
 						}
@@ -514,20 +550,9 @@ function OnTabContextChanged
 					}
 				})
 		}
-
-		$global:mFileBOM = $null #clear the global variable to release the grid content
 		return
 	}
 
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml")
-	{
-		$items = $vault.ItemService.GetItemsByIds(@($vaultContext.SelectedObject.Id))
-		$item = $items[0]
-		$itemids = @($item.Id)
-		$assocFiles = @(GetAssociatedFiles $itemids $([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile).DirectoryName))
-		$dsWindow.FindName("AssoicatedFiles").ItemsSource = $assocFiles
-		return
-	}
 }
 
 function GetNewCustomObjectName
