@@ -81,7 +81,7 @@
             <TextBox x:Name="txtCadBomSearch" Grid.Column="5" TextWrapping="Wrap" Text="" IsReadOnly="False" MaxWidth="300" Margin="0,1,0,1"/>
             <Button x:Name="btnCadBomFind" Command="{Binding PsCmd[CadBomSearchButton_Click]}" Grid.Column="6" HorizontalAlignment="Center" Content="{Binding UIString[ADSK.TS.CAD-BOM04], FallbackValue=Find}" MinWidth="60" Margin="0,1,0,1" ToolTip="Search and filter the grid" Width="60"/>
         </Grid>
-        <TextBox x:Name="txtStatus" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" Grid.ColumnSpan="4" VerticalContentAlignment="Stretch" Background="#FFECEC9E" Foreground="Black"/>
+        <TextBox x:Name="txtStatus" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" Grid.ColumnSpan="4" VerticalContentAlignment="Stretch" Background="#FFFFFFE1" Foreground="Black"/>
         <DataGrid x:Name="bomList" AutoGenerateColumns="False" IsReadOnly="True" ColumnWidth="Auto" Grid.Row="2" Grid.ColumnSpan="4" IsSynchronizedWithCurrentItem="True">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="Auto" Header="{Binding DataContext.UIString[LBL58], FallbackValue=Preview}">
