@@ -106,9 +106,9 @@ function mGetMdlStates($fileID) {
 		
 		# Sort and display model states/configurations
 		$mMdlStates = $mMdlStates.GetEnumerator() | Sort-Object Name		
-		$dsWindow.FindName("cmbModelStates").ItemsSource = $mMdlStates
-		$dsWindow.FindName("cmbModelStates").SelectedIndex = 0
-		$dsWindow.FindName("cmbModelStates").IsEnabled = $true
+		$dsWindow.FindName("cmbBomVariants").ItemsSource = $mMdlStates
+		$dsWindow.FindName("cmbBomVariants").SelectedIndex = 0
+		$dsWindow.FindName("cmbBomVariants").IsEnabled = $true
 		
 		# Update the label based on CAD provider
 		if ($dsWindow.FindName("lblBomVariant")) {
@@ -121,9 +121,9 @@ function mGetMdlStates($fileID) {
 		}
 	}
 	else {
-		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
-		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
-		$dsWindow.FindName("cmbModelStates").ItemsSource = $null		
+		$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
+		$dsWindow.FindName("cmbBomVariants").SelectedIndex = -1
+		$dsWindow.FindName("cmbBomVariants").ItemsSource = $null		
 	}
 
 	return $MsArray

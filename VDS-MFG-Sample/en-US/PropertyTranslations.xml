@@ -49,5 +49,9 @@
   <PropertyTranslation Name="REVISION">Revision</PropertyTranslation>
   <!--VDS Sample end-->
 
+  <!--VDS CAD-BOM Instance Property Sample start-->
+  <PropertyTranslation Name ="FUNCTIONALDES">Funktionsbezeichnung</PropertyTranslation>
+  <!--VDS CAD-BOM Instance Property Sample end-->
+
 </PropertyTranslations>
 

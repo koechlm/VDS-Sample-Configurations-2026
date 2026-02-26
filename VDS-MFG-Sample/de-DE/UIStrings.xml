@@ -240,6 +240,10 @@
   <UIString ID="ADSK.TS.CAD-BOM03">Modellzustand</UIString>
   <UIString ID="ADSK.TS.CAD-BOM04">Finde</UIString>
   <UIString ID="ADSK.TS.CAD-BOM05">Konfiguration</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM06">BOM Typ:</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM07">Modelldaten</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM08">Strukturiert</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM09">Funktionsbezeichnung</UIString>
   <!--VDS Sample CAD-BOM end-->
 
   <!--VDS Sample Inventor Dialog-->

@@ -352,17 +352,54 @@ function OnTabContextChanged
 	$xamlFile = ([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile)).Name
 	
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
+		if (-not $global:_mVdsUtilities) {
+			$global:_mVdsUtilities = "$($env:programdata)\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll"
+			if (! (Test-Path $mVdsUtilities)) {
+				#the basic utility installation only
+				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll')
+			}
+			Else {
+				#the extended utility activation
+				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll')
+			}
+			$global:_VltHelpers = New-Object VdsSampleUtilities.VltHelpers	<# Action to perform if the condition is true #>
+		}
+
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$global:file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
+
+		# get CAD provider for the file to determine if model states or configurations should be read; this is based on the file extension as there is no direct property indicating the CAD provider
+		# Read the Provider property to determine if it's Inventor or SolidWorks
+		$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId('FILE')
+		$providerPropDef = $propDefs | Where-Object { $_.SysName -eq 'Provider' }
+	
+		$mCadProvider = "Unknown"
+		if ($providerPropDef) {
+			$providerProp = $vault.PropertyService.GetProperties('FILE', @($file.Id), @($providerPropDef.Id))[0]
+			$providerValue = $providerProp.Val
+		
+			if ($providerValue -like "*Inventor*") {
+				$mCadProvider = "Inventor"
+			}
+			elseif ($providerValue -like "*SolidWorks*") {
+				$mCadProvider = "SolidWorks"
+			}
+		}
 
 		#check for model state BOMs;  
 		# model state names and BOMComp Id are the key value pairs of the combobox
 		$dsWindow.FindName("bomList").ItemsSource = $null
-		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
-		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
-		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
+		$dsWindow.FindName("cmbBomVariants").ItemsSource = $null
+		$dsWindow.FindName("cmbBomVariants").SelectedIndex = -1
+		$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
 		#reset the search text box
 		$dsWindow.FindName("txtCadBomSearch").Text = ""
+		# reset the status text bar (errors and warnings)
+		$dsWindow.FindName("txtStatus").Text = ""
+		$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+
+		# we will capture model states or configuration names and comp Ids in an array and bind to the combobox; the model state BOM will be read based on the selected model state or configuration
+		$_MsArray = @()
 
 		# applies to Inventor IAMs with true model state = false
 		if ($file.Name -match "\.iam$" ) {
@@ -379,41 +416,101 @@ function OnTabContextChanged
 			}
 
 			if ($mPropNameValues["HasModelState"] -eq $true -and $mPropNameValues["IsTrueModelState"] -eq $false) {
-				$_MsArray = @()
-				$_MsArray += mGetMdlStates($file.id)
+				$_MsArray += $_VltHelpers.GetModelStates($vaultConnection, $file.id)
 			}
 		}
 
 		# read configuration names for sldasm files
 		if ($file.Name -match "\.sldasm$" ) {
-			$_MsArray = @()
-			$_MsArray += mGetMdlStates($file.id)
+			$_MsArray += $_VltHelpers.GetModelStates($vaultConnection, $file.id)
 		}
 
-		#read the primary BOM
+		# update the UI with model states if there are any; otherwise, just read the primary BOM
+		# Sort and display model states/configurations
+		if ($_MsArray.Count -gt 0) {
+			$mMdlStates = $_MsArray.GetEnumerator() | Sort-Object Name		
+			$dsWindow.FindName("cmbBomVariants").ItemsSource = $mMdlStates
+			$dsWindow.FindName("cmbBomVariants").SelectedIndex = 0
+			$dsWindow.FindName("cmbBomVariants").IsEnabled = $true
+			$dsWindow.FindName("cmbBomVariants").Visibility = "Visible"
+			$dsWindow.FindName("lblBomVariant").Visibility = "Visible"
+		}
+		else {
+			$dsWindow.FindName("cmbBomVariants").ItemsSource = $null		
+			$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
+			$dsWindow.FindName("cmbBomVariants").Visibility = "Collapsed"
+			$dsWindow.FindName("lblBomVariant").Visibility = "Collapsed"
+		}
+		
+		# Update the label based on CAD provider
+		if ($dsWindow.FindName("lblBomVariant")) {
+			if ($mCadProvider -eq "SolidWorks") {
+				$dsWindow.FindName("lblBomVariant").Content = "Configuration:" #$UIStrings["ADSK.TS.CAD-BOM05"] #
+			}
+			else {
+				$dsWindow.FindName("lblBomVariant").Content = "Model State:" # $UIStrings["ADSK.TS.CAD-BOM03"] # 
+			}
+		}
+
+		# exit if the file.Name doesn't match either *.iam or *.sldasm as the following code is only for Inventor and SolidWorks files; for other CAD files, just read the primary BOM as there is no model state or configuration concept
+		if ($file.Name -notmatch "\.iam$" -and $file.Name -notmatch "\.sldasm$") { return }
+	
+		#read the primary BOM, GetFileBOM will return a structured BOM if available
+		$errorMessage = ""
+		$structured = $false
+		$dsWindow.FindName("txtBomType").Text = "" #reset the BOM type text box before reading the BOM, as the GetFileBOM may return error and not update the BOM type; this will avoid showing wrong BOM type from previous file selection
 		try {
-			$bom = @(GetFileBOM $file.id 0)
+			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0, [ref] $structured, [ref] $errorMessage)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
 			$dsWindow.FindName("bomList").ItemsSource = $bom
+			if ($errorMessage -ne "") {
+				$dsWindow.FindName("txtStatus").Text = $errorMessage
+				$dsWindow.FindName("txtStatus").Visibility = "Visible"
+			}
+			if ($structured -eq $true) {
+				$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+			}
+			else {
+				$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+			}
 		}
 		catch {
-			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
+			$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, contact your administrator if it continues or relates to a specific assembly only."
+			$dsWindow.FindName("txtStatus").Visibility = "Visible"			
 		}
 
 		# read model state BOMs on demand;		
-		if ($dsWindow.FindName("cmbModelStates").ItemsSource.Count -gt 0) {
+		if ($dsWindow.FindName("cmbBomVariants").ItemsSource.Count -gt 0) {
 			# add a selection changed event to the combobox
-			$dsWindow.FindName("cmbModelStates").add_SelectionChanged({
-					$mModelStateId = $dsWindow.FindName("cmbModelStates").SelectedValue
-					if ($dsWindow.FindName("cmbModelStates").SelectedIndex -eq -1) {
+			$dsWindow.FindName("cmbBomVariants").add_SelectionChanged({
+					$mModelStateId = $dsWindow.FindName("cmbBomVariants").SelectedValue
+					if ($dsWindow.FindName("cmbBomVariants").SelectedIndex -eq -1) {
 						$dsWindow.FindName("bomList").ItemsSource = $null
 					}
 					else {
-						$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
-						$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
-						#update the global bom list to restore clearing the search text box
-						$global:currentBOMList = $mMdlStateBom
-						#clear the search text box as the grid content has changed
-						CadBomClearButton_Click
+						try {
+							$errorMessage = ""
+							$structured = $false
+							$mMdlStateBom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $structured, [ref] $errorMessage)) #($file.id, $mModelStateId)
+							$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
+							if ($errorMessage -ne "") {								
+								$dsWindow.FindName("txtStatus").Text = $errorMessage
+								$dsWindow.FindName("txtStatus").Visibility = "Visible"
+							}
+							if ($structured -eq $true) {
+								$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+							}
+							else {
+								$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+							}						
+							#update the global bom list to restore clearing the search text box
+							$global:currentBOMList = $mMdlStateBom
+							#clear the search text box as the grid content has changed
+							CadBomClearButton_Click
+						}
+						catch {
+							$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, contact your administrator if it continues or relates to a specific assembly only."
+							$dsWindow.FindName("txtStatus").Visibility = "Visible"
+						}					
 					}
 				})
 		}
