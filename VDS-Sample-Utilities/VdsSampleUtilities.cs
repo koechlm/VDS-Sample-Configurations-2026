@@ -896,12 +896,20 @@ namespace VdsSampleUtilities
                 try
                 {
                     schm = mFileBom.SchmArray.FirstOrDefault(s => s.SchmTyp == SchemeTypeEnum.Structured && s.RootCompId == bomCompId);
+                    // Only call ReadStructuredBom if schm is not null
+                    if (schm != null)
+                    {
+                        ReadStructuredBom(conn, mFileBom, schm, bomItems);
+                        structured = true;
+                    }
+                    else
+                    {
+                        // if no structured scheme is found, attempt to read the Model BOM structure (Inventor BOM: Model)
+                        ReadModelBom(conn, mFileBom, bomItems);
+                        structured = false;
+                    }
                 }
                 catch (Exception) { }
-
-                // if a structured BOM scheme is found for the given component ID, read the structured BOM (Inventor BOM: Structured = Enabled)
-                ReadStructuredBom(conn, mFileBom, schm, bomItems);
-                structured = true;
             }
             else
             {
@@ -1079,6 +1087,50 @@ namespace VdsSampleUtilities
                                 bomItem.Material = prop.Val;
                             }
                         }
+
+                        // Function Designation is a bom row property in Vault, and optionally an instance property in Inventor; we need to to handle both cases to get the value if it exists
+                        var funcProp = parentBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
+                        if (funcProp != null)
+                        {
+                            // we need to lookup the instance attribute matching the current instance id
+                            if (parentBom?.InstArray?.Length >= 1)
+                            {
+
+                                var instArrayMatch = parentBom.InstArray.FirstOrDefault(i => i.Id == inst.Id);
+                                if (instArrayMatch != null)
+                                {
+                                    var instProp = parentBom.InstPropArray.FirstOrDefault(p => p.InstId == instArrayMatch.Id);
+                                    if (instProp != null && instProp.PropId == funcProp.Id)
+                                    {
+                                        bomItem.FunctionalDesignation = instProp.Val;
+                                    }
+                                    else // no instance property, check for a component property
+                                    {
+                                        var compProp = cldBom?.PropArray?.FirstOrDefault(p => p.DispName == "Functional Designation");
+                                        if (compProp != null)
+                                        {
+                                            var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == compProp.Id);
+                                            if (prop != null)
+                                            {
+                                                bomItem.FunctionalDesignation = prop.Val;
+                                            }
+                                        }
+                                    }
+                                }
+                                else // no matching instance array, check for a component property
+                                {
+                                    var compProp = cldBom?.PropArray?.FirstOrDefault(p => p.DispName == "Functional Designation");
+                                    if (compProp != null)
+                                    {
+                                        var prop = cldCompAttrArray.FirstOrDefault(ca => ca.PropId == compProp.Id);
+                                        if (prop != null)
+                                        {
+                                            bomItem.FunctionalDesignation = prop.Val;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -1252,8 +1304,8 @@ namespace VdsSampleUtilities
                         // we need to lookup the instances matching the current occurrence that have an instance property with funcProp.PropId
                         if (parentBom.InstArray.Length >= 1)
                         {
-
-                            var instArrayMatch = parentBom.InstArray.FirstOrDefault(i => i.SchemeOccurrenceId == occur.Id);
+                            // occurrences on structured BOM differ from occurrences within phantom subassemblies; we need different logic to find the matching instance for each case
+                            var instArrayMatch = parentBom.InstArray.FirstOrDefault(i => i.SchemeOccurrenceId == occur.Id || i.Id == occur.Id);
                             if (instArrayMatch != null)
                             {
                                 var instProp = parentBom.InstPropArray.FirstOrDefault(p => p.InstId == instArrayMatch.Id);

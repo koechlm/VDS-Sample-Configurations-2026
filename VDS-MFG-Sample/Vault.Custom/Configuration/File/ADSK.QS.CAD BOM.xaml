@@ -74,7 +74,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label x:Name="lblBomType" Content="{Binding UIString[ADSK.TS.CAD-BOM06], FallbackValue=BOM Type}"/>
-            <TextBox x:Name="txtBomType" Grid.Column="1" Text=""/>
+            <TextBox x:Name="txtBomType" Grid.Column="1" Text="" Padding="4,0,4,0"/>
             <Label x:Name="lblBomVariant" Content="{Binding UIString[ADSK.TS.CAD-BOM03],FallbackValue=Model State}" Grid.Column="2" Margin="20,0,0,0"/>
             <ComboBox x:Name="cmbBomVariants" Width="200" MinWidth="200" VerticalAlignment="Center" Grid.Column="3" DisplayMemberPath="Key" SelectedValuePath="Value" MaxWidth="300" HorizontalAlignment="Left" Height="22"/>
             <Button x:Name="btnCadBomClear" IsEnabled="False" Command="{Binding PsCmd[CadBomClearButton_Click]}" Grid.Column="4" Content="  X  " Foreground="Red" FontWeight="Bold" HorizontalAlignment="Right" ToolTip="Clear search text" Width="25"/>
@@ -145,13 +145,13 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn x:Name="clmFunctionalDesignation" Binding="{Binding FunctionalDesignation}" Width="*">
+                <!--<DataGridTextColumn x:Name="clmFunctionalDesignation" Binding="{Binding FunctionalDesignation}" Width="*">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding DataContext.UIString[ADSK.TS.CAD-BOM09], FallbackValue = 'Functional Designation', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
-                </DataGridTextColumn>
+                </DataGridTextColumn>-->
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
