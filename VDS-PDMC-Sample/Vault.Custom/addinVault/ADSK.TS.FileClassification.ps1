@@ -212,7 +212,7 @@ function mGetCustentiesByName([String]$Name) {
 	$srchConds[0] = $srchCond
 	
 	$srchCond2 = New-Object autodesk.Connectivity.WebServices.SrchCond
-	$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq $Prop["_XLTN_CLSSTANDARD"].Name }).Id
+	$srchCond2.PropDefId = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }).Id
 	$srchCond2.SrchOper = 3 #Is exactly (or equals)
 	if (-not $global:mActiveStandard) {
 		$srchCond2.SrchTxt = "*"
@@ -390,7 +390,7 @@ function mAddClsLevelCmbChild ($data) {
 	if ($null -eq $children) { return }
 	# sort the children by Name, case sensitive
 	$children = $children | Sort-Object -Property Name -CaseSensitive #-Descending -Unique -Stable
-	
+	$dsDiag.Trace("Childrens: " + $children.GetEnumerator)
 	$mBreadCrumb = $AssignClsWindow.FindName("wrpClassification2")
 	
 	# Determine which breadcrumb level was just selected (this is the level we populate TreeView for)
@@ -419,7 +419,7 @@ function mAddClsLevelCmbChild ($data) {
 		($_.CustEntDefId -in $Global:mClsObjectCustentDefIds) -and
 		($_.CustEntDefId -ne $Global:mClassCustentDef.Id)
 	}
-	
+
 	$dsDiag.Trace("Filtered children: ClassLevels=$($mClassLevelObjects.Count), ClassObjects=$($mClassObjects.Count), Terms=$($mTermObjects.Count)")
 
 	# Populate the appropriate TreeView ComboBoxes based on which breadcrumb level was selected
@@ -466,6 +466,7 @@ function mAddClsLevelCmbChild ($data) {
 	if ($null -ne $cmbTrmTarget -and $mTermObjects.Count -gt 0) {
 		$cmbTrmTarget.ItemsSource = $mTermObjects
 		$cmbTrmTarget.DisplayMemberPath = "Name"
+		$cmbTrmTarget.SelectedIndex = 0
 		$cmbTrmTarget.IsEnabled = $true
 	}
 	else {
@@ -492,9 +493,10 @@ function mAddClsLevelCmbChild ($data) {
 		$mBreadCrumb.Children.Add($cmb)
 		$cmb.ItemsSource = @($mClassLevelObjects)
 		
-		# Auto-open dropdown if only one item available
+		# enforce selection changed for single items; auto-open dropdown if only one item available
 		if ($mClassLevelObjects.Count -eq 1) { 
 			$cmb.SelectedIndex = 0
+			mClsLevelCmbSelectionChanged($cmb)
 		}
 		else {
 			$cmb.IsDropDownOpen = $true 
@@ -557,7 +559,7 @@ function mGetCustentClsLevelList ([String] $ClassLevelName) {
 				$mResultAll.AddRange($mResultPage)
 			}
 			else { 
-				#$MsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("Could not find any " + $ClassLevelName, "VDS Sample -- Classification", "OK")
+				$MsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("Could not find any " + $ClassLevelName, "VDS Sample -- Classification", "OK")
 				break;
 			}
 		}
@@ -573,19 +575,7 @@ function mGetCustentClsLevelUsesList ($mSender) {
 		#$dsDiag.Trace(">> mGetCustentClsLevelUsesList started")
 		$mBreadCrumb = $AssignClsWindow.FindName("wrpClassification2")
 		$_i = $mBreadCrumb.Children.Count - 1
-		$_CurrentCmbName = "cmbClsBrdCrmb_" + $mBreadCrumb.Children.Count.ToString()
-		$_CurrentClass = $mBreadCrumb.Children[$_i].SelectedValue.Name
-		#[System.Windows.MessageBox]::Show("Currentclass: $_CurrentClass and Level# is $_i")
-		switch ($_i) {
-			0 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_01"] }
-			1 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_02"] }
-			2 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_03"] }
-			3 { $mSearchFilter = $UIString["Adsk.QS.ClsLevel_04"] }
-			default { $mSearchFilter = "*" }
-		}
-		$_customObjects = mGetCustentClsLevelList -ClassLevelName $mSearchFilter
-		$_Parent = $_customObjects | Where-Object { $_.Name -eq $_CurrentClass }
-
+		$_Parent = $mBreadCrumb.Children[$_i].SelectedValue
 		try {
 			$links = $vault.DocumentService.GetLinksByParentIds(@($_Parent.Id), @("CUSTENT"))
 			$linkIds = @()

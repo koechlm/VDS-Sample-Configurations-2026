@@ -255,9 +255,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Class Object" FontWeight="Normal"/>
-                        <ComboBox x:Name="cmbCls1" Grid.Column="1" MinWidth="140" Height="22" IsEnabled="False"/>
+                        <ComboBox x:Name="cmbCls1" Grid.Column="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
                         <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
-                        <ComboBox x:Name="cmbTrm1" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False"/>
+                        <ComboBox x:Name="cmbTrm1" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
                     </Grid>
                     <TreeViewItem x:Name="trvClsLevel2" Header="Class Level 2" FontWeight="Bold" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
                         <Grid>
@@ -270,9 +270,9 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Label Content="Class Object" FontWeight="Normal"/>
-                            <ComboBox x:Name="cmbCls2" Grid.Column="1" MinWidth="140" Height="22" IsEnabled="False"/>
+                            <ComboBox x:Name="cmbCls2" Grid.Column="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
                             <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
-                            <ComboBox x:Name="cmbTrm2" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False"/>
+                            <ComboBox x:Name="cmbTrm2" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
                         </Grid>
                         <TreeViewItem x:Name="trvClsLevel3" Header="Class Level 3" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
                             <Grid>
@@ -285,9 +285,9 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Content="Class Object" FontWeight="Normal"/>
-                                <ComboBox x:Name="cmbCls3" Grid.Column="1" Height="22" IsEnabled="False"/>
+                                <ComboBox x:Name="cmbCls3" Grid.Column="1" Height="22" IsEnabled="False" FontWeight="Normal"/>
                                 <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
-                                <ComboBox x:Name="cmbTrm3" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False"/>
+                                <ComboBox x:Name="cmbTrm3" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
                             </Grid>
                             <TreeViewItem x:Name="trvClsLevel4" Header="Class Level 4" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
                                 <Grid>
@@ -300,9 +300,9 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Content="Class Object" FontWeight="Normal"/>
-                                    <ComboBox x:Name="cmbCls4" Grid.Column="1" MinWidth="140" Margin="0,0,10,0" Height="22" IsEnabled="False"/>
+                                    <ComboBox x:Name="cmbCls4" Grid.Column="1" MinWidth="140" Margin="0,0,10,0" Height="22" IsEnabled="False" FontWeight="Normal"/>
                                     <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
-                                    <ComboBox x:Name="cmbTrm4" Grid.Column="1" Grid.Row="1" MinWidth="140" Margin="0,0,10,0" Height="22" IsEnabled="False"/>
+                                    <ComboBox x:Name="cmbTrm4" Grid.Column="1" Grid.Row="1" MinWidth="140" Margin="0,0,10,0" Height="22" IsEnabled="False" FontWeight="Normal"/>
                                 </Grid>
                             </TreeViewItem>
                         </TreeViewItem>
