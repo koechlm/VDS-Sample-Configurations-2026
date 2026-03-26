@@ -335,7 +335,7 @@
                     </DataGrid>
                 </GroupBox>
                 <GroupBox Header="Class Term" MinWidth="637" MinHeight="282" Grid.Row="1">
-                    <DataGrid x:Name="dtgrdClsTermProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0">
+                    <DataGrid x:Name="dtgrdTermProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="ClassPropName2" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="140">
                                 <DataGridTextColumn.HeaderTemplate>

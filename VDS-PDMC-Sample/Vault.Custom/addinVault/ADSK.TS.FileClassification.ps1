@@ -11,8 +11,8 @@ Add-Type -AssemblyName WindowsBase
 Add-Type -AssemblyName System.Xaml
 
 function mInitializeClassificationTab($ParentType, $file) {
-	#$dsDiag.ShowLog()
-	#$dsDiag.Clear()
+	$dsDiag.ShowLog()
+	$dsDiag.Clear()
 
 	$dsWindow.FindName("txtClassificationStatus").Visibility = "Collapsed"
 	$Global:mClsTabInitialized = $false
@@ -31,10 +31,19 @@ function mInitializeClassificationTab($ParentType, $file) {
 		}
 		#configuration info - the custom object names used for the classification structure may vary. Align Custent names of your Vault in UIStrings ADSK.QS.ClassLevel_*
 		$Global:mClsLevelNames = ($UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
+			$UIString["Adsk.QS.ClsLevel_04"])
+		$Global:mClassLevelCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $mClsLevelNames }).Id
+
+		$Global:mClsObjectNames = ($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
+		$Global:mClsObjectCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $Global:mClsObjectNames }).Id
+
+		$Global:mClsPropNames = (
+			$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
 			$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
 			$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Adsk.QS.ClsLevelCode"], 
 			$UIString["Adsk.QS.Classification_00"], $UIString["Comments"], $UIString["CommentsDE"] )
-		$Global:mClassLevelCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $mClsLevelNames }).Id		
+		$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id
+
 	}
 
 	Switch ($ParentType) {
@@ -390,25 +399,28 @@ function mAddClsLevelCmbChild ($data) {
 	
 	$dsDiag.Trace("Processing breadcrumb level $($currentLevel + 1) selection, Children.Count = $($mBreadCrumb.Children.Count)")
 	
-	#Filter classification levels, class objects, and term objects
-	# Get Class Object and Term definition IDs first to exclude from breadcrumb
+	# Filter classification levels, class objects, and term objects using the new bucket system
+	# Breadcrumb: Use mClassLevelCustentDefIds (Class Levels 1-4 only)
+	$mClassLevelObjects = @() #filtered list for the next class level (for breadcrumb)
+	$mClassLevelObjects += $children | Where-Object { 
+		$_.CustEntDefId -in $Global:mClassLevelCustentDefIds
+	}
+	
+	# TreeView: Use mClsObjectCustentDefIds (Class Objects and Terms only)
+	# Need to separate Class Objects from Terms by checking against the specific Class Object definition
 	$mClassObjects = @() #filtered list for class objects (for TreeView cmbCls*)
-	$mClassObjects += $children | Where-Object { $_.CustEntDefId -eq $Global:mClassCustentDef.Id }
+	$mClassObjects += $children | Where-Object { 
+		$_.CustEntDefId -eq $Global:mClassCustentDef.Id
+	}
 	
 	$mTermObjects = @() #filtered list for term objects (for TreeView cmbTrm*)
-	$mTermCustentDef = $Global:mCustentDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsTerm"] }
-	if ($mTermCustentDef) {
-		$mTermObjects += $children | Where-Object { $_.CustEntDefId -eq $mTermCustentDef.Id }
+	# Terms are anything in mClsObjectCustentDefIds that is NOT a Class Object
+	$mTermObjects += $children | Where-Object { 
+		($_.CustEntDefId -in $Global:mClsObjectCustentDefIds) -and
+		($_.CustEntDefId -ne $Global:mClassCustentDef.Id)
 	}
-
-	# Filter for Class Level entities only - EXCLUDE Class Objects and Terms from breadcrumb
-	$mClassLevelObjects = @() #filtered list for the next class level (for breadcrumb)
-	$excludeIds = @($Global:mClassCustentDef.Id)
-	if ($mTermCustentDef) { $excludeIds += $mTermCustentDef.Id }
-	$mClassLevelObjects += $children | Where-Object { 
-		($_.CustEntDefId -in $Global:mClassLevelCustentDefIds) -and 
-		($_.CustEntDefId -notin $excludeIds)
-	}
+	
+	$dsDiag.Trace("Filtered children: ClassLevels=$($mClassLevelObjects.Count), ClassObjects=$($mClassObjects.Count), Terms=$($mTermObjects.Count)")
 
 	# Populate the appropriate TreeView ComboBoxes based on which breadcrumb level was selected
 	$cmbClsTarget = $null
@@ -678,13 +690,37 @@ function mResetClassSelection {
 }
 
 function mAvlblClsReset {
-	if ($null -ne $AssignClsWindow.FindName("cmbCls1")) {
-		$dsWindow.FindName("txtActiveClass").Text = ""
-		$dsWindow.FindName("dtgrdClassProps").ItemsSource = $null
-		$AssignClsWindow.FindName("cmbCls1").ItemsSource = $null
-		$AssignClsWindow.FindName("cmbCls1").SelectedIndex = -1
-		$AssignClsWindow.FindName("cmbCls1").IsEnabled = $false
+	# Get current breadcrumb position to determine which TreeView levels to reset
+	$mBreadCrumb = $AssignClsWindow.FindName("wrpClassification2")
+	$currentLevel = $mBreadCrumb.Children.Count - 1  # 0=Level1, 1=Level2, 2=Level3, 3=Level4
+	
+	# Reset TreeView ComboBoxes for levels AFTER the current selection
+	# If currentLevel=1 (Level 2 selected), reset cmbCls3, cmbCls4, cmbTrm3, cmbTrm4
+	for ($i = $currentLevel + 2; $i -le 4; $i++) {
+		$cmbCls = $AssignClsWindow.FindName("cmbCls$i")
+		$cmbTrm = $AssignClsWindow.FindName("cmbTrm$i")
+		
+		if ($cmbCls) {
+			$cmbCls.ItemsSource = $null
+			$cmbCls.SelectedIndex = -1
+			$cmbCls.IsEnabled = $false
+		}
+		
+		if ($cmbTrm) {
+			$cmbTrm.ItemsSource = $null
+			$cmbTrm.SelectedIndex = -1
+			$cmbTrm.IsEnabled = $false
+		}
 	}
+	
+	# Clear active class display
+	if ($null -ne $dsWindow.FindName("txtActiveClass")) {
+		$dsWindow.FindName("txtActiveClass").Text = ""
+	}
+	if ($null -ne $dsWindow.FindName("dtgrdClassProps")) {
+		$dsWindow.FindName("dtgrdClassProps").ItemsSource = $null
+	}
+	
 	$AssignClsWindow.FindName("btnSelectClass").IsEnabled = $false
 }
 #endregion classification breadcrumb
