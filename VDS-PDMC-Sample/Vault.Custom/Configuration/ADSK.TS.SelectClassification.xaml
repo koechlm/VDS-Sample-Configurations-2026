@@ -10,7 +10,7 @@
     <WPF:MainWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/Autodesk.DataManagement.Client.Framework.Forms;component/Controls/WPF/ControlTemplates/MergedResources.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/Autodesk.DataManagement.Client.Framework.Forms;component/Controls/WPF/ControlTemplates/MergedResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <WPF:IsMoreThanZeroConverter x:Key="MoreThanZeroConverter"/>
             <WPF:InverseBoolConverter x:Key="BoolConvert"/>
@@ -185,6 +185,7 @@
             <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource ThemedListBoxStyle}" />
             <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ThemedListBoxItemStyle}"/>
             <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource ThemedTreeViewStyle}"/>
+            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ThemedTreeViewItemStyle}"/>
             <Style TargetType="{x:Type Border}" BasedOn="{StaticResource ThemedBorderStyle}"/>
             <!--#endregion themed styles for VE dialog standard controls-->
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -205,34 +206,35 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,2" >
-            <Grid Margin="5">
+            <Grid Margin="5" Grid.IsSharedSizeScope="True">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition x:Name="clmStandard" Width="Auto" SharedSizeGroup="FirstCol"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="SecondCol"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
-                <ComboBox x:Name="cmb_ClsStd" Text="{Binding Prop[_XLTN_CLSSTANDARD]}" SelectedValue="{Binding Prop[_XLTN_CLSSTANDARD]}" SelectedIndex="0" VerticalAlignment="Center" Grid.Column="1" Margin="0" MinWidth="140" ItemsSource="{Binding Text, ElementName=cmb_ClsStd}">
+                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}" FontWeight="Bold"/>
+                <ComboBox x:Name="cmb_ClsStd" Text="" SelectedIndex="0" VerticalAlignment="Center" Grid.Column="1" Margin="0" MinWidth="140">
+                    <ComboBoxItem x:Name="IEC61355" Content="IEC 61355"/>
+                    <ComboBoxItem x:Name="eClass" Content="eCl@ss"/>
+                    <ComboBoxItem x:Name="Company" Content="PDMC-Sample"/>
+                    <ComboBoxItem x:Name="Uniclass" Content="Uniclass" />
                 </ComboBox>
                 <Grid Grid.Row="1" Margin="0,5,0,10" Height="22" MinWidth="140" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition x:Name="clmReset" Width="Auto" SharedSizeGroup="FirstCol"/>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="SecondCol"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnResetClsLevels" Grid.Column="0" Content="Reset" Margin="5,0,5,0" Padding="5,1,5,1" >
-                    </Button>
-                    <ComboBox x:Name="cmbClsLevel1" Grid.Column="1" Margin="2,0,2,0" MinWidth="140"/>
-                    <ComboBox x:Name="cmbClsLevel2" Grid.Column="2" Margin="2,0,2,0" MinWidth="140"/>
-                    <ComboBox x:Name="cmbClsLevel3" Grid.Column="3" Margin="2,0,2,0" MinWidth="140"/>
-                    <ComboBox x:Name="cmbClsLevel4" Grid.Column="4" Margin="2,0,2,0" MinWidth="140"/>
+                    <Button x:Name="btnResetClsLevels" Grid.Column="0" Content="Reset" Margin="2,0,5,0" Padding="5,1,5,1" Width="50"
+                        Command="{Binding PsCmd[mResetClassSelection]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue='Reset Selection'}" />
+                    <WrapPanel x:Name="wrpClassification2" MaxWidth="800" Grid.Column="1" Grid.ColumnSpan="5"/>
                 </Grid>
             </Grid>
         </Border>
@@ -242,7 +244,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TreeView Margin="10,0,0,0">
-                <TreeViewItem x:Name="trvClssLevel1" Header="Class Level 1" IsExpanded="True">
+                <TreeViewItem x:Name="trvClssLevel1" Header="Class Level 1" IsExpanded="True" Foreground="{Binding Foreground, ElementName=cmbCls1}" FontWeight="Bold">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -252,12 +254,12 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="Class Object"/>
-                        <ComboBox Grid.Column="1" MinWidth="140" Height="22"/>
-                        <Label Content="Class Term" Grid.Row="1"/>
-                        <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
+                        <Label Content="Class Object" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbCls1" Grid.Column="1" MinWidth="140" Height="22"/>
+                        <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbTrm1" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
                     </Grid>
-                    <TreeViewItem x:Name="trvClsLevel2" Header="Class Level 2" IsExpanded="True">
+                    <TreeViewItem x:Name="trvClsLevel2" Header="Class Level 2" FontWeight="Bold" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -267,12 +269,12 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Content="Class Object"/>
-                            <ComboBox Grid.Column="1" MinWidth="140" Height="22"/>
-                            <Label Content="Class Term" Grid.Row="1"/>
-                            <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
+                            <Label Content="Class Object" FontWeight="Normal"/>
+                            <ComboBox x:Name="cmbCls2" Grid.Column="1" MinWidth="140" Height="22"/>
+                            <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                            <ComboBox x:Name="cmbTrm2" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
                         </Grid>
-                        <TreeViewItem x:Name="trvClsLevel3" Header="Class Level 3" IsExpanded="True">
+                        <TreeViewItem x:Name="trvClsLevel3" Header="Class Level 3" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
@@ -282,12 +284,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Content="Class Object"/>
-                                <ComboBox Grid.Column="1" Height="22"/>
-                                <Label Content="Class Term" Grid.Row="1"/>
-                                <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
+                                <Label Content="Class Object" FontWeight="Normal"/>
+                                <ComboBox x:Name="cmbCls3" Grid.Column="1" Height="22"/>
+                                <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                                <ComboBox x:Name="cmbTrm3" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22"/>
                             </Grid>
-                            <TreeViewItem x:Name="trvClsLevel4" Header="Class Level 4" IsExpanded="True">
+                            <TreeViewItem x:Name="trvClsLevel4" Header="Class Level 4" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
@@ -297,10 +299,10 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Content="Class Object"/>
-                                    <ComboBox Grid.Column="1" MinWidth="140" Margin="0,0,10,0" Height="22"/>
-                                    <Label Content="Class Term" Grid.Row="1"/>
-                                    <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="140" Margin="0,0,10,0" Height="22"/>
+                                    <Label Content="Class Object" FontWeight="Normal"/>
+                                    <ComboBox x:Name="cmbCls4" Grid.Column="1" MinWidth="140" Margin="0,0,10,0" Height="22"/>
+                                    <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                                    <ComboBox x:Name="cmbTrm4" Grid.Column="1" Grid.Row="1" MinWidth="140" Margin="0,0,10,0" Height="22"/>
                                 </Grid>
                             </TreeViewItem>
                         </TreeViewItem>
@@ -376,7 +378,7 @@
                 <CheckBox Content="Copy Term -&gt; Title Values (Multi-Languages)" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="True"/>
                 <Button x:Name="btnHelp2" Content="{Binding UIString[MSDCE_BTN1], FallbackValue=Help}" 
                     Command="{Binding PsCmd[mHelp(500)]}" ToolTip="F1" Margin="0" Width="80" Height="24" />
-                <Button x:Name="btnSelectClass1" Content="{Binding UIString[], FallbackValue=Select Classification}"  Command="{Binding PsCmd[mSelectClassification]}" Grid.Column="3" BorderThickness="1" Padding="5,1" IsEnabled="False" Height="24"/>
+                <Button x:Name="btnSelectClass" Content="{Binding UIString[], FallbackValue=Select Classification}"  Command="{Binding PsCmd[mSelectClassification]}" Grid.Column="3" BorderThickness="1" Padding="5,1" IsEnabled="False" Height="24"/>
             </Grid>
         </Grid>
     </Grid>
