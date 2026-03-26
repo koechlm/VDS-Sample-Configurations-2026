@@ -1098,6 +1098,7 @@
                 <Grid x:Name="grdClassification" Width="{Binding ActualWidth, ElementName=grdMain, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=grdMain, Mode=OneWay}" Margin="5,10,5,5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -1107,26 +1108,28 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition MaxWidth="400"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label x:Name="lblActiveClass" Content="{Binding UIString[Adsk.QS.Classification_06], FallbackValue='Active Classification'}" Grid.Row="3" />
-                    <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Height="24" Text="[not bound]" Grid.Row="3" Grid.Column="1" IsReadOnly="True"/>
-                    <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue='Class Properties'}" Grid.Row="5" Height="Auto" BorderThickness="1,1,0,1"/>
-                    <Border x:Name="brdwrpclassification2" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5">
+                    <Label x:Name="lblClsStandard" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
+                    <TextBox x:Name="txtClsStandard" Grid.Column="1" Text="txtClsStandard" IsEnabled="False" Width="Auto"/>
+                    <Label x:Name="lblActiveClass" Content="{Binding UIString[Adsk.QS.Classification_06], FallbackValue=Active Classification}" Grid.Row="4" />
+                    <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Height="24" Text="[not bound]" Grid.Row="4" Grid.Column="1" IsReadOnly="True"/>
+                    <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue=Class Properties}" Grid.Row="6" Height="Auto" BorderThickness="1,1,0,1"/>
+                    <Border x:Name="brdwrpclassification2" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5" Grid.Row="1">
                         <WrapPanel Orientation="Horizontal">
-                            <TextBox x:Name="txtSegment" TextWrapping="Wrap" Text="TextBox" HorizontalAlignment="Left" Margin="0,0,2,0" />
-                            <TextBox x:Name="txtMainGroup" TextWrapping="Wrap" Text="TextBox" HorizontalAlignment="Left" Margin="0,0,2,0" />
-                            <TextBox x:Name="txtGroup" TextWrapping="Wrap" Text="TextBox" HorizontalAlignment="Left" Margin="0,0,2,0" />
-                            <TextBox x:Name="txtSubGroup" TextWrapping="Wrap" Text="TextBox" HorizontalAlignment="Left" Margin="0,0,2,0" />
+                            <TextBox x:Name="txtSegment" Text="Level1" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False" />
+                            <TextBox x:Name="txtMainGroup" Text="Level2" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
+                            <TextBox x:Name="txtGroup" Text="Level3" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
+                            <TextBox x:Name="txtSubGroup" Text="Level4" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
                         </WrapPanel>
                     </Border>
-                    <Label x:Name="lblClassHierarchy" Content="{Binding UIString[Adsk.QS.Classification_04], FallbackValue='Class Hierarchy'}" Margin="0,5,0,0"/>
-                    <TextBox x:Name="txtClassificationStatus" Height="Auto" TextWrapping="Wrap" Background="#FFFFFFE1" Padding="5,0,0,0" MinHeight="24" Grid.Row="2" Grid.Column="1" Margin="0,1,0,0" />
-                    <Button x:Name="btnRemoveClass" Content="{Binding UIString[], FallbackValue=' Remove Classification '}" Command="{Binding PsCmd[mRemoveClassification]}" Grid.Row="3" Grid.Column="2" Margin="2" MinWidth="80"/>
-                    <Button x:Name="btnSelectClass" Content=" Select Classification . . ." Command="{Binding PsCmd[mInitializeClsSelection]}" Grid.Column="3" HorizontalAlignment="Left" Width="Auto" Grid.Row="3" Margin="2"/>
-                    <DataGrid x:Name="dtgrdClassProps" Grid.Row="5" AutoGenerateColumns="False" Grid.Column="1" SelectionUnit="Cell" Grid.ColumnSpan="3" Margin="0">
+                    <Label x:Name="lblClassHierarchy" Content="{Binding UIString[Adsk.QS.Classification_04], FallbackValue=Class Hierarchy}" Margin="0,5,0,0" Grid.Row="1"/>
+                    <TextBox x:Name="txtClassificationStatus" Height="Auto" TextWrapping="Wrap" Background="#FFFFFFE1" Padding="5,0,0,0" MinHeight="24" Grid.Row="3" Grid.Column="1" Margin="0,1,0,0" />
+                    <Button x:Name="btnRemoveClass" Content="{Binding UIString[], FallbackValue=' Remove Classification '}" Command="{Binding PsCmd[mRemoveClassification]}" Grid.Row="4" Grid.Column="2" Margin="2" MinWidth="80"/>
+                    <Button x:Name="btnSelectClass" Content=" Select Classification . . ." Command="{Binding PsCmd[mInitializeAssignClsDlg]}" Grid.Column="3" HorizontalAlignment="Left" Width="Auto" Grid.Row="4" Margin="2"/>
+                    <DataGrid x:Name="dtgrdClassProps" Grid.Row="6" AutoGenerateColumns="False" Grid.Column="1" SelectionUnit="Cell" Grid.ColumnSpan="3" Margin="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="ClassPropName" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto">
                                 <DataGridTextColumn.HeaderTemplate>
@@ -1144,7 +1147,7 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid x:Name="ButtonGridTabClassific" Grid.Row="7" Grid.ColumnSpan="4" Margin="0,5,2,5">
+                    <Grid x:Name="ButtonGridTabClassific" Grid.Row="8" Grid.ColumnSpan="4" Margin="0,5,2,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80" />
                             <ColumnDefinition />
