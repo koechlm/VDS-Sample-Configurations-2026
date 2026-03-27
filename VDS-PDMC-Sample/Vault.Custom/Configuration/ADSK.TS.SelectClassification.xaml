@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Style="{DynamicResource ThemedWindowStyle}"
         x:Name="AssignClsWindow"
-        Title="VDS-PDMC-Sample | Select Classification . . ." Topmost="True" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight"  VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ResizeMode="NoResize">
+        Title="VDS-PDMC-Sample | Select Classification . . ." Topmost="True" WindowStartupLocation="CenterOwner" SizeToContent="Height" Width="800" MaxWidth="1200" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ResizeMode="CanResize">
     <WPF:MainWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -234,16 +234,16 @@
                     </Grid.ColumnDefinitions>
                     <Button x:Name="btnResetClsLevels" Grid.Column="0" Content="Reset" Margin="2,0,5,0" Padding="5,1,5,1" Width="50"
                         Command="{Binding PsCmd[mResetClassSelection]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue='Reset Selection'}" />
-                    <WrapPanel x:Name="wrpClassification2" MaxWidth="800" Grid.Column="1" Grid.ColumnSpan="5"/>
+                    <WrapPanel x:Name="wrpClassification2" MaxWidth="800" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Left"/>
                 </Grid>
             </Grid>
         </Border>
         <Grid Grid.ColumnSpan="3" Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto" MinWidth="250"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TreeView Margin="10,0,0,0">
+            <TreeView Margin="10,0,5,0">
                 <TreeViewItem x:Name="trvClssLevel1" Header="Class Level 1" IsExpanded="True" Foreground="{Binding Foreground, ElementName=cmbCls1}" FontWeight="Bold">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -309,22 +309,23 @@
                     </TreeViewItem>
                 </TreeViewItem>
             </TreeView>
-            <Grid Grid.Column="1" Margin="10,0,10,0">
+            <Grid Grid.Column="1" Margin="5,0,10,0">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <GroupBox Header="Class Object" MinWidth="637" MinHeight="282" >
-                    <DataGrid x:Name="dtgrdClassProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0">
+                <GroupBox Header="Class Object" MinHeight="240" Margin="0,0,0,5">
+                    <DataGrid x:Name="dtgrdClassProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0" 
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="ClassPropName1" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="140">
+                            <DataGridTextColumn x:Name="ClassPropName1" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="120">
                                 <DataGridTextColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
-                            <DataGridTextColumn x:Name="ClassPropValue1" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}"  Width="*" MinWidth="140">
+                            <DataGridTextColumn x:Name="ClassPropValue1" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}" Width="*" MinWidth="180">
                                 <DataGridTextColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
@@ -334,17 +335,18 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
-                <GroupBox Header="Class Term" MinWidth="637" MinHeight="282" Grid.Row="1">
-                    <DataGrid x:Name="dtgrdTermProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0">
+                <GroupBox Header="Class Term" MinHeight="240" Grid.Row="1" Margin="0,5,0,0">
+                    <DataGrid x:Name="dtgrdTermProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0"
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="ClassPropName2" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="140">
+                            <DataGridTextColumn x:Name="ClassPropName2" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="120">
                                 <DataGridTextColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
-                            <DataGridTextColumn x:Name="ClassPropValue2" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}"  Width="*" MinWidth="140">
+                            <DataGridTextColumn x:Name="ClassPropValue2" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}" Width="*" MinWidth="180">
                                 <DataGridTextColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
