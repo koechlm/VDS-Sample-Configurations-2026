@@ -12,7 +12,7 @@ Add-Type -AssemblyName System.Xaml
 
 function mInitializeClassificationTab($ParentType, $file) {
 	#$dsDiag.ShowLog()
-	#$dsDiag.Clear()
+	$dsDiag.Clear()
 
 	$dsWindow.FindName("txtClassificationStatus").Visibility = "Collapsed"
 	$Global:mClsTabInitialized = $false
@@ -65,6 +65,9 @@ function mInitializeClassificationTab($ParentType, $file) {
 
 			if ($Prop["_XLTN_CLSOBJECT"]) {
 				$dsWindow.FindName("txtActiveClass").Text = $Prop["_XLTN_CLSOBJECT"].Value
+			}
+			if ($Prop["_XLTN_CLSSTANDARD"].Value.Length -gt 0) {
+				$dsWindow.FindName("txtClsStandard").Text = $Prop["_XLTN_CLSSTANDARD"].Value
 			}
 
 			$Global:mClsTabInitialized = $true
@@ -128,46 +131,101 @@ function mGetFileClsValues($sendingCmb) {
 		
 		#get the file's class property values
 		$mFileClassProps = $vault.PropertyService.GetProperties("FILE", @($mFile.Id), $Global:mActvClsPrpNames.Keys)
+		
+		# Get ALL properties from class entity (including Level 1-4 for display in txtLevel textboxes)
+		# We need to retrieve more than just mActvClsPrpNames because those are filtered
+		$allClassEntityProps = $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($mActiveClass[0].Id))
+		$dsDiag.Trace("   Retrieved $($allClassEntityProps.Count) total properties from class entity")
+		
+		# Create a lookup dictionary for all class entity properties by PropDefId
+		$mClassPropsLookup = @{}
+		foreach ($prop in $allClassEntityProps) {
+			$mClassPropsLookup[$prop.PropDefId] = $prop
+		}
+		
 		$mClassProps = $vault.PropertyService.GetProperties("CUSTENT", @($mActiveClass[0].Id), $Global:mActvClsPrpNames.Keys)
 		
-		$dsDiag.Trace("Edit mode: Retrieved $($mFileClassProps.Count) file properties and $($mClassProps.Count) class properties")
+		$dsDiag.Trace(">> mGetFileClsValues: Retrieved $($mFileClassProps.Count) file properties and $($mClassProps.Count) class entity properties")
+		$dsDiag.Trace("   Window name: $($dsWindow.Name)")
+		$dsDiag.Trace("   Class object Id: $($mActiveClass[0].Id), Name: $($mActiveClass[0].Name)")
 		
+		# Debug: List all classification level names we're looking for
+		$dsDiag.Trace("   Classification level names to match:")
+		$dsDiag.Trace("     Level 1: '$($UIString["Adsk.QS.ClsLevel_01"])'")
+		$dsDiag.Trace("     Level 2: '$($UIString["Adsk.QS.ClsLevel_02"])'")
+		$dsDiag.Trace("     Level 3: '$($UIString["Adsk.QS.ClsLevel_03"])'")
+		$dsDiag.Trace("     Level 4: '$($UIString["Adsk.QS.ClsLevel_04"])'")
+		$dsDiag.Trace("     Standard: '$($UIString["Adsk.QS.ClsStandard"])'")
+		
+		# First, handle Level 1-4 and Standard properties from the complete property set
+		if ($dsWindow.Name -eq "FileWindow") {
+			# Find Level 1 property
+			$level1PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_01"] }
+			if ($level1PropDef -and $mClassPropsLookup.ContainsKey($level1PropDef.Id)) {
+				$level1Value = $mClassPropsLookup[$level1PropDef.Id].Val
+				$dsWindow.FindName("txtLevel1").Text = $level1Value
+				$dsDiag.Trace("   SET txtLevel1 = '$level1Value' (from complete property set)")
+				if ($level1Value -ne "") { 
+					$dsWindow.FindName("txtLevel1").Visibility = "Visible"
+				}
+			}
+			
+			# Find Level 2 property
+			$level2PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_02"] }
+			if ($level2PropDef -and $mClassPropsLookup.ContainsKey($level2PropDef.Id)) {
+				$level2Value = $mClassPropsLookup[$level2PropDef.Id].Val
+				$dsWindow.FindName("txtLevel2").Text = $level2Value
+				$dsDiag.Trace("   SET txtLevel2 = '$level2Value' (from complete property set)")
+				if ($level2Value -ne "") { 
+					$dsWindow.FindName("txtLevel2").Visibility = "Visible"
+				}
+			}
+			
+			# Find Level 3 property
+			$level3PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_03"] }
+			if ($level3PropDef -and $mClassPropsLookup.ContainsKey($level3PropDef.Id)) {
+				$level3Value = $mClassPropsLookup[$level3PropDef.Id].Val
+				$dsWindow.FindName("txtLevel3").Text = $level3Value
+				$dsDiag.Trace("   SET txtLevel3 = '$level3Value' (from complete property set)")
+				if ($level3Value -ne "") { 
+					$dsWindow.FindName("txtLevel3").Visibility = "Visible"
+				}
+			}
+			
+			# Find Level 4 property
+			$level4PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_04"] }
+			if ($level4PropDef -and $mClassPropsLookup.ContainsKey($level4PropDef.Id)) {
+				$level4Value = $mClassPropsLookup[$level4PropDef.Id].Val
+				$dsWindow.FindName("txtLevel4").Text = $level4Value
+				$dsDiag.Trace("   SET txtLevel4 = '$level4Value' (from complete property set)")
+				if ($level4Value -ne "") { 
+					$dsWindow.FindName("txtLevel4").Visibility = "Visible"
+				}
+			}
+			
+			# Find Standard property
+			$standardPropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }
+			if ($standardPropDef -and $mClassPropsLookup.ContainsKey($standardPropDef.Id)) {
+				$standardValue = $mClassPropsLookup[$standardPropDef.Id].Val
+				$global:mActiveStandard = $standardValue
+				$dsWindow.FindName("txtClsStandard").Text = $standardValue
+				$dsDiag.Trace("   SET txtClsStandard = '$standardValue' (from complete property set)")
+				if ($standardValue -ne "") { 
+					$dsWindow.FindName("txtClsStandard").Visibility = "Visible"
+				}
+			}
+		}
+		
+		# Now process the data properties for the grid
+		# Now process the data properties for the grid
 		Foreach ($mClsProp in $Global:mActvClsPrpNames.GetEnumerator()) {
 			# Add property to display table (filter out only classification level names, keep all actual data properties)
 			if ($mClsProp.Value -notin $Global:mClsLevelNames) {
 				$filePropertyValue = ($mFileClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
 				$mClsPropTable.Add($Global:mActvClsPrpNames[$mClsProp.Key], $filePropertyValue)
-				$dsDiag.Trace("  Added property to table: $($mClsProp.Value) = '$filePropertyValue'")
 			}
-			
-			# Update UI TextBoxes with classification level hierarchy (if in FileWindow)
-			if ($dsWindow.Name -eq "FileWindow") {
-				if ($Global:mActvClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_01"]) { 
-					$dsWindow.FindName("txtLevel1").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-					if ($dsWindow.FindName("txtLevel1").Text -ne "") { $dsWindow.FindName("txtLevel1").Visibility = "Visible" }
-				}
-				
-				if ($Global:mActvClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_02"]) { 
-					$dsWindow.FindName("txtLevel2").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-					if ($dsWindow.FindName("txtLevel2").Text -ne "") { $dsWindow.FindName("txtLevel2").Visibility = "Visible" }
-				}
-				
-				if ($Global:mActvClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_03"]) { 
-					$dsWindow.FindName("txtLevel3").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-					if ($dsWindow.FindName("txtLevel3").Text -ne "") { $dsWindow.FindName("txtLevel3").Visibility = "Visible" }
-				}
-				if ($Global:mActvClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsLevel_04"]) { 
-					$dsWindow.FindName("txtLevel4").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-					if ($dsWindow.FindName("txtLevel4").Text -ne "") { $dsWindow.FindName("txtLevel4").Visibility = "Visible" }
-				}				
-				if ($Global:mActvClsPrpNames[$mClsProp.Key] -eq $UIString["Adsk.QS.ClsStandard"]) { 
-					$global:mActiveStandard = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-					$dsWindow.FindName("txtClsStandard").Text = ($mClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-					if ($dsWindow.FindName("txtClsStandard").Text -ne "") { $dsWindow.FindName("txtClsStandard").Visibility = "Visible" }
-				}
-			}
-
 		}
+		
 		#fill the grid either for edits or as preview before the class assignment
 		if ($AssignClsWindow) {
 			$AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable
