@@ -1119,10 +1119,10 @@
                     <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue=Class Properties}" Grid.Row="6" Height="Auto" BorderThickness="1,1,0,1"/>
                     <Border x:Name="brdwrpclassification2" Grid.ColumnSpan="3" Grid.Column="1" Margin="0,5" Grid.Row="1">
                         <WrapPanel Orientation="Horizontal">
-                            <TextBox x:Name="txtSegment" Text="Level1" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False" />
-                            <TextBox x:Name="txtMainGroup" Text="Level2" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
-                            <TextBox x:Name="txtGroup" Text="Level3" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
-                            <TextBox x:Name="txtSubGroup" Text="Level4" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
+                            <TextBox x:Name="txtLevel1" Text="Level1" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False" />
+                            <TextBox x:Name="txtLevel2" Text="Level2" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
+                            <TextBox x:Name="txtLevel3" Text="Level3" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
+                            <TextBox x:Name="txtLevel4" Text="Level4" HorizontalAlignment="Left" Margin="0,0,2,0" IsEnabled="False"/>
                         </WrapPanel>
                     </Border>
                     <Label x:Name="lblClassHierarchy" Content="{Binding UIString[Adsk.QS.Classification_04], FallbackValue=Class Hierarchy}" Margin="0,5,0,0" Grid.Row="1"/>
