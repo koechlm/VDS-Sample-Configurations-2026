@@ -11,8 +11,8 @@ Add-Type -AssemblyName WindowsBase
 Add-Type -AssemblyName System.Xaml
 
 function mInitializeClassificationTab($ParentType, $file) {
-	$dsDiag.ShowLog()
-	$dsDiag.Clear()
+	#$dsDiag.ShowLog()
+	#$dsDiag.Clear()
 
 	$dsWindow.FindName("txtClassificationStatus").Visibility = "Collapsed"
 	$Global:mClsTabInitialized = $false
@@ -143,7 +143,6 @@ function mGetFileClsValues($sendingCmb) {
 		#fill the grid either for edits or as preview before the class assignment
 		if ($AssignClsWindow) {
 			$AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable
-			$AssignClsWindow.FindName("dtgrdClassProps").IsEnabled = $false
 		}
 		else {
 			$dsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable		
@@ -180,6 +179,77 @@ function mGetClsDfltValues($sendingCmb) {
     $Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable
 
     $dsDiag.Trace("...Function mGetClsDfltValues finished.<<")
+}
+
+function mGetTermDfltValues($sendingCmb) {
+    $dsDiag.Trace(">>Function mGetTermDfltValues starts...$($sendingCmb)")
+    
+    # Add defensive check
+    if (-not $Global:AssignClsWindow) {
+        $dsDiag.Trace("ERROR: AssignClsWindow is null in mGetTermDfltValues")
+        return
+    }
+    
+    # Check what we're getting from the ComboBox
+    $dsDiag.Trace("  SelectedValue: $($sendingCmb.SelectedValue)")
+    $dsDiag.Trace("  SelectedItem: $($sendingCmb.SelectedItem)")
+    $dsDiag.Trace("  SelectedItem.Name: $($sendingCmb.SelectedItem.Name)")
+    
+    # Use SelectedItem.Name to get the actual name (SelectedValue should be Name, but let's be safe)
+    $termName = if ($sendingCmb.SelectedValue) { $sendingCmb.SelectedValue } else { $sendingCmb.SelectedItem.Name }
+    $dsDiag.Trace("  Searching for term: $termName")
+    
+    # SelectedValue returns the Name string (not the object), so we need to search for it
+    $mActiveTerm = mGetCustentiesByName($termName)
+    if (-not $mActiveTerm -or $mActiveTerm.Count -eq 0) {
+        $dsDiag.Trace("ERROR: No term object found with name '$termName'")
+        return
+    }
+    
+    $dsDiag.Trace("  Found term object with Id: $($mActiveTerm[0].Id)")
+    
+    # Use special functions for Terms that don't pre-filter properties
+    $mActvTermPrpNames = mGetTermPrpNames($mActiveTerm[0].Id)
+    $mTermPrpValues = mGetTermPrpValues($mActiveTerm[0].Id)
+    $mTermPropTable = @{}
+    
+    Foreach ($mTermProp in $mActvTermPrpNames.GetEnumerator()) {
+        # For Terms: only filter out the class level properties (Segment, Main Group, Group, Sub Group)
+        # Keep all other properties including Class, Standard, Codes, Comments, etc.
+        if ($mActvTermPrpNames[$mTermProp.Key] -notin $Global:mClsLevelNames) {
+            $mTermPropTable.Add($mActvTermPrpNames[$mTermProp.Key], $mTermPrpValues[$mTermProp.Key])
+        }
+    }
+
+    $dsDiag.Trace("  Term property table has $($mTermPropTable.Count) entries")
+    $Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource = $mTermPropTable
+
+    $dsDiag.Trace("...Function mGetTermDfltValues finished.<<")
+}
+
+function mGetTermPrpNames($TermId) { #get Properties added to this term - NO pre-filtering
+	$global:mTermPropInsts = @()
+	$global:mTermPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($TermId))
+	$mActvTermPrpNames = @{}
+	ForEach ($mPropInst in $mTermPropInsts) {
+		#add ALL UDPs of the Term Object - don't filter out $Global:mClsPropDefIds
+		If ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }) {
+			$mDispName = ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }).DispName
+			$mActvTermPrpNames.Add($mPropInst.PropDefId, $mDispName)
+		}
+	}
+	return $mActvTermPrpNames
+}
+
+function mGetTermPrpValues($TermId) { #get Property values for this term
+	$mTermPropValues = @{}
+	ForEach ($mPropInst in $global:mTermPropInsts) {
+		#add ALL UDPs of the Term Object
+		If ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }) {
+			$mTermPropValues.Add($mPropInst.PropDefId, $mPropInst.Val)
+		}
+	}
+	return $mTermPropValues
 }
 
 function mGetClsPrpNames($ClassId) { #get Properties added to this class
@@ -272,6 +342,7 @@ function mGetFileObject() {
 }
 
 function mSelectClassification() {
+	#$dsDiag.ShowLog()  # Comment out if this was causing the log to show
 	$dsWindow.FindName("txtActiveClass").Text = $AssignClsWindow.FindName("cmbCls1").SelectedValue
 	$dsWindow.FindName("btnRemoveClass").IsEnabled = $false
 	$dsWindow.FindName("btnSelectClass").IsEnabled = $true
@@ -283,6 +354,7 @@ function mSelectClassification() {
 	
 	$AssignClsWindow.DialogResult = $true #"OK"
 	$AssignClsWindow.Close()
+	#$dsDiag.ShowLog()  # Comment out if this was causing the log to show after close
 }
 
 function mApplyClassification() {
@@ -475,7 +547,7 @@ function mAddClsLevelCmbChild ($data) {
 	if ($null -ne $cmbTrmTarget -and $mTermObjects.Count -gt 0) {
 		$cmbTrmTarget.ItemsSource = $mTermObjects
 		$cmbTrmTarget.DisplayMemberPath = "Name"
-		$cmbClsTarget.SelectedValuePath = "Name"
+		$cmbTrmTarget.SelectedValuePath = "Name"
 		$cmbTrmTarget.SelectedIndex = 0
 		$cmbTrmTarget.IsEnabled = $true
 	}
@@ -788,6 +860,9 @@ function mInitializeAssignClsDlg {
 		$cmbTrm2.SelectedIndex = -1
 		$cmbTrm3.SelectedIndex = -1
 		$cmbTrm4.SelectedIndex = -1
+		
+		# preview the properties and default values for this term
+		mGetTermDfltValues -sendingCmb $mSender
 	})
 	$cmbCls2.add_SelectionChanged({
 		param ($mSender, $e)
@@ -808,6 +883,9 @@ function mInitializeAssignClsDlg {
 		$cmbTrm1.SelectedIndex = -1
 		$cmbTrm3.SelectedIndex = -1
 		$cmbTrm4.SelectedIndex = -1
+		
+		# preview the properties and default values for this term
+		mGetTermDfltValues -sendingCmb $mSender
 	})
 	$cmbCls3.add_SelectionChanged({
 		param ($mSender, $e)
@@ -828,6 +906,9 @@ function mInitializeAssignClsDlg {
 		$cmbTrm1.SelectedIndex = -1
 		$cmbTrm2.SelectedIndex = -1
 		$cmbTrm4.SelectedIndex = -1
+		
+		# preview the properties and default values for this term
+		mGetTermDfltValues -sendingCmb $mSender
 	})
 	$cmbCls4.add_SelectionChanged({
 		param ($mSender, $e)
@@ -848,6 +929,9 @@ function mInitializeAssignClsDlg {
 		$cmbTrm1.SelectedIndex = -1
 		$cmbTrm2.SelectedIndex = -1
 		$cmbTrm3.SelectedIndex = -1
+		
+		# preview the properties and default values for this term
+		mGetTermDfltValues -sendingCmb $mSender
 	})
 	
 	
@@ -861,6 +945,7 @@ function mInitializeAssignClsDlg {
 			return
 		}
 		else {
+			$global:AssignClsWindow = $null
 			return $null
 		}
 	}
