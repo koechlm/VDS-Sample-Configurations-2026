@@ -519,6 +519,7 @@
   <UIString ID="ClassTerms_11">Term FR</UIString>
   <UIString ID="ClassTerms_12">Term IT</UIString>
   <UIString ID="ClassTerms_12a">Term ES</UIString>
+  <UIString ID="ClassTerms_12b">Is Manual Entry</UIString>
   <UIString ID="ClassTerms_13">Catalog...</UIString>
   <UIString ID="ClassTerms_14">Filter</UIString>
   <UIString ID="ClassTerms_15">Additional Languages</UIString>

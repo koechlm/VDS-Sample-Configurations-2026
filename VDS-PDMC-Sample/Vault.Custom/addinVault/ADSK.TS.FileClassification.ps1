@@ -40,7 +40,7 @@ function mInitializeClassificationTab($ParentType, $file) {
 	$Global:mClsPropNames = (
 		$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
 		$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
-		$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["ClassTerms_12a"], $UIString["Adsk.QS.ClsLevelCode"], 
+		$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["ClassTerms_12a"], $UIString["ClassTerms_12b"], $UIString["Adsk.QS.ClsLevelCode"], 
 		$UIString["Comments"], $UIString["CommentsDE"] )
 	$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id	}
 
@@ -376,6 +376,20 @@ function mGetClsPrpNames($ClassId) { #get Properties added to this class
 	return $mActvClsPrpNames
 }
 
+function mGetAllClsPrpNames($ClassId) { #get ALL Properties from this class (no filtering) - used for removal
+	$global:mClsPropInsts = @()
+	$global:mClsPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($ClassId))
+	$mActvClsPrpNames = @{}
+	ForEach ($mPropInst in $mClsPropInsts) {
+		#add ALL UDPs of the Custom Object - NO FILTERING for removal
+		If ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }) {
+			$mDispName = ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }).DispName
+			$mActvClsPrpNames.Add($mPropInst.PropDefId, $mDispName)
+		}
+	}
+	return $mActvClsPrpNames
+}
+
 function mGetClsPrpValues($ClassId) { #get Properties added to this class
 	$mClsPropValues = @{}
 	ForEach ($mPropInst in $global:mClsPropInsts) {
@@ -623,14 +637,17 @@ function mRemoveClassification() { #applies to $dsWindow
 		if ($Global:mFile) {
 			$dsDiag.Trace("...remove class - file found")
 			
-			#get class object to remove
+			#get class object to remove - use mGetAllClsPrpNames to get ALL properties (including "Class" and other filtered properties)
 			$mActiveClass = mGetCustentiesByName($Prop["_XLTN_CLSOBJECT"].Value)
-			$mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
+			$mActvClsPrpNames = mGetAllClsPrpNames($mActiveClass[0].Id)
 			$mPropsRemove = @()
 			
 			Foreach ($mClsProp in $mActvClsPrpNames.GetEnumerator()) {
 				$mPropsRemove += $mClsProp.Key
+				$dsDiag.Trace("  Removing property: $($mClsProp.Value) (ID: $($mClsProp.Key))")
 			}
+			
+			$dsDiag.Trace("Total properties to remove: $($mPropsRemove.Count)")
 			
 			$mMsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning(($UIString["Adsk.QS.Classification_11"] -f "`n"), "VDS Sample Configuration", "YesNo")
 			if ($mMsgResult -eq "No") { return }
@@ -639,8 +656,10 @@ function mRemoveClassification() { #applies to $dsWindow
 			$mPropsAdd = @()
 			try {
 				$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
+				$dsDiag.Trace("Successfully removed $($mPropsRemove.Count) classification properties")
 			}
 			catch {
+				$dsDiag.Trace("Error removing classification: $($_.Exception.Message)")
 				[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("Error removing or updating classification", "VDS Sample Configuration")
 			}
 		}

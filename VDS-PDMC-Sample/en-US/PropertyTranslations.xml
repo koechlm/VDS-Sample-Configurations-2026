@@ -71,6 +71,7 @@
   <PropertyTranslation Name="TERM-FR">Term FR</PropertyTranslation>
   <PropertyTranslation Name="TERM-IT">Term IT</PropertyTranslation>
   <PropertyTranslation Name="TERM-ES">Term ES</PropertyTranslation>
+  <PropertyTranslation Name="IS-MANUAL-ENTRY">Is Manual Entry</PropertyTranslation>
   <!--Note the default "Term" is used as object name and varies according the language-->
   <PropertyTranslation Name="TITLE-DE">Title DE</PropertyTranslation>
   <PropertyTranslation Name="TITLE-EN">Title</PropertyTranslation>
