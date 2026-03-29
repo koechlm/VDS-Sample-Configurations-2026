@@ -179,8 +179,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" MinWidth="340"/>
-                <ColumnDefinition Width="3*" MinWidth="340"/>
+                <ColumnDefinition MinWidth="340"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Label Content="{Binding UIString[LBL73], FallbackValue=System Properties}" FontWeight="Bold"/>
@@ -223,16 +223,16 @@
                 </Grid.RowDefinitions>
                 <DataGrid x:Name="DSDynCatPropGrid" ToolTip="{Binding UIString[LBL63], FallbackValue=Category Properties}"
                     ItemsSource="{Binding DynamicProperties}" AutoGenerateColumns="False" HeadersVisibility="Column"
-                    ScrollViewer.CanContentScroll="False" Margin="0,1,0,0" CanUserReorderColumns="False" >
+                    ScrollViewer.CanContentScroll="False" Margin="0,1,0,0" CanUserReorderColumns="False" HorizontalContentAlignment="Stretch" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding DispName}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="1*" MinWidth="100" IsReadOnly="True">
+                        <DataGridTextColumn Binding="{Binding DispName}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="SizeToCells" MinWidth="100" IsReadOnly="True">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding DataContext.UIString[LBL64], FallbackValue=Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Height="22" FontWeight="Bold"/>
                                 </DataTemplate>
                             </DataGridTextColumn.HeaderTemplate>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Value}"  Width="2*" CellStyle="{StaticResource DynamicDataGridCellStyle}" MinWidth="200" IsReadOnly="True">
+                        <DataGridTextColumn Binding="{Binding Value}"  Width="*" CellStyle="{StaticResource DynamicDataGridCellStyle}" MinWidth="200" IsReadOnly="True">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding DataContext.UIString[LBL65], FallbackValue=Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Height="22" FontWeight="Bold"/>
@@ -251,22 +251,22 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label x:Name="lblActiveClass" Content="{Binding UIString[Adsk.QS.Classification_06], FallbackValue=Active Classification}" Grid.Row="1" />
                 <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Height="24" Text="{Binding Prop[_XLTN_CLSOBJECT].Value}" Grid.Row="1" Grid.Column="1" Margin="0,1" />
                 <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue=Class Properties}" Grid.Row="2" Height="Auto" />
-                <DataGrid x:Name="dtgrdClassProps" Grid.Row="2" AutoGenerateColumns="False" Grid.Column="1"  Grid.ColumnSpan="3" CanUserResizeRows="False" SelectionMode="Single" SelectionUnit="Cell" HeadersVisibility="Column" ColumnHeaderHeight="26" >
+                <DataGrid x:Name="dtgrdClassProps" Grid.Row="2" AutoGenerateColumns="False" Grid.Column="1" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" SelectionUnit="Cell" HeadersVisibility="Column" ColumnHeaderHeight="26" HorizontalContentAlignment="Stretch" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="ClassPropName" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="1*" MinWidth="100">
+                        <DataGridTextColumn x:Name="ClassPropName" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="SizeToCells" MinWidth="140">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" FontWeight="Bold" />
                                 </DataTemplate>
                             </DataGridTextColumn.HeaderTemplate>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="ClassPropValue" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource ClassificationDataGridCellStyle}"  Width="2*" MinWidth="100">
+                        <DataGridTextColumn x:Name="ClassPropValue" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource ClassificationDataGridCellStyle}"  Width="*" MinWidth="200">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" FontWeight="Bold" />
