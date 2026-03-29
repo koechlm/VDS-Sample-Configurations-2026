@@ -74,11 +74,13 @@
   <PropertyTranslation Name="TERM-EN">Begriff EN</PropertyTranslation>
   <PropertyTranslation Name="TERM-FR">Begriff FR</PropertyTranslation>
   <PropertyTranslation Name="TERM-IT">Begriff IT</PropertyTranslation>
+  <PropertyTranslation Name="TERM-ES">Begriff ES</PropertyTranslation>
   <!--Note the default "Term" is used as object name and varies according the language-->
   <PropertyTranslation Name="TITLE-DE">Titel</PropertyTranslation>
   <PropertyTranslation Name="TITLE-EN">Titel EN</PropertyTranslation>
   <PropertyTranslation Name="TITLE-FR">Titel FR</PropertyTranslation>
   <PropertyTranslation Name="TITLE-IT">Titel IT</PropertyTranslation>
+  <PropertyTranslation Name="TITLE-ES">Titel ES</PropertyTranslation>
   <!--Classification & Terms-->
 
   <!--Revision Property Tab start-->

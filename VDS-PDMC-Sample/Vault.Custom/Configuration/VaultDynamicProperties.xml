@@ -156,6 +156,7 @@
     <DynamicProperty>Engr Approved By</DynamicProperty>
     <DynamicProperty>Engr Approved Date</DynamicProperty>
     <DynamicProperty>Source File</DynamicProperty>
+    <DynamicProperty>Source Revision</DynamicProperty>
     <DynamicProperty>Replaced By</DynamicProperty>
     <DynamicProperty Hidden="True">MBD</DynamicProperty>
     <DynamicProperty Hidden="True">BOM Type</DynamicProperty>
@@ -163,7 +164,7 @@
     <DynamicProperty Hidden="True">Sub-Type</DynamicProperty>
     <DynamicProperty Hidden="True">Key Parameters</DynamicProperty>
     <DynamicProperty Hidden="True">Comments</DynamicProperty>
-    <DynamicProperty Hidden="True">Application Version</DynamicProperty>
+    <DynamicProperty Hidden="True">Application Version</DynamicProperty>    
   </DynamicPropertiesCategory>
   <DynamicPropertiesCategory Category="Reference" Type="FILE">
     <DynamicProperty>Title</DynamicProperty>
@@ -464,6 +465,60 @@
     <DynamicProperty>Term DE</DynamicProperty>
     <DynamicProperty>Term FR</DynamicProperty>
     <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Comments DE</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Class Level 1" Type="CustomObject">
+    <DynamicProperty>Standard</DynamicProperty>
+    <DynamicProperty>Code</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Term EN</DynamicProperty>
+    <DynamicProperty>Term DE</DynamicProperty>
+    <DynamicProperty>Term FR</DynamicProperty>
+    <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Comments DE</DynamicProperty>
+    <DynamicProperty>Level Code</DynamicProperty>
+    <DynamicProperty>Term ES</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Class Level 2" Type="CustomObject">
+    <DynamicProperty>Class Level 1</DynamicProperty>
+    <DynamicProperty>Standard</DynamicProperty>
+    <DynamicProperty>Code</DynamicProperty>
+    <DynamicProperty>Level Code</DynamicProperty>
+    <DynamicProperty>Term EN</DynamicProperty>
+    <DynamicProperty>Term DE</DynamicProperty>
+    <DynamicProperty>Term FR</DynamicProperty>
+    <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Term ES</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Comments DE</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Class Level 3" Type="CustomObject">
+    <DynamicProperty>Class Level 1</DynamicProperty>
+    <DynamicProperty>Class Level 2</DynamicProperty>
+    <DynamicProperty>Standard</DynamicProperty>
+    <DynamicProperty>Code</DynamicProperty>
+    <DynamicProperty>Level Code</DynamicProperty>
+    <DynamicProperty>Term EN</DynamicProperty>
+    <DynamicProperty>Term DE</DynamicProperty>
+    <DynamicProperty>Term FR</DynamicProperty>
+    <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Term ES</DynamicProperty>
+    <DynamicProperty>Comments</DynamicProperty>
+    <DynamicProperty>Comments DE</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Class Level 4" Type="CustomObject">
+    <DynamicProperty>Class Level 1</DynamicProperty>
+    <DynamicProperty>Class Level 2</DynamicProperty>
+    <DynamicProperty>Class Level 3</DynamicProperty>
+    <DynamicProperty>Standard</DynamicProperty>
+    <DynamicProperty>Code</DynamicProperty>
+    <DynamicProperty>Level Code</DynamicProperty>
+    <DynamicProperty>Term EN</DynamicProperty>
+    <DynamicProperty>Term DE</DynamicProperty>
+    <DynamicProperty>Term FR</DynamicProperty>
+    <DynamicProperty>Term IT</DynamicProperty>
+    <DynamicProperty>Term ES</DynamicProperty>
     <DynamicProperty>Comments</DynamicProperty>
     <DynamicProperty>Comments DE</DynamicProperty>    
   </DynamicPropertiesCategory>

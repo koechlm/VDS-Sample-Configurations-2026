@@ -37,14 +37,12 @@ function mInitializeClassificationTab($ParentType, $file) {
 		$Global:mClsObjectNames = ($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
 		$Global:mClsObjectCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $Global:mClsObjectNames }).Id
 
-		$Global:mClsPropNames = (
-			$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
-			$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
-			$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["Adsk.QS.ClsCode"], $UIString["Adsk.QS.ClsLevelCode"], 
-			$UIString["Comments"], $UIString["CommentsDE"] )
-		$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id
-
-	}
+	$Global:mClsPropNames = (
+		$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
+		$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
+		$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["ClassTerms_12a"], $UIString["Adsk.QS.ClsLevelCode"], 
+		$UIString["Comments"], $UIString["CommentsDE"] )
+	$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id	}
 
 	Switch ($ParentType) {
 		"Dialog" {
@@ -508,13 +506,45 @@ function mSelectClassification() {
 		$dsDiag.Trace("Added $($classProps.Count) Class properties to merged table")
 	}
 	
+	# Check if user wants to copy Term properties to Title properties
+	$chckCopyTermToTitle = $AssignClsWindow.FindName("chckCopyTermToTitle")
+	$copyTermToTitle = $chckCopyTermToTitle -and $chckCopyTermToTitle.IsChecked -eq $true
+	
 	# Then, add/override with Term properties (Term has priority)
 	$termProps = $AssignClsWindow.FindName("dtgrdTermProps").ItemsSource
 	if ($termProps) {
 		foreach ($entry in $termProps.GetEnumerator()) {
-			$mMergedPropTable[$entry.Key] = $entry.Value
+			$propertyName = $entry.Key
+			$propertyValue = $entry.Value
+			
+			# If checkbox is checked, map Term properties to Title properties
+			if ($copyTermToTitle) {
+				# Check if this is a Term language property and map it to Title
+				if ($propertyName -eq "Term DE") {
+					$propertyName = "Title DE"
+					$dsDiag.Trace("Mapped 'Term DE' to 'Title DE'")
+				}
+				elseif ($propertyName -eq "Term EN") {
+					$propertyName = "Title"  # Default Title property
+					$dsDiag.Trace("Mapped 'Term EN' to 'Title'")
+				}
+				elseif ($propertyName -eq "Term FR") {
+					$propertyName = "Title FR"
+					$dsDiag.Trace("Mapped 'Term FR' to 'Title FR'")
+				}
+				elseif ($propertyName -eq "Term IT") {
+					$propertyName = "Title IT"
+					$dsDiag.Trace("Mapped 'Term IT' to 'Title IT'")
+				}
+				elseif ($propertyName -eq "Term ES") {
+					$propertyName = "Title ES"
+					$dsDiag.Trace("Mapped 'Term ES' to 'Title ES'")
+				}
+			}
+			
+			$mMergedPropTable[$propertyName] = $propertyValue
 		}
-		$dsDiag.Trace("Added/Overrode with $($termProps.Count) Term properties to merged table")
+		$dsDiag.Trace("Added/Overrode with $($termProps.Count) Term properties to merged table (CopyToTitle: $copyTermToTitle)")
 	}
 	
 	$dsDiag.Trace("Final merged table has $($mMergedPropTable.Count) properties")
