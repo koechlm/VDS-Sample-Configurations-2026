@@ -164,7 +164,7 @@
     <DynamicProperty Hidden="True">Sub-Type</DynamicProperty>
     <DynamicProperty Hidden="True">Key Parameters</DynamicProperty>
     <DynamicProperty Hidden="True">Comments</DynamicProperty>
-    <DynamicProperty Hidden="True">Application Version</DynamicProperty>    
+    <DynamicProperty Hidden="True">Application Version</DynamicProperty>
   </DynamicPropertiesCategory>
   <DynamicPropertiesCategory Category="Reference" Type="FILE">
     <DynamicProperty>Title</DynamicProperty>
@@ -356,6 +356,10 @@
     <DynamicProperty Hidden="True">Customer Approved Date</DynamicProperty>
     <DynamicProperty>Source File</DynamicProperty>
     <DynamicProperty>Replaced By</DynamicProperty>
+    <DynamicProperty>Bounding Size</DynamicProperty>
+    <DynamicProperty>Sync-Test-Text</DynamicProperty>
+    <DynamicProperty>Source Revision</DynamicProperty>
+    <DynamicProperty>Document Class</DynamicProperty>
   </DynamicPropertiesCategory>
   <DynamicPropertiesCategory Category="Folder" Type="Folder">
     <DynamicProperty>Title</DynamicProperty>
@@ -396,6 +400,7 @@
     <DynamicProperty Hidden="True">Customer Approved Date</DynamicProperty>
     <DynamicProperty Hidden="True">DWG Type</DynamicProperty>
     <DynamicProperty Hidden="True">Application Version</DynamicProperty>
+    <DynamicProperty>Source Revision</DynamicProperty>
   </DynamicPropertiesCategory>
   <DynamicPropertiesCategory Category="Managed Asset" Type="File">
     <DynamicProperty>Title</DynamicProperty>
@@ -520,6 +525,6 @@
     <DynamicProperty>Term IT</DynamicProperty>
     <DynamicProperty>Term ES</DynamicProperty>
     <DynamicProperty>Comments</DynamicProperty>
-    <DynamicProperty>Comments DE</DynamicProperty>    
+    <DynamicProperty>Comments DE</DynamicProperty>
   </DynamicPropertiesCategory>
 </DynamicProperties>

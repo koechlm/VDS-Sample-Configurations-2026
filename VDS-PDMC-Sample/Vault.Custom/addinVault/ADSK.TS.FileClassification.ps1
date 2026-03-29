@@ -501,6 +501,20 @@ function mSelectClassification() {
 		}
 	}
 	
+	# Uniclass Extension: If no Class Object selected but a Term is selected, treat Term as Class
+	if (-not $selectedClassObject -and $global:mActiveStandard -eq "Uniclass") {
+		$dsDiag.Trace("Uniclass mode: No Class Object selected, checking for Term selection...")
+		for ($i = 1; $i -le 4; $i++) {
+			$cmbTrm = $AssignClsWindow.FindName("cmbTrm$i")
+			if ($cmbTrm -and $cmbTrm.SelectedItem) {
+				$selectedClassObject = $cmbTrm.SelectedItem
+				$dsWindow.FindName("txtActiveClass").Text = $selectedClassObject.Name
+				$dsDiag.Trace("Uniclass: Set txtActiveClass = '$($selectedClassObject.Name)' from cmbTrm$i (treating Term as Class)")
+				break
+			}
+		}
+	}
+	
 	# Save the selected class object ID for post-close event
 	if ($selectedClassObject) {
 		$value = $selectedClassObject.Id
@@ -610,23 +624,45 @@ function mApplyClassification() {
 		
 		#get class object to apply
 		$mActiveClass = mGetCustentiesByName($Prop["_XLTN_CLSOBJECT"].Value)
-		$mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
+		
+		# Check if the selected object is a Class Object or Term
+		$isClassObject = $mActiveClass[0].CustEntDefId -eq $Global:mClassCustentDef.Id
+		$isTerm = $mActiveClass[0].CustEntDefId -in $Global:mClsObjectCustentDefIds -and -not $isClassObject
+		
+		# Determine which function to use based on object type
+		if ($isTerm -and $global:mActiveStandard -eq "Uniclass") {
+			# For Uniclass Terms, use mGetTermPrpNames to get ALL properties (including metadata)
+			$dsDiag.Trace("Uniclass: Applying Term as Class - using mGetTermPrpNames()")
+			$mActvClsPrpNames = mGetTermPrpNames($mActiveClass[0].Id)
+		}
+		else {
+			# For Class Objects and other standards, use mGetClsPrpNames (with filtering)
+			$dsDiag.Trace("Applying Class Object - using mGetClsPrpNames()")
+			$mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
+		}
+		
 		$mPropsAdd = @()
 		
 		Foreach ($mClsProp in $mActvClsPrpNames.GetEnumerator()) {
+			# For Uniclass Terms, filter out classification level names
+			# For Class Objects, the filtering is already done in mGetClsPrpNames
 			if ($mActvClsPrpNames[$mClsProp.Key] -notin $Global:mClsLevelNames) {
 				$mPropsAdd += $mClsProp.Key
+				$dsDiag.Trace("  Adding property: $($mActvClsPrpNames[$mClsProp.Key]) (ID: $($mClsProp.Key))")
 			}
 		}
+		
+		$dsDiag.Trace("Total properties to add: $($mPropsAdd.Count)")
 		
 		$mPropsRemove = @()
 		$mAddRemoveComment = "Added classification"
 		try {
 			$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
 			mUpdateClsPropValues
+			$dsDiag.Trace("Successfully applied classification with $($mPropsAdd.Count) properties")
 		}
 		catch {
-			$dsDiag.Trace("AddClassification Error on UpdateFilePropertyDefinitions")
+			$dsDiag.Trace("AddClassification Error on UpdateFilePropertyDefinitions: $($_.Exception.Message)")
 		}
 	}
 }
@@ -637,14 +673,59 @@ function mRemoveClassification() { #applies to $dsWindow
 		if ($Global:mFile) {
 			$dsDiag.Trace("...remove class - file found")
 			
-			#get class object to remove - use mGetAllClsPrpNames to get ALL properties (including "Class" and other filtered properties)
+			#get class object to remove
 			$mActiveClass = mGetCustentiesByName($Prop["_XLTN_CLSOBJECT"].Value)
-			$mActvClsPrpNames = mGetAllClsPrpNames($mActiveClass[0].Id)
+			
+			# Check if the selected object is a Class Object or Term
+			$isClassObject = $mActiveClass[0].CustEntDefId -eq $Global:mClassCustentDef.Id
+			$isTerm = $mActiveClass[0].CustEntDefId -in $Global:mClsObjectCustentDefIds -and -not $isClassObject
+			
+			# Determine which function to use based on object type
+			if ($isTerm) {
+				# For Terms (Uniclass Term-as-Class), use mGetTermPrpNames to get ALL properties
+				$dsDiag.Trace("Removing Uniclass Term-as-Class - using mGetTermPrpNames()")
+				$mActvClsPrpNames = mGetTermPrpNames($mActiveClass[0].Id)
+			}
+			else {
+				# For Class Objects, use mGetAllClsPrpNames to get ALL properties (including "Class" and other filtered properties)
+				$dsDiag.Trace("Removing Class Object - using mGetAllClsPrpNames()")
+				$mActvClsPrpNames = mGetAllClsPrpNames($mActiveClass[0].Id)
+			}
+			
 			$mPropsRemove = @()
 			
 			Foreach ($mClsProp in $mActvClsPrpNames.GetEnumerator()) {
 				$mPropsRemove += $mClsProp.Key
 				$dsDiag.Trace("  Removing property: $($mClsProp.Value) (ID: $($mClsProp.Key))")
+			}
+
+			# EXPLICIT REMOVAL OF "Class" PROPERTY (CLSOBJECT)
+			# The "Class" property is added to the FILE to store the assigned class/term name.
+			# This property must ALWAYS be explicitly removed from the file, regardless of Class Object or Term.
+			# NOTE: We do NOT clear $Prop["_XLTN_CLSOBJECT"].Value here because the Data Standard framework's
+			# post-close event automatically adds properties with values back to the file. By leaving the value
+			# as-is and only adding the property ID to the removal list, UpdateFilePropertyDefinitions will
+			# remove the property definition, which automatically clears the value without triggering re-addition.
+			try {
+				$mFilePropDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("FILE")
+				$mClassPropertyDef = $mFilePropDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.Classification_00"] }
+				
+				if ($mClassPropertyDef) {
+					# Only add if not already in the removal list
+					if ($mPropsRemove -notcontains $mClassPropertyDef.Id) {
+						$mPropsRemove += $mClassPropertyDef.Id
+						$dsDiag.Trace("  [EXPLICIT] Removing 'Class' property (CLSOBJECT) - ID: $($mClassPropertyDef.Id), Display Name: $($mClassPropertyDef.DispName)")
+					}
+					else {
+						$dsDiag.Trace("  [INFO] 'Class' property (CLSOBJECT) already in removal list - ID: $($mClassPropertyDef.Id)")
+					}
+				}
+				else {
+					$dsDiag.Trace("  [WARNING] 'Class' property (CLSOBJECT) not found in FILE property definitions")
+				}
+			}
+			catch {
+				$dsDiag.Trace("  [ERROR] Failed to find/add Class property for removal: $($_.Exception.Message)")
 			}
 			
 			$dsDiag.Trace("Total properties to remove: $($mPropsRemove.Count)")

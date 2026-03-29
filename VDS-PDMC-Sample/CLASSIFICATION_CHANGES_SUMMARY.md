@@ -174,6 +174,77 @@ When removing classification, the following are now ALL removed:
 
 ---
 
+## Change 5: Uniclass Term-as-Class Enhancement ✨ NEW WORKFLOW
+
+### Overview
+Extended the classification assignment workflow for **Uniclass Standard** to support selecting only a Term (without a Class Object) and treating it as the primary classification object.
+
+### Business Need
+Uniclass users often want to classify objects using only Terms without requiring Class Object selection, providing a more flexible and streamlined workflow.
+
+### Files Modified
+1. **Vault.Custom\addinVault\ADSK.TS.FileClassification.ps1**:
+   - Updated `mSelectClassification()` function (Lines 487-518)
+   - Updated `mApplyClassification()` function (Lines 622-663)
+
+### Technical Details
+
+**Enhanced Selection Logic**:
+```powershell
+# If no Class Object selected AND Standard is Uniclass
+# Check for Term selection and use it as Class Object
+if (-not $selectedClassObject -and $global:mActiveStandard -eq "Uniclass") {
+    # Search cmbTrm1-4 for selected Term
+    # Set txtActiveClass = Term Name
+}
+```
+
+**Enhanced Application Logic**:
+```powershell
+# Detect object type: Class Object or Term
+$isClassObject = $mActiveClass[0].CustEntDefId -eq $Global:mClassCustentDef.Id
+$isTerm = $mActiveClass[0].CustEntDefId -in $Global:mClsObjectCustentDefIds -and -not $isClassObject
+
+# For Uniclass Terms: Use mGetTermPrpNames() (all properties)
+# For Class Objects: Use mGetClsPrpNames() (filtered properties)
+```
+
+### Impact
+
+**New Uniclass Workflow**: ✨
+1. Select "Uniclass" standard
+2. Navigate hierarchy
+3. **Option A**: Select Class Object (traditional)
+4. **Option B**: Select ONLY Term (new capability)
+   - Term treated as Class Object
+   - All Term properties applied to file
+   - txtActiveClass = Term Name
+
+**Other Standards**: ✅
+- No impact on IEC 61355, eCl@ss, PDMC-Sample
+- Class Object still required
+- Behavior unchanged
+
+**Use Case Example**:
+```
+Uniclass: Select Term "Single-stage centrifugal pump" (no Class)
+↓
+txtActiveClass = "Single-stage centrifugal pump"
+↓
+Apply: Code, Title, Power, Flow Rate, etc.
+↓
+File classified with Term as primary object
+```
+
+### Benefits
+- ✅ More flexible Uniclass classification
+- ✅ Simplified workflow (fewer required selections)
+- ✅ Standard-specific (only affects Uniclass)
+- ✅ Backward compatible (existing workflows unchanged)
+- ✅ No impact on other standards
+
+---
+
 ## Properties Transfer Behavior
 
 ### Properties EXCLUDED from File Transfer (Metadata/Hierarchy)
@@ -263,13 +334,29 @@ Ensure the following property definitions exist in Vault:
 ## Related Documentation
 - See **TERM_ES_IMPLEMENTATION_SUMMARY.md** for detailed Term ES implementation
 - See **CODE_PROPERTY_IMPLEMENTATION.md** for detailed Code property implementation
-- See **IS_MANUAL_ENTRY_IMPLEMENTATION.md** for detailed "Is Manual Entry" implementation ✨ NEW
+- See **IS_MANUAL_ENTRY_IMPLEMENTATION.md** for detailed "Is Manual Entry" implementation
+- See **CLASSIFICATION_REMOVAL_FIX.md** for classification removal fix details
+- See **UNICLASS_TERM_AS_CLASS_ENHANCEMENT.md** for Uniclass Term-as-Class workflow
+- See **UNICLASS_TERM_REMOVAL_FIX.md** for Uniclass Term-as-Class removal fix
 - See **CLASSIFICATION_PROPERTY_FLOW.md** for visual flow diagrams and technical details
 - See **copilot-instructions.md** for overall system architecture
 
 ---
 
 ## Version History
+- **v1.2.1** (March 29, 2026):
+  - **FIX**: Uniclass Term-as-Class removal issue
+    - Updated `mRemoveClassification()` to detect Term vs Class Object
+    - For Terms: Use `mGetTermPrpNames()` for complete property removal
+    - For Class Objects: Use `mGetAllClsPrpNames()` (unchanged)
+    - Ensures complete removal of Uniclass Term-as-Class properties
+- **v1.2** (March 29, 2026):
+  - **UNICLASS ENHANCEMENT**: Term-as-Class workflow ✨
+    - Extended `mSelectClassification()` to detect Term selection when no Class Object selected
+    - Enhanced `mApplyClassification()` to handle Terms as primary classification objects
+    - Added object type detection (Class vs Term)
+    - Uniclass-specific: Allows Term-only classification assignment
+    - No impact on other classification standards
 - **v1.1** (March 29, 2026): 
   - **CRITICAL FIX**: Classification removal issue
     - Added `mGetAllClsPrpNames()` function to retrieve all properties without filtering
