@@ -10,6 +10,24 @@ Add-Type -AssemblyName PresentationCore
 Add-Type -AssemblyName WindowsBase
 Add-Type -AssemblyName System.Xaml
 
+# Helper function to sort property table alphabetically by property name (Key)
+function mSortPropertyTable($propTable) {
+	if ($null -eq $propTable -or $propTable.Count -eq 0) {
+		return $propTable
+	}
+	
+	# Convert hashtable to sorted array of custom objects for DataGrid binding
+	# Sort alphabetically by Key (property name)
+	$sortedArray = $propTable.GetEnumerator() | Sort-Object -Property Key | ForEach-Object {
+		[PSCustomObject]@{
+			Key = $_.Key
+			Value = $_.Value
+		}
+	}
+	
+	return $sortedArray
+}
+
 function mInitializeClassificationTab($ParentType, $file) {
 	#$dsDiag.ShowLog()
 	$dsDiag.Clear()
@@ -226,10 +244,10 @@ function mGetFileClsValues($sendingCmb) {
 		
 		#fill the grid either for edits or as preview before the class assignment
 		if ($AssignClsWindow) {
-			$AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable
+			$AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
 		}
 		else {
-			$dsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable		
+			$dsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
 		}
 	#}
 }
@@ -261,7 +279,7 @@ function mGetClsDfltValues($sendingCmb) {
         }
     }
 
-    $Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = $mClsPropTable
+    $Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
 
     # Enable btnSelectClass if either DataGrid has values
     mUpdateSelectClassButton
@@ -310,7 +328,7 @@ function mGetTermDfltValues($sendingCmb) {
     }
 
     $dsDiag.Trace("  Term property table has $($mTermPropTable.Count) entries")
-    $Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource = $mTermPropTable
+    $Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource = mSortPropertyTable($mTermPropTable)
 
     # Enable btnSelectClass if either DataGrid has values
     mUpdateSelectClassButton
@@ -577,8 +595,8 @@ function mSelectClassification() {
 	
 	$dsDiag.Trace("Final merged table has $($mMergedPropTable.Count) properties")
 	
-	# Assign the merged table to the main window's DataGrid
-	$dsWindow.FindName("dtgrdClassProps").ItemsSource = $mMergedPropTable
+	# Assign the merged table to the main window's DataGrid (sorted alphabetically by property name)
+	$dsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mMergedPropTable)
 	
 	# Update the 4 class level TextBoxes (txtLevel1, txtLevel2, txtLevel3, txtLevel4)
 	# Get the breadcrumb wrapper to access the selected classification levels
