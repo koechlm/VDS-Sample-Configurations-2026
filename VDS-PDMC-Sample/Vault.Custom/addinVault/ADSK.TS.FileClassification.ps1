@@ -18,14 +18,15 @@ function mSortPropertyTable($propTable) {
 	
 	# Convert hashtable to sorted array of custom objects for DataGrid binding
 	# Sort alphabetically by Key (property name)
-	$sortedArray = $propTable.GetEnumerator() | Sort-Object -Property Key | ForEach-Object {
-		[PSCustomObject]@{
-			Key = $_.Key
-			Value = $_.Value
-		}
-	}
+	$sortedArray = @($propTable.GetEnumerator() | Sort-Object -Property Key | ForEach-Object {
+			[PSCustomObject]@{
+				Key   = $_.Key
+				Value = $_.Value
+			}
+		})
 	
-	return $sortedArray
+	# Force array return to prevent unwrapping single items (which crashes WPF DataGrid)
+	return , $sortedArray
 }
 
 function mInitializeClassificationTab($ParentType, $file) {
@@ -37,8 +38,8 @@ function mInitializeClassificationTab($ParentType, $file) {
 
 	if ($Global:mClsTabInitialized -ne $true) {
 		$dsDiag.Trace("...not intialized yet -> Initialize classification tab.")
+		
 		#variables, that we need in any case; limit number of server calls
-
 		$Global:mAllCustentPropDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("CUSTENT")
 		$Global:mCustentUdpDefs = $Global:mAllCustentPropDefs | Where-Object { $_.IsSys -eq $false }
 		$Global:mCustentDefs = $vault.CustomEntityService.GetAllCustomEntityDefinitions()
@@ -55,12 +56,13 @@ function mInitializeClassificationTab($ParentType, $file) {
 		$Global:mClsObjectNames = ($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
 		$Global:mClsObjectCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $Global:mClsObjectNames }).Id
 
-	$Global:mClsPropNames = (
-		$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
-		$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
-		$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["ClassTerms_12a"], $UIString["ClassTerms_12b"], $UIString["Adsk.QS.ClsLevelCode"], 
-		$UIString["Comments"], $UIString["CommentsDE"] )
-	$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id	}
+		$Global:mClsPropNames = (
+			$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
+			$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
+			$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["ClassTerms_12a"], $UIString["ClassTerms_12b"], $UIString["Adsk.QS.ClsLevelCode"], 
+			$UIString["Comments"], $UIString["CommentsDE"] )
+		$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id	
+ }
 
 	Switch ($ParentType) {
 		"Dialog" {
@@ -89,7 +91,8 @@ function mInitializeClassificationTab($ParentType, $file) {
 			$Global:mClsTabInitialized = $true
 			$dsDiag.Trace("...Initialize UI Controls for Dialog finished")
 		}
-		default { #data sheet tab
+		default {
+			#data sheet tab
 			$dsDiag.Trace("Initialize Detail Tab Datasheet starts...")
 			$Global:mFile = $file
 			$Global:mClsTabInitialized = $true
@@ -120,7 +123,7 @@ function mGetFileClsValues($sendingCmb) {
 			return
 		}
 		
-		# Read the standard from file properties and store it globally
+		# Read the standard from file properties and store it globally; the direct usage of _XLTN_CLSSTANDARD might not work, as this property adds only if a standard is assigned to the file
 		$standardPropName = "_XLTN_" + $UIString["Adsk.QS.ClsStandard"].ToUpper()
 		if (-not [string]::IsNullOrEmpty($Prop[$standardPropName].Value)) {
 			$global:mActiveStandard = $Prop[$standardPropName].Value
@@ -140,222 +143,220 @@ function mGetFileClsValues($sendingCmb) {
 		return
 	}
 
-	#if ($mActiveClass.Count -eq 1) {
-		#region get Property Ids and Displaynames for this class
-		$Global:mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
-		$mClsPropTable = @{}
+	#region get Property Ids and Displaynames for this class
+	$Global:mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
+	$mClsPropTable = @{}
 		
-		#get the file's class property values
-		$mFileClassProps = $vault.PropertyService.GetProperties("FILE", @($mFile.Id), $Global:mActvClsPrpNames.Keys)
+	#get the file's class property values
+	$mFileClassProps = $vault.PropertyService.GetProperties("FILE", @($mFile.Id), $Global:mActvClsPrpNames.Keys)
 		
-		# Get ALL properties from class entity (including Level 1-4 for display in txtLevel textboxes)
-		# We need to retrieve more than just mActvClsPrpNames because those are filtered
-		$allClassEntityProps = $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($mActiveClass[0].Id))
-		$dsDiag.Trace("   Retrieved $($allClassEntityProps.Count) total properties from class entity")
+	# Get ALL properties from class entity (including Level 1-4 for display in txtLevel textboxes)
+	# We need to retrieve more than just mActvClsPrpNames because those are filtered
+	$allClassEntityProps = $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($mActiveClass[0].Id))
+	$dsDiag.Trace("   Retrieved $($allClassEntityProps.Count) total properties from class entity")
 		
-		# Create a lookup dictionary for all class entity properties by PropDefId
-		$mClassPropsLookup = @{}
-		foreach ($prop in $allClassEntityProps) {
-			$mClassPropsLookup[$prop.PropDefId] = $prop
-		}
+	# Create a lookup dictionary for all class entity properties by PropDefId
+	$mClassPropsLookup = @{}
+	foreach ($prop in $allClassEntityProps) {
+		$mClassPropsLookup[$prop.PropDefId] = $prop
+	}
 		
-		$mClassProps = $vault.PropertyService.GetProperties("CUSTENT", @($mActiveClass[0].Id), $Global:mActvClsPrpNames.Keys)
+	$mClassProps = $vault.PropertyService.GetProperties("CUSTENT", @($mActiveClass[0].Id), $Global:mActvClsPrpNames.Keys)
 		
-		$dsDiag.Trace(">> mGetFileClsValues: Retrieved $($mFileClassProps.Count) file properties and $($mClassProps.Count) class entity properties")
-		$dsDiag.Trace("   Window name: $($dsWindow.Name)")
-		$dsDiag.Trace("   Class object Id: $($mActiveClass[0].Id), Name: $($mActiveClass[0].Name)")
+	$dsDiag.Trace(">> mGetFileClsValues: Retrieved $($mFileClassProps.Count) file properties and $($mClassProps.Count) class entity properties")
+	$dsDiag.Trace("   Window name: $($dsWindow.Name)")
+	$dsDiag.Trace("   Class object Id: $($mActiveClass[0].Id), Name: $($mActiveClass[0].Name)")
 		
-		# Debug: List all classification level names we're looking for
-		$dsDiag.Trace("   Classification level names to match:")
-		$dsDiag.Trace("     Level 1: '$($UIString["Adsk.QS.ClsLevel_01"])'")
-		$dsDiag.Trace("     Level 2: '$($UIString["Adsk.QS.ClsLevel_02"])'")
-		$dsDiag.Trace("     Level 3: '$($UIString["Adsk.QS.ClsLevel_03"])'")
-		$dsDiag.Trace("     Level 4: '$($UIString["Adsk.QS.ClsLevel_04"])'")
-		$dsDiag.Trace("     Standard: '$($UIString["Adsk.QS.ClsStandard"])'")
+	# Debug: List all classification level names we're looking for
+	$dsDiag.Trace("   Classification level names to match:")
+	$dsDiag.Trace("     Level 1: '$($UIString["Adsk.QS.ClsLevel_01"])'")
+	$dsDiag.Trace("     Level 2: '$($UIString["Adsk.QS.ClsLevel_02"])'")
+	$dsDiag.Trace("     Level 3: '$($UIString["Adsk.QS.ClsLevel_03"])'")
+	$dsDiag.Trace("     Level 4: '$($UIString["Adsk.QS.ClsLevel_04"])'")
+	$dsDiag.Trace("     Standard: '$($UIString["Adsk.QS.ClsStandard"])'")
 		
-		# First, handle Level 1-4 and Standard properties from the complete property set
-		if ($dsWindow.Name -eq "FileWindow") {
-			# Find Level 1 property
-			$level1PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_01"] }
-			if ($level1PropDef -and $mClassPropsLookup.ContainsKey($level1PropDef.Id)) {
-				$level1Value = $mClassPropsLookup[$level1PropDef.Id].Val
-				$dsWindow.FindName("txtLevel1").Text = $level1Value
-				$dsDiag.Trace("   SET txtLevel1 = '$level1Value' (from complete property set)")
-				if ($level1Value -ne "") { 
-					$dsWindow.FindName("txtLevel1").Visibility = "Visible"
-				}
+	# First, handle Level 1-4 and Standard properties from the complete property set
+	if ($dsWindow.Name -eq "FileWindow") {
+		# Find Level 1 property
+		$level1PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_01"] }
+		if ($level1PropDef -and $mClassPropsLookup.ContainsKey($level1PropDef.Id)) {
+			$level1Value = $mClassPropsLookup[$level1PropDef.Id].Val
+			$dsWindow.FindName("txtLevel1").Text = $level1Value
+			$dsDiag.Trace("   SET txtLevel1 = '$level1Value' (from complete property set)")
+			if ($level1Value -ne "") { 
+				$dsWindow.FindName("txtLevel1").Visibility = "Visible"
 			}
+		}
 			
-			# Find Level 2 property
-			$level2PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_02"] }
-			if ($level2PropDef -and $mClassPropsLookup.ContainsKey($level2PropDef.Id)) {
-				$level2Value = $mClassPropsLookup[$level2PropDef.Id].Val
-				$dsWindow.FindName("txtLevel2").Text = $level2Value
-				$dsDiag.Trace("   SET txtLevel2 = '$level2Value' (from complete property set)")
-				if ($level2Value -ne "") { 
-					$dsWindow.FindName("txtLevel2").Visibility = "Visible"
-				}
-			}
-			
-			# Find Level 3 property
-			$level3PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_03"] }
-			if ($level3PropDef -and $mClassPropsLookup.ContainsKey($level3PropDef.Id)) {
-				$level3Value = $mClassPropsLookup[$level3PropDef.Id].Val
-				$dsWindow.FindName("txtLevel3").Text = $level3Value
-				$dsDiag.Trace("   SET txtLevel3 = '$level3Value' (from complete property set)")
-				if ($level3Value -ne "") { 
-					$dsWindow.FindName("txtLevel3").Visibility = "Visible"
-				}
-			}
-			
-			# Find Level 4 property
-			$level4PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_04"] }
-			if ($level4PropDef -and $mClassPropsLookup.ContainsKey($level4PropDef.Id)) {
-				$level4Value = $mClassPropsLookup[$level4PropDef.Id].Val
-				$dsWindow.FindName("txtLevel4").Text = $level4Value
-				$dsDiag.Trace("   SET txtLevel4 = '$level4Value' (from complete property set)")
-				if ($level4Value -ne "") { 
-					$dsWindow.FindName("txtLevel4").Visibility = "Visible"
-				}
-			}
-			
-			# Find Standard property
-			$standardPropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }
-			if ($standardPropDef -and $mClassPropsLookup.ContainsKey($standardPropDef.Id)) {
-				$standardValue = $mClassPropsLookup[$standardPropDef.Id].Val
-				$global:mActiveStandard = $standardValue
-				$dsWindow.FindName("txtClsStandard").Text = $standardValue
-				$dsDiag.Trace("   SET txtClsStandard = '$standardValue' (from complete property set)")
-				if ($standardValue -ne "") { 
-					$dsWindow.FindName("txtClsStandard").Visibility = "Visible"
-				}
+		# Find Level 2 property
+		$level2PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_02"] }
+		if ($level2PropDef -and $mClassPropsLookup.ContainsKey($level2PropDef.Id)) {
+			$level2Value = $mClassPropsLookup[$level2PropDef.Id].Val
+			$dsWindow.FindName("txtLevel2").Text = $level2Value
+			$dsDiag.Trace("   SET txtLevel2 = '$level2Value' (from complete property set)")
+			if ($level2Value -ne "") { 
+				$dsWindow.FindName("txtLevel2").Visibility = "Visible"
 			}
 		}
+			
+		# Find Level 3 property
+		$level3PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_03"] }
+		if ($level3PropDef -and $mClassPropsLookup.ContainsKey($level3PropDef.Id)) {
+			$level3Value = $mClassPropsLookup[$level3PropDef.Id].Val
+			$dsWindow.FindName("txtLevel3").Text = $level3Value
+			$dsDiag.Trace("   SET txtLevel3 = '$level3Value' (from complete property set)")
+			if ($level3Value -ne "") { 
+				$dsWindow.FindName("txtLevel3").Visibility = "Visible"
+			}
+		}
+			
+		# Find Level 4 property
+		$level4PropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsLevel_04"] }
+		if ($level4PropDef -and $mClassPropsLookup.ContainsKey($level4PropDef.Id)) {
+			$level4Value = $mClassPropsLookup[$level4PropDef.Id].Val
+			$dsWindow.FindName("txtLevel4").Text = $level4Value
+			$dsDiag.Trace("   SET txtLevel4 = '$level4Value' (from complete property set)")
+			if ($level4Value -ne "") { 
+				$dsWindow.FindName("txtLevel4").Visibility = "Visible"
+			}
+		}
+			
+		# Find Standard property
+		$standardPropDef = $Global:mCustentUdpDefs | Where-Object { $_.DispName -eq $UIString["Adsk.QS.ClsStandard"] }
+		if ($standardPropDef -and $mClassPropsLookup.ContainsKey($standardPropDef.Id)) {
+			$standardValue = $mClassPropsLookup[$standardPropDef.Id].Val
+			$global:mActiveStandard = $standardValue
+			$dsWindow.FindName("txtClsStandard").Text = $standardValue
+			$dsDiag.Trace("   SET txtClsStandard = '$standardValue' (from complete property set)")
+			if ($standardValue -ne "") { 
+				$dsWindow.FindName("txtClsStandard").Visibility = "Visible"
+			}
+		}
+	}
 		
-		# Now process the data properties for the grid
-		# Now process the data properties for the grid
-		Foreach ($mClsProp in $Global:mActvClsPrpNames.GetEnumerator()) {
-			# Add property to display table (filter out only classification level names, keep all actual data properties)
-			if ($mClsProp.Value -notin $Global:mClsLevelNames) {
-				$filePropertyValue = ($mFileClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
-				$mClsPropTable.Add($Global:mActvClsPrpNames[$mClsProp.Key], $filePropertyValue)
-			}
+	# Now process the data properties for the grid
+	Foreach ($mClsProp in $Global:mActvClsPrpNames.GetEnumerator()) {
+		# Add property to display table (filter out only classification level names, keep all actual data properties)
+		if ($mClsProp.Value -notin $Global:mClsLevelNames) {
+			$filePropertyValue = ($mFileClassProps | Where-Object { $_.PropDefId -eq ($mClsProp.Key) }).Val
+			$mClsPropTable.Add($Global:mActvClsPrpNames[$mClsProp.Key], $filePropertyValue)
 		}
+	}
 		
-		#fill the grid either for edits or as preview before the class assignment
-		if ($AssignClsWindow) {
-			$AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
-		}
-		else {
-			$dsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
-		}
-	#}
+	#fill the grid either for edits or as preview before the class assignment
+	if ($AssignClsWindow) {
+		$AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
+	}
+	else {
+		$dsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
+	}
 }
 
 function mGetClsDfltValues($sendingCmb) {
-    $dsDiag.Trace(">>Function mGetClsDfltValues starts...$($sendingCmb)")
+	$dsDiag.Trace(">>Function mGetClsDfltValues starts...$($sendingCmb)")
     
-    # Add defensive check
-    if (-not $Global:AssignClsWindow) {
-        $dsDiag.Trace("ERROR: AssignClsWindow is null in mGetClsDfltValues")
-        return
-    }
+	# Add defensive check
+	if (-not $Global:AssignClsWindow) {
+		$dsDiag.Trace("ERROR: AssignClsWindow is null in mGetClsDfltValues")
+		return
+	}
     
-    # SelectedValue returns the Name string (not the object), so we need to search for it
-    $mActiveClass = mGetCustentiesByName($sendingCmb.SelectedValue)
-    if (-not $mActiveClass -or $mActiveClass.Count -eq 0) {
-        $dsDiag.Trace("ERROR: No class object found with name '$($sendingCmb.SelectedValue)'")
-        return
-    }
+	# SelectedValue returns the Name string (not the object), so we need to search for it
+	$mActiveClass = mGetCustentiesByName($sendingCmb.SelectedValue)
+	if (-not $mActiveClass -or $mActiveClass.Count -eq 0) {
+		$dsDiag.Trace("ERROR: No class object found with name '$($sendingCmb.SelectedValue)'")
+		return
+	}
     
-    # Store property names and values globally for later use
-    $Global:mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
-    $Global:mClsPrpValues = mGetClsPrpValues($mActiveClass[0].Id)
-    $mClsPropTable = @{}
+	# Store property names and values globally for later use
+	$Global:mActvClsPrpNames = mGetClsPrpNames($mActiveClass[0].Id)
+	$Global:mClsPrpValues = mGetClsPrpValues($mActiveClass[0].Id)
+	$mClsPropTable = @{}
     
-    Foreach ($mClsProp in $Global:mActvClsPrpNames.GetEnumerator()) {
-        if ($Global:mActvClsPrpNames[$mClsProp.Key] -notin $Global:mClsPropNames) {
-            $mClsPropTable.Add($Global:mActvClsPrpNames[$mClsProp.Key], $Global:mClsPrpValues[$mClsProp.Key])
-        }
-    }
+	Foreach ($mClsProp in $Global:mActvClsPrpNames.GetEnumerator()) {
+		if ($Global:mActvClsPrpNames[$mClsProp.Key] -notin $Global:mClsPropNames) {
+			$mClsPropTable.Add($Global:mActvClsPrpNames[$mClsProp.Key], $Global:mClsPrpValues[$mClsProp.Key])
+		}
+	}
 
-    $Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
+	$Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource = mSortPropertyTable($mClsPropTable)
 
-    # Enable btnSelectClass if either DataGrid has values
-    mUpdateSelectClassButton
+	# Enable btnSelectClass if either DataGrid has values
+	mUpdateSelectClassButton
 
-    $dsDiag.Trace("...Function mGetClsDfltValues finished.<<")
+	$dsDiag.Trace("...Function mGetClsDfltValues finished.<<")
 }
 
 function mGetTermDfltValues($sendingCmb) {
-    $dsDiag.Trace(">>Function mGetTermDfltValues starts...$($sendingCmb)")
+	$dsDiag.Trace(">>Function mGetTermDfltValues starts...$($sendingCmb)")
     
-    # Add defensive check
-    if (-not $Global:AssignClsWindow) {
-        $dsDiag.Trace("ERROR: AssignClsWindow is null in mGetTermDfltValues")
-        return
-    }
+	# Add defensive check
+	if (-not $Global:AssignClsWindow) {
+		$dsDiag.Trace("ERROR: AssignClsWindow is null in mGetTermDfltValues")
+		return
+	}
     
-    # Check what we're getting from the ComboBox
-    $dsDiag.Trace("  SelectedValue: $($sendingCmb.SelectedValue)")
-    $dsDiag.Trace("  SelectedItem: $($sendingCmb.SelectedItem)")
-    $dsDiag.Trace("  SelectedItem.Name: $($sendingCmb.SelectedItem.Name)")
+	# Check what we're getting from the ComboBox
+	$dsDiag.Trace("  SelectedValue: $($sendingCmb.SelectedValue)")
+	$dsDiag.Trace("  SelectedItem: $($sendingCmb.SelectedItem)")
+	$dsDiag.Trace("  SelectedItem.Name: $($sendingCmb.SelectedItem.Name)")
     
-    # Use SelectedItem.Name to get the actual name (SelectedValue should be Name, but let's be safe)
-    $termName = if ($sendingCmb.SelectedValue) { $sendingCmb.SelectedValue } else { $sendingCmb.SelectedItem.Name }
-    $dsDiag.Trace("  Searching for term: $termName")
+	# Use SelectedItem.Name to get the actual name (SelectedValue should be Name, but let's be safe)
+	$termName = if ($sendingCmb.SelectedValue) { $sendingCmb.SelectedValue } else { $sendingCmb.SelectedItem.Name }
+	$dsDiag.Trace("  Searching for term: $termName")
     
-    # SelectedValue returns the Name string (not the object), so we need to search for it
-    $mActiveTerm = mGetCustentiesByName($termName)
-    if (-not $mActiveTerm -or $mActiveTerm.Count -eq 0) {
-        $dsDiag.Trace("ERROR: No term object found with name '$termName'")
-        return
-    }
+	# SelectedValue returns the Name string (not the object), so we need to search for it
+	$mActiveTerm = mGetCustentiesByName($termName)
+	if (-not $mActiveTerm -or $mActiveTerm.Count -eq 0) {
+		$dsDiag.Trace("ERROR: No term object found with name '$termName'")
+		return
+	}
     
-    $dsDiag.Trace("  Found term object with Id: $($mActiveTerm[0].Id)")
+	$dsDiag.Trace("  Found term object with Id: $($mActiveTerm[0].Id)")
     
-    # Store property names and values globally for later use
-    $Global:mActvTermPrpNames = mGetTermPrpNames($mActiveTerm[0].Id)
-    $Global:mTermPrpValues = mGetTermPrpValues($mActiveTerm[0].Id)
-    $mTermPropTable = @{}
+	# Store property names and values globally for later use
+	$Global:mActvTermPrpNames = mGetTermPrpNames($mActiveTerm[0].Id)
+	$Global:mTermPrpValues = mGetTermPrpValues($mActiveTerm[0].Id)
+	$mTermPropTable = @{}
     
-    Foreach ($mTermProp in $Global:mActvTermPrpNames.GetEnumerator()) {
-        # For Terms: only filter out the class level properties (Segment, Main Group, Group, Sub Group)
-        # Keep all other properties including Class, Standard, Codes, Comments, etc.
-        if ($Global:mActvTermPrpNames[$mTermProp.Key] -notin $Global:mClsLevelNames) {
-            $mTermPropTable.Add($Global:mActvTermPrpNames[$mTermProp.Key], $Global:mTermPrpValues[$mTermProp.Key])
-        }
-    }
+	Foreach ($mTermProp in $Global:mActvTermPrpNames.GetEnumerator()) {
+		# For Terms: only filter out the class level properties (Segment, Main Group, Group, Sub Group)
+		# Keep all other properties including Class, Standard, Codes, Comments, etc.
+		if ($Global:mActvTermPrpNames[$mTermProp.Key] -notin $Global:mClsLevelNames) {
+			$mTermPropTable.Add($Global:mActvTermPrpNames[$mTermProp.Key], $Global:mTermPrpValues[$mTermProp.Key])
+		}
+	}
 
-    $dsDiag.Trace("  Term property table has $($mTermPropTable.Count) entries")
-    $Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource = mSortPropertyTable($mTermPropTable)
+	$dsDiag.Trace("  Term property table has $($mTermPropTable.Count) entries")
+	$Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource = mSortPropertyTable($mTermPropTable)
 
-    # Enable btnSelectClass if either DataGrid has values
-    mUpdateSelectClassButton
+	# Enable btnSelectClass if either DataGrid has values
+	mUpdateSelectClassButton
 
-    $dsDiag.Trace("...Function mGetTermDfltValues finished.<<")
+	$dsDiag.Trace("...Function mGetTermDfltValues finished.<<")
 }
 
 function mUpdateSelectClassButton {
-    # Helper function to enable btnSelectClass when either DataGrid has values
-    if (-not $Global:AssignClsWindow) {
-        return
-    }
+	# Helper function to enable btnSelectClass when either DataGrid has values
+	if (-not $Global:AssignClsWindow) {
+		return
+	}
     
-    $classProps = $Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource
-    $termProps = $Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource
-    $btnSelect = $Global:AssignClsWindow.FindName("btnSelectClass")
+	$classProps = $Global:AssignClsWindow.FindName("dtgrdClassProps").ItemsSource
+	$termProps = $Global:AssignClsWindow.FindName("dtgrdTermProps").ItemsSource
+	$btnSelect = $Global:AssignClsWindow.FindName("btnSelectClass")
     
-    if ($btnSelect) {
-        $hasClassProps = $classProps -and ($classProps.Count -gt 0)
-        $hasTermProps = $termProps -and ($termProps.Count -gt 0)
+	if ($btnSelect) {
+		$hasClassProps = $classProps -and ($classProps.Count -gt 0)
+		$hasTermProps = $termProps -and ($termProps.Count -gt 0)
         
-        $btnSelect.IsEnabled = $hasClassProps -or $hasTermProps
-        $dsDiag.Trace("btnSelectClass enabled: $($btnSelect.IsEnabled) (ClassProps: $hasClassProps, TermProps: $hasTermProps)")
-    }
+		$btnSelect.IsEnabled = $hasClassProps -or $hasTermProps
+		$dsDiag.Trace("btnSelectClass enabled: $($btnSelect.IsEnabled) (ClassProps: $hasClassProps, TermProps: $hasTermProps)")
+	}
 }
 
-function mGetTermPrpNames($TermId) { #get Properties added to this term - NO pre-filtering
+function mGetTermPrpNames($TermId) {
+ #get Properties added to this term - NO pre-filtering
 	$global:mTermPropInsts = @()
 	$global:mTermPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($TermId))
 	$mActvTermPrpNames = @{}
@@ -369,7 +370,8 @@ function mGetTermPrpNames($TermId) { #get Properties added to this term - NO pre
 	return $mActvTermPrpNames
 }
 
-function mGetTermPrpValues($TermId) { #get Property values for this term
+function mGetTermPrpValues($TermId) {
+ #get Property values for this term
 	$mTermPropValues = @{}
 	ForEach ($mPropInst in $global:mTermPropInsts) {
 		#add ALL UDPs of the Term Object
@@ -380,7 +382,8 @@ function mGetTermPrpValues($TermId) { #get Property values for this term
 	return $mTermPropValues
 }
 
-function mGetClsPrpNames($ClassId) { #get Properties added to this class
+function mGetClsPrpNames($ClassId) {
+ #get Properties added to this class
 	$global:mClsPropInsts = @()
 	$global:mClsPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($ClassId))
 	$mActvClsPrpNames = @{}
@@ -394,7 +397,8 @@ function mGetClsPrpNames($ClassId) { #get Properties added to this class
 	return $mActvClsPrpNames
 }
 
-function mGetAllClsPrpNames($ClassId) { #get ALL Properties from this class (no filtering) - used for removal
+function mGetAllClsPrpNames($ClassId) {
+ #get ALL Properties from this class (no filtering) - used for removal
 	$global:mClsPropInsts = @()
 	$global:mClsPropInsts += $vault.PropertyService.GetPropertiesByEntityIds("CUSTENT", @($ClassId))
 	$mActvClsPrpNames = @{}
@@ -408,10 +412,10 @@ function mGetAllClsPrpNames($ClassId) { #get ALL Properties from this class (no 
 	return $mActvClsPrpNames
 }
 
-function mGetClsPrpValues($ClassId) { #get Properties added to this class
+function mGetClsPrpValues($ClassId) {
+ #get Properties added to this class
 	$mClsPropValues = @{}
 	ForEach ($mPropInst in $global:mClsPropInsts) {
-		#add UDPs of the Custom Object $UIString["Adsk.QS.ClsObject"] only
 		If ($Global:mCustentUdpDefs | Where-Object { $_.Id -eq $mPropInst.PropDefId }) {
 			$mClsPropValues.Add($mPropInst.PropDefId, $mPropInst.Val)
 		}
@@ -502,7 +506,7 @@ function mGetFileObject() {
 }
 
 function mSelectClassification() {
-	
+	# method to be called on click of btnSelectClass in AssignClassification-Dialog; it will set the selected class and term (if uniclass) to the file properties and update the main window display accordingly; it will also save the selected class object ID to a temp file for retrieval in post-close event to trigger the classification assignment
 	$dsWindow.FindName("txtClsStandard").Text = $global:mActiveStandard
 	$dsWindow.FindName("btnRemoveClass").IsEnabled = $false
 	$dsWindow.FindName("btnSelectClass").IsEnabled = $true
@@ -636,6 +640,8 @@ function mSelectClassification() {
 }
 
 function mApplyClassification() {
+	# this method applies the selected classification to the file by adding the class/term properties to the file's property definitions and setting the "Class" property value to the selected class/term name; it is called in the post-close event of the Assign Classification dialog after a classification is selected, and also on the main window's Save event to apply any pending classification selection; it also updates the main window display with the assigned classification properties
+	$dsDiag.Trace(">>Function mApplyClassification starts...")
 	if ($Global:mFile) {
 		#the function mFindCustent returns a generic list object
 		$Prop["_XLTN_CLSOBJECT"].Value = $dsWindow.FindName("txtActiveClass").Text
@@ -676,7 +682,13 @@ function mApplyClassification() {
 		$mAddRemoveComment = "Added classification"
 		try {
 			$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
-			mUpdateClsPropValues
+			if ($mFileUpdated) {
+				$dsDiag.Trace("File property definitions updated successfully.")
+				mUpdateClsPropValues
+			}
+			else {
+				$dsDiag.Trace("File property definitions update returned false, no changes applied.")
+			}
 			$dsDiag.Trace("Successfully applied classification with $($mPropsAdd.Count) properties")
 		}
 		catch {
@@ -685,7 +697,8 @@ function mApplyClassification() {
 	}
 }
 
-function mRemoveClassification() { #applies to $dsWindow
+function mRemoveClassification() {
+ #applies to $dsWindow
 	#$dsDiag.Trace("Remove Class starts...")
 	if ($Prop["_EditMode"]) {
 		if ($Global:mFile) {
@@ -755,6 +768,13 @@ function mRemoveClassification() { #applies to $dsWindow
 			$mPropsAdd = @()
 			try {
 				$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
+				if ($mFileUpdated) {
+					$dsDiag.Trace("File property definitions updated successfully.")
+					mUpdateClsPropValues
+				}
+				else {
+					$dsDiag.Trace("File property definitions update returned false, no changes applied.")
+				}
 				$dsDiag.Trace("Successfully removed $($mPropsRemove.Count) classification properties")
 			}
 			catch {
@@ -943,10 +963,10 @@ function mAddClsLevelCmbChild ($data) {
 		}
 
 		$cmb.add_SelectionChanged({
-			param($mSender, $e)
-			$dsDiag.Trace("Breadcrumb SelectionChanged: $($mSender.Name)")
-			mClsLevelCmbSelectionChanged($mSender)
-		})
+				param($mSender, $e)
+				$dsDiag.Trace("Breadcrumb SelectionChanged: $($mSender.Name)")
+				mClsLevelCmbSelectionChanged($mSender)
+			})
 		
 		$dsDiag.Trace("Added breadcrumb level $($mBreadCrumb.Children.Count) with $($mClassLevelObjects.Count) class level objects")
 	}
@@ -1093,9 +1113,9 @@ function mResetClassSelection {
 	
 	# Add selection changed event handler
 	$cmb.add_SelectionChanged({
-		param($mSender, $e)
-		mClsLevelCmbSelectionChanged($mSender)
-	})
+			param($mSender, $e)
+			mClsLevelCmbSelectionChanged($mSender)
+		})
 	
 	# Reset all TreeView ComboBoxes (Class Objects and Terms for levels 1-4)
 	for ($i = 1; $i -le 4; $i++) {
@@ -1188,10 +1208,10 @@ function mInitializeAssignClsDlg {
 
 	# changing the standard initializes/resets the hierarchy selection
 	$AssignClsWindow.FindName("cmb_ClsStd").add_SelectionChanged({
-		param ($mSender, $e)
-		$global:mActiveStandard = $AssignClsWindow.FindName("cmb_ClsStd").SelectedItem.Content
-		mInitializeCompClassification
-	})
+			param ($mSender, $e)
+			$global:mActiveStandard = $AssignClsWindow.FindName("cmb_ClsStd").SelectedItem.Content
+			mInitializeCompClassification
+		})
 
 	# selection of treeview combobox items displays the class/term objects data in the grid
 	$cmbCls1 = $AssignClsWindow.FindName("cmbCls1")
@@ -1204,98 +1224,98 @@ function mInitializeAssignClsDlg {
 	$cmbTrm4 = $AssignClsWindow.FindName("cmbTrm4")
 
 	$cmbCls1.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		# Clear other level selections without retriggering events
-		$cmbCls2.SelectedIndex = -1
-		$cmbCls3.SelectedIndex = -1
-		$cmbCls4.SelectedIndex = -1
+			# Clear other level selections without retriggering events
+			$cmbCls2.SelectedIndex = -1
+			$cmbCls3.SelectedIndex = -1
+			$cmbCls4.SelectedIndex = -1
 		
-		# preview the properties and default values for this class
-		mGetFileClsValues -sendingCmb $mSender
-		mGetClsDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this class
+			mGetFileClsValues -sendingCmb $mSender
+			mGetClsDfltValues -sendingCmb $mSender
+		})
 	$cmbTrm1.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbTrm2.SelectedIndex = -1
-		$cmbTrm3.SelectedIndex = -1
-		$cmbTrm4.SelectedIndex = -1
+			$cmbTrm2.SelectedIndex = -1
+			$cmbTrm3.SelectedIndex = -1
+			$cmbTrm4.SelectedIndex = -1
 		
-		# preview the properties and default values for this term
-		mGetTermDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this term
+			mGetTermDfltValues -sendingCmb $mSender
+		})
 	$cmbCls2.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbCls1.SelectedIndex = -1
-		$cmbCls3.SelectedIndex = -1
-		$cmbCls4.SelectedIndex = -1
+			$cmbCls1.SelectedIndex = -1
+			$cmbCls3.SelectedIndex = -1
+			$cmbCls4.SelectedIndex = -1
 
-		# preview the properties and default values for this class
-		mGetFileClsValues -sendingCmb $mSender
-		mGetClsDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this class
+			mGetFileClsValues -sendingCmb $mSender
+			mGetClsDfltValues -sendingCmb $mSender
+		})
 	$cmbTrm2.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbTrm1.SelectedIndex = -1
-		$cmbTrm3.SelectedIndex = -1
-		$cmbTrm4.SelectedIndex = -1
+			$cmbTrm1.SelectedIndex = -1
+			$cmbTrm3.SelectedIndex = -1
+			$cmbTrm4.SelectedIndex = -1
 		
-		# preview the properties and default values for this term
-		mGetTermDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this term
+			mGetTermDfltValues -sendingCmb $mSender
+		})
 	$cmbCls3.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbCls1.SelectedIndex = -1
-		$cmbCls2.SelectedIndex = -1
-		$cmbCls4.SelectedIndex = -1
+			$cmbCls1.SelectedIndex = -1
+			$cmbCls2.SelectedIndex = -1
+			$cmbCls4.SelectedIndex = -1
 
-		# preview the properties and default values for this class
-		mGetFileClsValues -sendingCmb $mSender
-		mGetClsDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this class
+			mGetFileClsValues -sendingCmb $mSender
+			mGetClsDfltValues -sendingCmb $mSender
+		})
 	$cmbTrm3.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbTrm1.SelectedIndex = -1
-		$cmbTrm2.SelectedIndex = -1
-		$cmbTrm4.SelectedIndex = -1
+			$cmbTrm1.SelectedIndex = -1
+			$cmbTrm2.SelectedIndex = -1
+			$cmbTrm4.SelectedIndex = -1
 		
-		# preview the properties and default values for this term
-		mGetTermDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this term
+			mGetTermDfltValues -sendingCmb $mSender
+		})
 	$cmbCls4.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbCls1.SelectedIndex = -1
-		$cmbCls2.SelectedIndex = -1
-		$cmbCls3.SelectedIndex = -1
+			$cmbCls1.SelectedIndex = -1
+			$cmbCls2.SelectedIndex = -1
+			$cmbCls3.SelectedIndex = -1
 
-		# preview the properties and default values for this class
-		mGetFileClsValues -sendingCmb $mSender
-		mGetClsDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this class
+			mGetFileClsValues -sendingCmb $mSender
+			mGetClsDfltValues -sendingCmb $mSender
+		})
 	$cmbTrm4.add_SelectionChanged({
-		param ($mSender, $e)
-		if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
+			param ($mSender, $e)
+			if ($mSender.SelectedIndex -lt 0) { return }  # Skip if clearing selection
 		
-		$cmbTrm1.SelectedIndex = -1
-		$cmbTrm2.SelectedIndex = -1
-		$cmbTrm3.SelectedIndex = -1
+			$cmbTrm1.SelectedIndex = -1
+			$cmbTrm2.SelectedIndex = -1
+			$cmbTrm3.SelectedIndex = -1
 		
-		# preview the properties and default values for this term
-		mGetTermDfltValues -sendingCmb $mSender
-	})
+			# preview the properties and default values for this term
+			mGetTermDfltValues -sendingCmb $mSender
+		})
 	
 	
 	# Show the dialog and handle the result
@@ -1351,6 +1371,7 @@ function mInitializeCompClassification {
 }
 
 function mUpdateClsPropValues() {
+	# Update the $Prop values based on the current values in the dtgrdClassProps DataGrid, otherwise VDS would override with old values on close since the property definitions are not updated until after the dialog closes and triggers the post-close event
 	try {
 		Foreach ($row in $dsWindow.FindName("dtgrdClassProps").Items) {
 			$Prop[$row.Key].Value = $row.Value
