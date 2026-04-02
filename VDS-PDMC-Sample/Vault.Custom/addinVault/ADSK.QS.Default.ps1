@@ -211,7 +211,6 @@ function InitializeWindow {
 			}
 		}
 
-
 		#region CustomObjectClassifiedWindow
 		"CustomObjectClassifiedWindow" {      
 			IF ($Prop["_CreateMode"].Value -eq $true) {
@@ -249,7 +248,22 @@ function InitializeWindow {
 				# enable standard selection
 				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
 				$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
-				#$dsWindow.FindName("cmb_ClsStd").IsDropDownOpen = $true
+				
+				$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({					
+					param($sender, $e)
+
+					$mBreadCrumb = $dsWindow.FindName("wrpClassification")
+					$children = $mBreadCrumb.Children.Count - 1					
+					while ($children -gt 0 ) {
+						$cmb = $mBreadCrumb.Children[$children]
+						$mBreadCrumb.UnregisterName($cmb.Name) #unregister the name to correct for later addition/registration
+						$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
+						$children--;
+					}
+
+					mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $sender.SelectedItem.Content #-_classes $_classes #enables classification for class objects
+
+				})		
 			}
 			
 			# Add property changed handlers for classification levels to update ClsCode
@@ -313,25 +327,6 @@ function InitializeWindow {
 				}
 			}
 			#endregion EditMode
-						
-			If ($Prop["_CreateMode"].Value -eq $true) {
-				
-				$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({					
-					param($sender, $e)
-
-					$mBreadCrumb = $dsWindow.FindName("wrpClassification")
-					$children = $mBreadCrumb.Children.Count - 1					
-					while ($children -gt 0 ) {
-						$cmb = $mBreadCrumb.Children[$children]
-						$mBreadCrumb.UnregisterName($cmb.Name) #unregister the name to correct for later addition/registration
-						$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
-						$children--;
-					}
-
-					mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $sender.SelectedItem.content #-_classes $_classes #enables classification for class objects
-
-				})								
-			}
 		}
 		#endregion CustomObjectClassifiedWindow
 		

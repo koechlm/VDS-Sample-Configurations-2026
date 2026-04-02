@@ -514,13 +514,23 @@ function mResetClassFilter([Bool] $ShowWarning = $true) {
 			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = ""
 			$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
 			$dsWindow.FindName("cmb_ClsStd").Tooltip = ""
+
+			# add the event handler to react on the standard change and enable the classification again
+			$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({					
+				param($mSender, $e)
+
+				#update the first level of the breadcrumb according to the new standard selection.
+				$mBreadCrumb = $dsWindow.FindName("wrpClassification")
+				$children = mGetCustomEntityList -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $mSender.SelectedItem.Content
+				$mBreadCrumb.Children[1].ItemsSource = $children | Sort-Object -Property Name -CaseSensitive
+				$mBreadCrumb.Children[1].SelectedIndex = -1
+			})			
 		}
 		default {
 			$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 			$mBreadCrumb.Children[1].SelectedIndex = -1
 		}
 	}
-
 	$dsDiag.Trace("...Reset Filter finished <<")
 }
 #endregion BreadCrumb ClassSelection
