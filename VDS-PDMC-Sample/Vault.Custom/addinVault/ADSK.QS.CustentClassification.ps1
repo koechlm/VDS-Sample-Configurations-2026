@@ -210,10 +210,11 @@ function mAddCoComboChild ($data) {
 
 function mGetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 	try {
-		$dsDiag.Trace(">> mGetCustomEntityList started")		
-		$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 2		
-		$srchConds[0] = mCreateClsSearchCond "Category Name" $_CoName "AND" # note - for any reason, the "Category Name can't be replaced by a variable"
-		$srchConds[1] = mCreateClsSearchCond $Prop["_XLTN_CLSSTANDARD"].Name $_Standard "AND"
+		$dsDiag.Trace(">> mGetCustomEntityList started with Category: $_CoName and Standard: $_Standard")		
+		$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 2
+		$dsDiag.Trace("Search condition 1: Category Name = $_CoName")
+		$srchConds[0] = mCreateClsSrchCond "Category Name" $_CoName "AND" # note - for any reason, the "Category Name can't be replaced by a variable"
+		$srchConds[1] = mCreateClsSrchCond $Prop["_XLTN_CLSSTANDARD"].Name $_Standard "AND"
 
 		$srchSort = New-Object autodesk.Connectivity.WebServices.SrchSort
 		$searchStatus = New-Object autodesk.Connectivity.WebServices.SrchStatus
@@ -231,7 +232,7 @@ function mGetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 				$mResultAll.AddRange($mResultPage)
 			}
 			else { 
-				#$MsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("Could not find any " + $_CoName, "VDS Sample -- Classified Objects", "OK")
+				$MsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("Could not find any " + $_CoName, "VDS Sample -- Classified Objects", "OK")
 				break;
 			}
 		}
@@ -281,6 +282,32 @@ function mGetCustomEntityUsesList ($sender) {
 	}
 	catch { $dsDiag.Trace("!! Error in mAddCoComboChild !!") }
 }
+
+function mCreateClsSrchCond ([String] $PropName, [String] $mSearchTxt, [String] $AndOr) {
+	$dsDiag.Trace("--SearchCond creation starts... for $PropName and $mSearchTxt and operator $AndOr")
+	$srchCond = New-Object autodesk.Connectivity.WebServices.SrchCond
+	$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId("CUSTENT")
+	$propNames = @($PropName) #$UIString["LBL6"]
+	$propDefIds = @{}
+	foreach($name in $propNames) 
+	{
+		$propDef = $propDefs | Where-Object { $_.dispName -eq $name }
+		$propDefIds[$propDef.Id] = $propDef.DispName
+	}
+	$srchCond.PropDefId = $propDef.Id
+	$srchCond.SrchOper = 1
+	$srchCond.SrchTxt = $mSearchTxt
+	$srchCond.PropTyp = [Autodesk.Connectivity.WebServices.PropertySearchType]::SingleProperty
+	
+	If ($AndOr -eq "AND") {
+		$srchCond.SrchRule = [Autodesk.Connectivity.WebServices.SearchRuleType]::Must
+	}
+	Else {
+		$srchCond.SrchRule = [Autodesk.Connectivity.WebServices.SearchRuleType]::May
+	}
+	$dsDiag.Trace("--SearchCond creation finished. ---")
+	return $srchCond
+} 
 
 # Helper function to build concatenated ClsCode from all selected breadcrumb levels
 # PLUS the current object's own ClsLevelCode property value
@@ -485,6 +512,8 @@ function mResetClassFilter([Bool] $ShowWarning = $true) {
 				catch {}
 			}
 			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = ""
+			$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
+			$dsWindow.FindName("cmb_ClsStd").Tooltip = ""
 		}
 		default {
 			$mBreadCrumb = $dsWindow.FindName("wrpClassification")

@@ -83,8 +83,8 @@ function InitializeTabWindow {
 }
 
 function InitializeWindow {	      
-	# $dsDiag.ShowLog()
-	# $dsDiag.Clear()
+	 #$dsDiag.ShowLog()
+	 #$dsDiag.Clear()
 
 	#begin rules applying commonly
 	$Prop["_Category"].add_PropertyChanged({
