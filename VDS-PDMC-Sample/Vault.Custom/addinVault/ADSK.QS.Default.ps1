@@ -251,6 +251,29 @@ function InitializeWindow {
 				$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
 				#$dsWindow.FindName("cmb_ClsStd").IsDropDownOpen = $true
 			}
+			
+			# Add property changed handlers for classification levels to update ClsCode
+			# This handles cases where levels are changed programmatically or via UI
+			$clsLevelProps = @(
+				$UIString["Adsk.QS.ClsLevel_01"],
+				$UIString["Adsk.QS.ClsLevel_02"],
+				$UIString["Adsk.QS.ClsLevel_03"],
+				$UIString["Adsk.QS.ClsLevel_04"],
+				$UIString["Adsk.QS.ClsLevelCode"] # the current object's own level code triggers update as well
+			)
+			
+			foreach ($levelProp in $clsLevelProps) {
+				if ($Prop[$levelProp]) {
+					$Prop[$levelProp].add_PropertyChanged({
+						param($sender, $e)
+						# Update ClsCode when any classification level changes
+						# Skip update if in read-only mode (changes won't be saved)
+						if ($dsWindow.FindName("wrpClassification") -and $Prop["_ReadOnly"].Value -ne $true) {
+							mUpdateClsCode
+						}
+					})
+				}
+			}
 
 			#region EditMode
 			IF ($Prop["_EditMode"].Value -eq $true) {
@@ -282,6 +305,12 @@ function InitializeWindow {
 				
 				$dsWindow.FindName("cmb_ClsStd").Text = $Prop["_XLTN_CLSSTANDARD"].Value
 				mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $Prop["_XLTN_CLSSTANDARD"].Value -_classes $_classes #enables classification for class objects
+				
+				# Update ClsCode based on initialized breadcrumb selections in edit mode
+				# Only update if NOT read-only (changes would not save in read-only mode)
+				if ($Prop["_ReadOnly"].Value -ne $true) {
+					mUpdateClsCode
+				}
 			}
 			#endregion EditMode
 						

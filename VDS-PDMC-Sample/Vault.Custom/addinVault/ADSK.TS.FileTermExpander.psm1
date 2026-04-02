@@ -12,9 +12,10 @@ class CatalogData {
 	[string]$Term_EN
 	[string]$Term_FR
 	[string]$Term_IT
+	[string]$Term_ES
 }
 
-function mInitializeTermCatalog {
+function mInitializeTermExpander {
      
 	If ($dsWindow.FindName("expTermSearch")) {      							
 		Try {
@@ -26,15 +27,19 @@ function mInitializeTermCatalog {
 				"InventorWindow" {
 					$dsWindow.FindName("mSearchTermText").Text = $Prop["Title"].Value #Inventor has its default property localization
 				}
-				default { #applies to all Vault windows
+				default {
+					#applies to all Vault windows
 					$dsWindow.FindName("mSearchTermText").Text = $Prop["_XLTN_TITLE"].Value
 				}
 			}
 			
+			# introduce a global variable for the active standard, set with cmb_ClsStd
+			$dsWindow.FindName("cmb_ClsStd").SelectedIndex = 0 #reset to default standard
+			$Global:mActiveStandard = $dsWindow.FindName("cmb_ClsStd").SelectedItem.Content
 			
 			If ($mTermCatalogInitialized -ne $true) {
-				If (-not $UIString["Adsk.QS.ClsLevel_01"]) { $UIString = mGetUIStrings } #the psm library might not get the VDS default variable
-				mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] #enables classification filter for catalog of terms starting with segment
+				If (-not $UIString["Adsk.QS.ClsLevel_01"]) { $UIString = mGetUIStrings } #the psm library might not get the VDS default variable				
+				mAddTrmClsCmb -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $Global:mActiveStandard #enables classification filter for catalog of terms starting with segment
 
 				$dsWindow.FindName("dataGrdTermsFound").add_SelectionChanged({
 						param($sender, $SelectionChangedEventArgs)
@@ -49,6 +54,17 @@ function mInitializeTermCatalog {
 						}
 					})
 
+				$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({
+						param($sender, $SelectionChangedEventArgs)
+						#$dsDiag.Trace(".. ClsStandard Selection")
+
+						# re-initialize the level selection for the new standard.
+						$Global:mActiveStandard = $dsWindow.FindName("cmb_ClsStd").SelectedItem.Content
+
+						# reset the current classification filter and apply the new one based on the standard selected;
+						mResetTermClassFilter
+					})
+				
 				#close the expander as another property is selected 
 				$dsWindow.FindName("DSDynamicCategoryProperties").add_GotFocus({
 						$dsWindow.FindName("expTermSearch").Visibility = "Collapsed"
@@ -74,6 +90,16 @@ function mInitializeTermCatalog {
 
 function mSearchTerms {
 	Try {
+		# Clear the status message
+		If ($dsWindow.FindName("txtTermStatusMsg")) {
+			$dsWindow.FindName("txtTermStatusMsg").Text = ""
+			$dsWindow.FindName("txtTermStatusMsg").Visibility = "Collapsed"
+			$dsDiag.Trace("Status message cleared")
+		}
+
+		# change the cursor to waiting state
+		$dsWindow.Cursor = [System.Windows.Input.Cursors]::Wait
+
 		#$dsDiag.Trace(">> search COs terms")
 		$dsWindow.FindName("dataGrdTermsFound").ItemsSource = $null
 
@@ -81,7 +107,7 @@ function mSearchTerms {
 		If (!$mSearchText1) { $mSearchText1 = "*" }
 
 		# the search conditions depend on the filters set (4 groups, 4 languages; the number has to match
-		$_NumConds = 2 #we have one condition as minimum, as we search for custom entities of category "term" 		
+		$_NumConds = 3 #we have 3 conditions as minimum: category "term" + classification standard + search text
 		$mBreadCrumb = $dsWindow.FindName("wrpClassification")
 		$_t1 = $mBreadCrumb.Children[1].SelectedIndex
 		If ($mBreadCrumb.Children[1].SelectedIndex -ge 0) { $_NumConds += 1 }
@@ -95,6 +121,7 @@ function mSearchTerms {
 
 		If ($dsWindow.FindName("chkFR").IsChecked -eq $true) { $_NumConds += 1 }
 		If ($dsWindow.FindName("chkIT").IsChecked -eq $true) { $_NumConds += 1 }
+		If ($dsWindow.FindName("chkES").IsChecked -eq $true) { $_NumConds += 1 }
 
 		# add all selected languages to search in; apply OR conditions
 		$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] $_NumConds
@@ -103,7 +130,14 @@ function mSearchTerms {
 		#the default search condition object type is custom object "term"
 		$srchConds[$_i] = mCreateClsSearchCond $UIString["ClassTerms_08"] $UIString["ClassTerms_00"] "AND" #Search in "Category Name" AND "Term" 
 		$_i += 1
-		if ($_NumConds -gt 2) {
+		
+		#add the active classification standard as a default search criteria
+		if ($Global:mActiveStandard) {
+			$srchConds[$_i] = mCreateClsSearchCond $UIString["Adsk.QS.ClsStandard"] $Global:mActiveStandard "AND"
+			$_i += 1
+			$dsDiag.Trace("Classification Standard filter applied: $($Global:mActiveStandard)")
+		}
+		if ($_NumConds -gt 3) {
 			$srchConds[$_i] = mCreateClsSearchCond $UIString["LBL19"] $mSearchText1 "OR" #Search in Names = main language $UIString["LBL19"]
 			$_i += 1
 		}
@@ -127,6 +161,10 @@ function mSearchTerms {
 		}
 		If ($dsWindow.FindName("chkIT").IsChecked -eq $true) {
 			$srchConds[$_i] = mCreateClsSearchCond $UIString["ClassTerms_12"] $mSearchText1 "OR"  #Term IT
+			$_i += 1
+		}
+		If ($dsWindow.FindName("chkES").IsChecked -eq $true) {
+			$srchConds[$_i] = mCreateClsSearchCond $UIString["ClassTerms_12a"] $mSearchText1 "OR"  #Term ES
 			$_i += 1
 		}
 
@@ -158,29 +196,90 @@ function mSearchTerms {
 		$bookmark = ""
 		$mResultAll = New-Object 'System.Collections.Generic.List[Autodesk.Connectivity.WebServices.CustEnt]'
 	
-		while (($searchStatus.TotalHits -eq 0) -or ($mResultAll.Count -lt $searchStatus.TotalHits)) {
+		# Determine if search criteria is too broad (no levels selected and wildcard search text)
+		$hasLevelFilter = ($mBreadCrumb.Children[1].SelectedIndex -ge 0) -or 
+		($mBreadCrumb.Children[2].SelectedIndex -ge 0) -or 
+		($mBreadCrumb.Children[3].SelectedIndex -ge 0) -or 
+		($mBreadCrumb.Children[4].SelectedIndex -ge 0)
+		$hasSearchText = ($mSearchText1 -ne "*")
+		$isBroadSearch = -not ($hasLevelFilter -or $hasSearchText)
+		
+		if ($isBroadSearch) {
+			$dsDiag.Trace("Broad search detected (no levels, no search text). Limiting to single page.")
+		}
+		
+		# Fetch results - either single page or all pages depending on search criteria
+		if ($isBroadSearch) {
+			# Limit to single page for broad searches
 			$mResultPage = $vault.CustomEntityService.FindCustomEntitiesBySearchConditions($srchConds, @($srchSort), [ref]$bookmark, [ref]$searchStatus)
+			
+			# Check indexing status
 			If ($searchStatus.IndxStatus -ne "IndexingComplete" -or $searchStatus -eq "IndexingContent") {
-				#check the indexing status; you might return a warning that the result bases on an incomplete index, or even return with a stop/error message, that we need to have a complete index first
 				$dsWindow.FindName("txtTermStatusMsg").Text = $UIString["Adsk.QS.Classification_12"]
 				$dsWindow.FindName("txtTermStatusMsg").Visibility = "Visible"
 			}
-			If ($mResultPage.Count -ne 0) {
-				$mResultAll.AddRange($mResultPage)
-			}
-			else { 
+			
+			# Check if results were found
+			If ($mResultPage.Count -eq 0) {
 				$dsWindow.FindName("txtTermStatusMsg").Text = $UIString["ClassTerms_MSG03"]
 				$dsWindow.FindName("txtTermStatusMsg").Visibility = "Visible"
-				break;
+				$global:_SearchResult = $mResultAll
+				$dsWindow.Cursor = [System.Windows.Input.Cursors]::Arrow
+				Return
+			}
+			
+			# Add first page results
+			$mResultAll.AddRange($mResultPage)
+			
+			# Show warning about too many results
+			If ($searchStatus.TotalHits -gt $mResultPage.Count) {
+				$dsDiag.Trace("Too many results found. Total: $($searchStatus.TotalHits), Showing: $($mResultPage.Count)")
+				$dsWindow.FindName("txtTermStatusMsg").Text = "Too many results ($($searchStatus.TotalHits) found). Showing first $($mResultPage.Count). Please refine your search criteria (select classification level or enter search text)."
+				$dsWindow.FindName("txtTermStatusMsg").Visibility = "Visible"
+			}
+			Else {
+				$dsWindow.FindName("txtTermStatusMsg").Visibility = "Collapsed"
+			}
+		}
+		else {
+			# Fetch all pages for refined searches, but only retrieve properties for first page
+			while (($searchStatus.TotalHits -eq 0) -or ($mResultAll.Count -lt $searchStatus.TotalHits)) {
+				$mResultPage = $vault.CustomEntityService.FindCustomEntitiesBySearchConditions($srchConds, @($srchSort), [ref]$bookmark, [ref]$searchStatus)
+				
+				# Check indexing status
+				If ($searchStatus.IndxStatus -ne "IndexingComplete" -or $searchStatus -eq "IndexingContent") {
+					$dsWindow.FindName("txtTermStatusMsg").Text = $UIString["Adsk.QS.Classification_12"]
+					$dsWindow.FindName("txtTermStatusMsg").Visibility = "Visible"
+				}
+				
+				If ($mResultPage.Count -ne 0) {
+					$mResultAll.AddRange($mResultPage)
+					
+					# Stop after first page - we'll only process first page properties
+					break
+				}
+				else {
+					$dsWindow.FindName("txtTermStatusMsg").Text = $UIString["ClassTerms_MSG03"]
+					$dsWindow.FindName("txtTermStatusMsg").Visibility = "Visible"
+					break
+				}
+			}
+			
+			# Show warning if more results exist beyond first page
+			If ($searchStatus.TotalHits -gt $mResultAll.Count) {
+				$dsDiag.Trace("Multiple pages found. Total: $($searchStatus.TotalHits), Showing: $($mResultAll.Count)")
+				$dsWindow.FindName("txtTermStatusMsg").Text = "Showing first $($mResultAll.Count) of $($searchStatus.TotalHits) results. Further refinement recommended."
+				$dsWindow.FindName("txtTermStatusMsg").Visibility = "Visible"
+			}
+			Else {
+				$dsWindow.FindName("txtTermStatusMsg").Visibility = "Collapsed"
 			}
 		}
 
 		$global:_SearchResult = $mResultAll	
-		If ($_SearchResult.Count -lt 1) {		
+		If ($_SearchResult.Count -lt 1) {
+			$dsWindow.Cursor = [System.Windows.Input.Cursors]::Arrow
 			Return
-		}
-		Else {
-			$dsWindow.FindName("txtTermStatusMsg").Visibility = "Collapsed"
 		}
 		# 	retrieve all properties of the COs found
 		$_data = @()
@@ -208,6 +307,7 @@ function mSearchTerms {
 			$row.Term_EN = $props[$UIString["ClassTerms_10"]]  # Term EN
 			$row.Term_FR = $props[$UIString["ClassTerms_11"]]  # Term FR
 			$row.Term_IT = $props[$UIString["ClassTerms_12"]]  # Term IT
+			$row.Term_ES = $props[$UIString["ClassTerms_12a"]]  # Term ES
 		
 			$_data += $row
 			$dsDiag.Trace("...iterates search result for properties finished.") 
@@ -217,7 +317,10 @@ function mSearchTerms {
 	catch {
 		$dsDiag.Trace("ERROR --- in m_SearchTerms function") 
 	}
-
+	Finally {
+		# reset the cursor to default state
+		$dsWindow.Cursor = [System.Windows.Input.Cursors]::Arrow
+	}
 }
 
 function mCreateClsSearchCond ([String] $PropName, [String] $mSearchTxt, [String] $AndOr) {
@@ -281,6 +384,11 @@ function m_SelectTerm {
 			}
 			catch { $dsDiag.Trace("Title IT does not exist") }
 				
+			Try {
+				$Prop["Title ES"].Value = $mSelectedItem.Term_ES
+			}
+			catch { $dsDiag.Trace("Title ES does not exist") }
+				
 		}
 		If ($dsWindow.Name -eq "InventorWindow") {
 			#region tab-rendering 
@@ -317,6 +425,11 @@ function m_SelectTerm {
 			}
 			catch { $dsDiag.Trace("Title IT does not exist") }
 			
+			Try {
+				$Prop["Title ES"].Value = $mSelectedItem.Term_ES
+			}
+			catch { $dsDiag.Trace("Title ES does not exist") }
+			
 		}
 		If ($dsWindow.Name -eq "FileWindow") {
 			
@@ -345,6 +458,10 @@ function m_SelectTerm {
 				$Prop["_XLTN_TITLE-IT"].Value = $mSelectedItem.Term_IT
 			}
 			catch { $dsDiag.Trace("Title IT does not exist") }
+			Try {
+				$Prop["_XLTN_TITLE-ES"].Value = $mSelectedItem.Term_ES
+			}
+			catch { $dsDiag.Trace("Title ES does not exist") }
 		}
 
 		$dsWindow.FindName("btnSearchTerm").IsDefault = $false
@@ -376,22 +493,11 @@ function m_SelectTerm {
 
 #endregion CatalogLookUp
 
-#region BreadCrumb ClassSelection
+#region BreadCrumb TermClassSelection
 
-<# class breadCrumbMetaData{
-	[hashtable]$level1_meta;
-	[hashtable]$level2_meta;
-	[hashtable]$level3_meta;
-	[hashtable]$level4_meta;
-	[hashtable]$classObj_meta;
-	[hashtable]$classTrm_meta;
-} #>
-
-
-function mAddCoCombo ([String] $_CoName, $_Standard, $_classes) {	
-	$children = mgetCustomEntityList $_CoName $_Standard #-_CoName $_CoName
-	If ($children -eq $null) { return }
-
+function mAddTrmClsCmb ([String] $_CoName, $_Standard, $_classes) {	
+	$children = mSearchCustents $_CoName $_Standard
+	If ($null -eq $children) { return }
 	# sort the children by Name, case sensitive
 	$children = $children | Sort-Object -Property Name -CaseSensitive #-Descending -Unique -Stable
 
@@ -436,7 +542,8 @@ function mAddCoCombo ([String] $_CoName, $_Standard, $_classes) {
 				$_cmbNames += $_cmbItem.Name
 			}
 			$dsDiag.Trace("Combo $index Namelist = $_cmbNames")
-			If ($_classes[0]) { #avoid activation of null ;)
+			If ($_classes[0]) {
+				#avoid activation of null ;)
 				$_CurrentName = $_classes[0]
 				#$dsDiag.Trace("Current Name: $_CurrentName ")
 				#get the index of name in array
@@ -459,7 +566,7 @@ function mAddCoCombo ([String] $_CoName, $_Standard, $_classes) {
 	#endregion
 } # addCoCombo
 
-function mAddCoComboChild ($data) {
+function mAddTrmClsCmbChild ($data) {
 	$children = @()
 	$children = mGetCustomEntityUsesList($data) #-sender $data
 	If ($children.count -eq 0) { return }
@@ -532,7 +639,8 @@ function mAddCoComboChild ($data) {
 				}
 				#$dsDiag.Trace("Combo $index Namelist = $_cmbNames")
 				#get the index of name in array
-				If ($_classes[$_i - 2]) { #avoid activation of null ;)
+				If ($_classes[$_i - 2]) {
+					#avoid activation of null ;)
 					$_CurrentName = $_classes[$_i - 2] #remember the number of breadcrumb children is +2 (delete button, and the class start with index 0)
 					#$dsDiag.Trace("Current Name: $_CurrentName ")
 					$i = 0
@@ -558,12 +666,12 @@ function mAddCoComboChild ($data) {
 	#endregion
 } #addCoComboChild
 
-function mgetCustomEntityList ([String] $_CoName, [String] $_Standard) {
+function mSearchCustents ([String] $_CoName, [String] $_Standard) {
 	try {
-		$dsDiag.Trace(">> mgetCustomEntityList started")		
+		$dsDiag.Trace(">> mSearchCustents started")		
 		$srchConds = New-Object autodesk.Connectivity.WebServices.SrchCond[] 2		
 		$srchConds[0] = mCreateClsSearchCond "Category Name" $_CoName "AND" # note - for any reason, the "Category Name can't be replaced by a variable"
-		$srchConds[1] = mCreateClsSearchCond $Prop["_XLTN_CLSSTANDARD"].Name $_Standard "AND"
+		$srchConds[1] = mCreateClsSearchCond $UIString["Adsk.QS.ClsStandard"] $_Standard "AND" # note - the classification standard condition is always applied as filter when a standard is selected in the UI; if no standard is selected, the condition value is empty and should not impact the search results
 
 		$srchSort = New-Object autodesk.Connectivity.WebServices.SrchSort
 		$searchStatus = New-Object autodesk.Connectivity.WebServices.SrchStatus
@@ -581,7 +689,7 @@ function mgetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 				$mResultAll.AddRange($mResultPage)
 			}
 			else { 
-				#$MsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("Could not find any " + $_CoName, "VDS Sample -- Classified Objects", "OK")
+				$MsgResult = [Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowWarning("Could not find any " + $_CoName, "VDS Sample -- Classified Objects", "OK")
 				break;
 			}
 		}
@@ -590,7 +698,7 @@ function mgetCustomEntityList ([String] $_CoName, [String] $_Standard) {
 		return $mResultAll
 	}
 	catch { 
-		$dsDiag.Trace("!! Error in mgetCustomEntityList")
+		$dsDiag.Trace("!! Error in mSearchCustents")
 	}
 }
 
@@ -610,7 +718,7 @@ function mGetCustomEntityUsesList ($sender) {
 			4 { $mSearchFilter = $UIString["Adsk.QS.ClsObject"] }
 			default { $mSearchFilter = "*" }
 		}
-		$_customObjects = mgetCustomEntityList($mSearchFilter) #-_CoName $mSearchFilter
+		$_customObjects = mSearchCustents($mSearchFilter) #-_CoName $mSearchFilter
 		$_Parent = $_customObjects | Where-Object { $_.Name -eq $_CurrentClass }
 		try {
 			$links = $vault.DocumentService.GetLinksByParentIds(@($_Parent.Id), @("CUSTENT"))
@@ -629,21 +737,34 @@ function mGetCustomEntityUsesList ($sender) {
 			return $null
 		}
 	}
-	catch { $dsDiag.Trace("!! Error in mAddCoComboChild !!") }
+	catch { $dsDiag.Trace("!! Error in mAddTrmClsCmbChild !!") }
 }
 
-function mCoComboSelectionChanged ($sender) {
+function mCoComboSelectionChanged ($mSender) {
 	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
-	[int]$position = $sender.Name.Split('_')[1]
+	[int]$position = $mSender.Name.Split('_')[1]
 
-	switch ($position) {
-		1 { $Global:_BC1 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
-		2 { $Global:_BC2 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
-		3 { $Global:_BC3 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
-		4 { $Global:_BC4 = mGetCustEntsPropNameValMaps $sender.ItemsSource }
-		Default {}
+	# Only build breadcrumb maps for Vault Custom Object windows
+	# CAD windows (Inventor/AutoCAD) don't use custom entity property mappings
+	if ($dsWindow.Name -eq "CustomObjectClassifiedWindow") {
+		try {
+			# Check if mGetCustEntsPropNameValMaps function exists (Vault-specific)
+			if (Get-Command mGetCustEntsPropNameValMaps -ErrorAction SilentlyContinue) {
+				switch ($position) {
+					1 { $Global:_BC1 = mGetCustEntsPropNameValMaps $mSender.ItemsSource }
+					2 { $Global:_BC2 = mGetCustEntsPropNameValMaps $mSender.ItemsSource }
+					3 { $Global:_BC3 = mGetCustEntsPropNameValMaps $mSender.ItemsSource }
+					4 { $Global:_BC4 = mGetCustEntsPropNameValMaps $mSender.ItemsSource }
+					Default {}
+				}
+			}
+		}
+		catch {
+			$dsDiag.Trace("Warning: Could not build breadcrumb property maps (Vault-only feature)")
+		}
 	}
-						
+	
+	$dsDiag.Trace("Selection changed at position $position, selected value = $($mSender.SelectedValue.Name)")					
 	$children = $mBreadCrumb.Children.Count - 1
 	while ($children -gt $position ) {
 		$cmb = $mBreadCrumb.Children[$children]
@@ -651,6 +772,7 @@ function mCoComboSelectionChanged ($sender) {
 		$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
 		$children--;
 	}
+	
 	Try {
 		#fill properties
 		if ($mBreadCrumb.Children[1]) { 
@@ -694,11 +816,10 @@ function mCoComboSelectionChanged ($sender) {
 			$Prop[$UIString["Adsk.QS.ClsLevel_04"]].Value = ""
 		}
 		if ($mBreadCrumb.Children[5]) { 
-			
-			$dsDiag.Inspect()
 			$Prop[$UIString["Adsk.QS.ClsObject"]].Value = $mBreadCrumb.Children[5].SelectedItem.Name 
 			#$_x5 = $_BC4[$mBreadCrumb.Children[5].SelectedItem.Num][$UIString["Adsk.QS.ClsCode"]]
-			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)_$($_x4)"}
+			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = "$($_x1)_$($_x2)_$($_x3)_$($_x4)"
+		}
 		else { $Prop[$UIString["Adsk.QS.ClsObject"]].Value = "" }
 
 		#write the highest level Custent Id to a text file for post-close event
@@ -720,7 +841,7 @@ function mCoComboSelectionChanged ($sender) {
 				return
 			}
 			else {
-				mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
+				mAddTrmClsCmbChild($sender.SelectedItem) #-sender $sender.SelectedItem
 			}
 		}
 		
@@ -729,7 +850,7 @@ function mCoComboSelectionChanged ($sender) {
 				return
 			}
 			else {
-				mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
+				mAddTrmClsCmbChild($sender.SelectedItem) #-sender $sender.SelectedItem
 			}
 		}
 
@@ -738,50 +859,96 @@ function mCoComboSelectionChanged ($sender) {
 				return
 			}
 			else {
-				mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
+				mAddTrmClsCmbChild($sender.SelectedItem) #-sender $sender.SelectedItem
 			}
 		}
 
 		default {
-			mAddCoComboChild($sender.SelectedItem) #-sender $sender.SelectedItem
+			mAddTrmClsCmbChild($sender.SelectedItem) #-sender $sender.SelectedItem
 		}
-	}
+	}	
 }
 
-function mResetClassFilter([Bool] $ShowWarning = $true) {
-	$dsDiag.Trace(">> Reset Filter started...")
-	$mWindowName = $dsWindow.Name
-	switch ($mWindowName) {
-		"CustomObjectClassifiedWindow" {
-			If ($Prop["_CreateMode"].Value -eq $true)
-			{
-				$mBreadCrumb = $dsWindow.FindName("wrpClassification")
-				$mBreadCrumb.Children[1].SelectedIndex = -1
-				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
-				$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
-			}
-			else {				
-				$mBreadCrumb = $dsWindow.FindName("wrpClassification")
-				$mBreadCrumb.Children[1].SelectedIndex = -1
-				# don't allow to change the Standard - the breadcrump selection is bound to the assigned standard
-				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $false
-			}
+function mResetTermClassFilter([Bool] $ShowWarning = $true) {
+	$dsDiag.Trace(">> Reset Term Classification Filter started...")
+	
+	# Get the breadcrumb wrapper panel
+	$mBreadCrumb = $dsWindow.FindName("wrpClassification")
+	
+	if (-not $mBreadCrumb) {
+		$dsDiag.Trace("Warning: wrpClassification breadcrumb not found")
+		return
+	}
+	
+	# Clear all existing ComboBoxes from the WrapPanel
+	while ($mBreadCrumb.Children.Count -gt 1) {
+		$cmb = $mBreadCrumb.Children[1]
+		if ($cmb.Name) {
+			$mBreadCrumb.UnregisterName($cmb.Name)
+		}
+		$mBreadCrumb.Children.RemoveAt(1)
+	}
+	
+	mAddTrmClsCmb -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $Global:mActiveStandard #enables classification filter for catalog of terms starting with segment
 
-			#reset the class level driven property values
-			$Global:mClsLevelNames | ForEach-Object {
-				Try {
+	
+	$dsDiag.Trace("Breadcrumb reset complete. Children remaining: $($mBreadCrumb.Children.Count)")
+	
+	# Enable the classification standard combo box (user can select a new standard)
+	if ($dsWindow.FindName("cmb_ClsStd")) {
+		$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
+		if ($UIString["Adsk.QS.ClsTT_01"]) {
+			$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
+		}
+		$dsDiag.Trace("Classification Standard combo enabled")
+	}
+	
+	# Clear the search text box
+	if ($dsWindow.FindName("mSearchTermText")) {
+		$dsWindow.FindName("mSearchTermText").Text = ""
+		$dsDiag.Trace("Search text cleared")
+	}
+	
+	# Clear the search results DataGrid
+	if ($dsWindow.FindName("dataGrdTermsFound")) {
+		$dsWindow.FindName("dataGrdTermsFound").ItemsSource = $null
+		$dsDiag.Trace("Search results DataGrid cleared")
+	}
+
+	# Clear the status message
+	if ($dsWindow.FindName("txtTermStatusMsg")) {
+		$dsWindow.FindName("txtTermStatusMsg").Text = ""
+		$dsWindow.FindName("txtTermStatusMsg").Visibility = "Collapsed"
+		$dsDiag.Trace("Status message cleared")
+	}
+	
+	# Clear any cached breadcrumb level maps
+	if ($Global:_BreadcrumbLevelMaps) {
+		$Global:_BreadcrumbLevelMaps.Clear()
+		$dsDiag.Trace("Breadcrumb level maps cleared")
+	}
+	
+	# Reset classification level property values if they exist
+	if ($Global:mClsLevelNames) {
+		$Global:mClsLevelNames | ForEach-Object {
+			try {
+				if ($Prop[$_]) {
 					$Prop[$_].Value = ""
 				}
-				catch {}
 			}
-			$Prop[$UIString["Adsk.QS.ClsCode"]].Value = ""
+			catch {
+				$dsDiag.Trace("Could not reset property: $_")
+			}
 		}
-		default {
-			$mBreadCrumb = $dsWindow.FindName("wrpClassification")
-			$mBreadCrumb.Children[1].SelectedIndex = -1
-		}
+		$dsDiag.Trace("Classification level properties cleared")
 	}
-
-	$dsDiag.Trace("...Reset Filter finished <<")
+	
+	# Reset the ClsCode property
+	if ($UIString["Adsk.QS.ClsCode"] -and $Prop[$UIString["Adsk.QS.ClsCode"]]) {
+		$Prop[$UIString["Adsk.QS.ClsCode"]].Value = ""
+		$dsDiag.Trace("ClsCode property cleared")
+	}
+	
+	$dsDiag.Trace("...Reset Term Classification Filter finished <<")
 }
-#endregion BreadCrumb ClassSelection
+#endregion BreadCrumb TermClassSelection

@@ -418,6 +418,7 @@
   <UIString ID="Adsk.QS.ItemSearch_05">Category Name</UIString>
   <UIString ID="Adsk.QS.ItemSearch_06">Item Master  (Search Results)</UIString>
   <UIString ID="Adsk.QS.ItemSearch_07">Search</UIString>
+  <UIString ID="Adsk.QS.ItemSearch_07a">Clear</UIString>
   <UIString ID="Adsk.QS.ItemSearch_08">Attention: The result is based on an incomplete index! Contact your Administrator, if you continue seeing this message.</UIString>
   <UIString ID="Adsk.QS.ItemSearch_09">Search result is limited to page size {0}; Total number of items found: {1}. Refine your search criterias and search again.</UIString>
   <UIString ID="Adsk.QS.ItemSearch_10">Expand Item Query Builder for item lookup and data copy.</UIString>
@@ -477,7 +478,7 @@
   <UIString ID="Adsk.QS.ClsLevel_03">Class Level 3</UIString>
   <UIString ID="Adsk.QS.ClsLevel_04">Class Level 4</UIString>
   <UIString ID="Adsk.QS.ClsObject">Class Object</UIString>
-  <UIString ID="Adsk.QS.ClsStandard">Standard</UIString>
+  <UIString ID="Adsk.QS.ClsStandard">Standard</UIString> <!--Important Note: this translation must match the PropertyTranslation CLSSTANDARD-->
   <UIString ID="Adsk.QS.ClsCode">Code</UIString>
   <UIString ID="Adsk.QS.ClsLevelCode">Level Code</UIString>
   <UIString ID="Adsk.QS.Classification_00">Class</UIString>
@@ -511,6 +512,7 @@
   <UIString ID="ClassTerms_03">English</UIString>
   <UIString ID="ClassTerms_04">French</UIString>
   <UIString ID="ClassTerms_05">Italian</UIString>
+  <UIString ID="ClassTerms_05a">Spanish</UIString>
   <UIString ID="ClassTerms_06">No matching term(s) found.</UIString>
   <UIString ID="ClassTerms_07">Classification</UIString>
   <UIString ID="ClassTerms_08">Category Name</UIString>
@@ -522,7 +524,7 @@
   <UIString ID="ClassTerms_12b">Is Manual Entry</UIString>
   <UIString ID="ClassTerms_13">Catalog...</UIString>
   <UIString ID="ClassTerms_14">Filter</UIString>
-  <UIString ID="ClassTerms_15">Additional Languages</UIString>
+  <UIString ID="ClassTerms_15">Filter Languages</UIString>
   <UIString ID="ClassTerms_16">Search text to match term definition, use "*" and/or add Languages to widen the scope</UIString>
   <UIString ID="ClassTerms_BTN8">Search</UIString>
   <UIString ID="ClassTerms_BTN9">Copy Term as Title</UIString>

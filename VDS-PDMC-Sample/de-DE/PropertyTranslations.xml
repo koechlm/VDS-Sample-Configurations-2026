@@ -61,7 +61,7 @@
   <PropertyTranslation Name="CLSLEVEL3">Klassifizierung 3</PropertyTranslation>
   <PropertyTranslation Name="CLSLEVEL4">Klassifizierung 4</PropertyTranslation>
   <PropertyTranslation Name="CLSOBJECT">Klasse</PropertyTranslation>
-  <PropertyTranslation Name="CLSSTANDARD">Norm</PropertyTranslation>
+  <PropertyTranslation Name="CLSSTANDARD">Norm</PropertyTranslation> <!--Important Note: this translation must match the UIString Adsk.QS.ClsStandard-->
   <PropertyTranslation Name="CLSCODE">Schlüssel</PropertyTranslation>
   <PropertyTranslation Name="CLSLEVELCODE">Schlüssel Ebene</PropertyTranslation>
   <PropertyTranslation Name="COMMENTS-DE">Kommentare DE</PropertyTranslation>

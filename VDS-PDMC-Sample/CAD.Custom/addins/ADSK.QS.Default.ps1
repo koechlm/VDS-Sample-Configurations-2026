@@ -369,7 +369,7 @@ function InitializeWindow {
 	#region CatalogTerm
 	If ($dsWindow.FindName("expTermSearch")) {			
 		Try {
-			Import-Module -FullyQualifiedName "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\ADSK.QS.CustentClassification.psm1"
+			Import-Module -FullyQualifiedName "C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\ADSK.TS.FileTermExpander.psm1"
 		}
 		catch {}
 	}

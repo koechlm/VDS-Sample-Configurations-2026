@@ -816,13 +816,6 @@ function mAddClsLevelCombo ([String] $ClassLevelName, $ClsLvls) {
 	# Set the ItemsSource after adding to the visual tree
 	$cmb.ItemsSource = $children
 
-	<# if ($AssignClsWindow.FindName("cmbCls1").Items.Count -gt 1) {
-        $AssignClsWindow.FindName("cmbCls1").IsDropDownOpen = $true
-    }
-    if ($AssignClsWindow.FindName("cmbCls1").Items.Count -eq 0 -and $Prop["_XLTN_CLSOBJECT"].Value -eq "") {
-        $cmb.IsDropDownOpen = $true
-    } #>
-
 	$cmb.add_SelectionChanged({
 			param($mSender, $e)
 			mClsLevelCmbSelectionChanged($mSender) # -mSender $mSender
@@ -1062,16 +1055,10 @@ function mClsLevelCmbSelectionChanged($mSender) {
 		$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
 		$children--;
 	}
-	Try {
-		# $Prop["_XLTN_CLSLEVEL1"].Value = $mBreadCrumb.Children[1].SelectedItem.Name
-		# $Prop["_XLTN_CLSLEVEL2"].Value = $mBreadCrumb.Children[2].SelectedItem.Name
-		# $Prop["_XLTN_CLSLEVEL3"].Value = $mBreadCrumb.Children[3].SelectedItem.Name
-		# $Prop["_XLTN_CLSLEVEL4"].Value = $mBreadCrumb.Children[4].SelectedItem.Name
-	}
-	catch {}
 
+	# reset subsequent comboboxes if the new selection does no longer has children.
 	mAvlblClsReset
-
+	# add the next combo with the children of the selected item.
 	mAddClsLevelCmbChild($mSender.SelectedItem) #-mSender $mSender.SelectedItem
 }
 

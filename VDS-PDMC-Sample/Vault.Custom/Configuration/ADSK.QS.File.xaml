@@ -30,7 +30,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -114,9 +114,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{Binding Value}" BorderThickness="0" 
-                                    ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" 
-                                    IsReadOnly="True" IsTabStop="False"/>
+                                    <TextBox Text="{Binding Value}" BorderThickness="0" ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" IsReadOnly="True" IsTabStop="False"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -125,9 +123,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" 
-                                    ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" 
-                                    IsReadOnly="True" IsTabStop="False"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" IsReadOnly="True" IsTabStop="False"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -136,9 +132,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" 
-                                    ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" 
-                                    IsReadOnly="True" IsTabStop="False"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" IsReadOnly="True" IsTabStop="False"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -147,9 +141,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" 
-                                    ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" 
-                                    IsReadOnly="True" IsTabStop="False"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" IsReadOnly="True" IsTabStop="False"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -158,9 +150,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" 
-                                    ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" 
-                                    IsReadOnly="True" IsTabStop="False"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" ToolTip="{Binding DataContext.UIString[LBL27], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, FallbackValue='[Assigned]'}" IsReadOnly="True" IsTabStop="False"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -226,7 +216,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <Button Content=" . . . " Command="{Binding DataContext.PsCmd[mInitializeTermCatalog], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" ToolTip="{Binding DataContext.UIString[ClassTerms_TT05], FallbackValue='No hand typed values, select from Catalog...', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Grid.Column="1" Padding="5,1" IsTabStop="False" MinWidth="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                    <Button Content=" . . . " Command="{Binding DataContext.PsCmd[mInitializeTermExpander], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" ToolTip="{Binding DataContext.UIString[ClassTerms_TT05], FallbackValue='No hand typed values, select from Catalog...', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Grid.Column="1" Padding="5,1" IsTabStop="False" MinWidth="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -237,7 +227,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <Button Content=" . . . " Command="{Binding DataContext.PsCmd[mInitializeTermCatalog], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" ToolTip="{Binding DataContext.UIString[ClassTerms_TT05], FallbackValue='No hand typed values, select from Catalog...', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Grid.Column="1" IsEnabled="{Binding PsVal[InvertReadOnly]}" Padding="5,1" IsTabStop="False" MinWidth="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                    <Button Content=" . . . " Command="{Binding DataContext.PsCmd[mInitializeTermExpander], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" ToolTip="{Binding DataContext.UIString[ClassTerms_TT05], FallbackValue='No hand typed values, select from Catalog...', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Grid.Column="1" IsEnabled="{Binding PsVal[InvertReadOnly]}" Padding="5,1" IsTabStop="False" MinWidth="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -383,7 +373,7 @@
     <TabControl >
         <TabItem x:Name="tabProperties" Header="{Binding UIString[MSDCE_MultiTab_01], FallbackValue=Properties}">
             <AdornerDecorator>
-                <Grid x:Name="grdMain" Margin="5,10,5,5" >
+                <Grid x:Name="grdMain" Margin="5,10,5,5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto"/>
@@ -703,7 +693,7 @@
                     </Expander>
                     <Expander x:Name="expTermSearch" Grid.Column="2" Header="" ExpandDirection="Right" IsExpanded="False" Visibility="Collapsed" Grid.RowSpan="4" MinHeight="360" VerticalAlignment="Stretch" MaxHeight="{Binding ActualHeight, ElementName=grdMain, Mode=OneWay}" MaxWidth="800">
                         <Border>
-                            <Grid x:Name="grdTermCatalog" Margin="5,0" >
+                            <Grid x:Name="grdTermCatalog" Margin="5,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -750,15 +740,45 @@
                                 </Grid>
                                 <GroupBox x:Name="grpClassification" Header="{Binding UIString[ClassTerms_14], FallbackValue=Classification Filter}" Grid.Row="1">
                                     <Grid x:Name="grdContentFilter">
-                                        <WrapPanel x:Name="wrpClassification" Grid.Row="2">
-                                            <Button x:Name="btnClsReset" Command="{Binding PsCmd[mResetClassFilter]}" Content="X" FontWeight="Bold" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue=Reset Selection}" Foreground="Red" Width="24" Height="24">
-                                                <Button.Template>
-                                                    <ControlTemplate>
-                                                        <Border BorderThickness="1">
-                                                            <Image x:Name="imgTemplateReset" Source="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\filter-delete.ico" Margin="2" />
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Button.Template>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="lbl_ClsStd" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
+                                        <ComboBox x:Name="cmb_ClsStd" Text="{Binding Prop[_XLTN_CLSSTANDARD].Value}" VerticalAlignment="Center" ToolTipService.ShowOnDisabled="True" Grid.Column="1" MinWidth="140">
+                                            <ComboBoxItem x:Name="IEC61355" Content="IEC 61355"/>
+                                            <ComboBoxItem x:Name="eClass" Content="eCl@ss"/>
+                                            <ComboBoxItem x:Name="Company" Content="PDMC-Sample"/>
+                                            <ComboBoxItem x:Name="Uniclass" Content="Uniclass" />
+                                        </ComboBox>
+                                        <WrapPanel x:Name="wrpClassification" Grid.Row="1" Grid.ColumnSpan="3">
+                                            <Button x:Name="btnClsReset" Command="{Binding PsCmd[mResetTermClassFilter]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue=Reset Selection}" HorizontalAlignment="Left" Height="24" Margin="0,0,5,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                                        <Image.Style>
+                                                            <Style>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchNotSearched_16.png" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchNotSearched_16.png" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Image.Style>
+                                                    </Image>
+                                                    <Label Content="{Binding UIString[Adsk.QS.ItemSearch_07a], FallbackValue=Clear}" Grid.Column="1" Padding="3,0,5,0" />
+                                                </Grid>
                                             </Button>
                                         </WrapPanel>
                                     </Grid>
@@ -805,23 +825,18 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
+                                            <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <CheckBox x:Name="chkDE" Content="{Binding UIString[ClassTerms_02], FallbackValue=German}"/>
-                                        <CheckBox x:Name="chkEN" Content="{Binding UIString[ClassTerms_03], FallbackValue=English}" Grid.Column="1"/>
+                                        <CheckBox x:Name="chkEN" Content="{Binding UIString[ClassTerms_03], FallbackValue=English}" IsChecked="True" IsEnabled="False"/>
+                                        <CheckBox x:Name="chkDE" Content="{Binding UIString[ClassTerms_02], FallbackValue=German}" Grid.Column="1"/>
                                         <CheckBox x:Name="chkFR" Content="{Binding UIString[ClassTerms_04], FallbackValue=French}" Grid.Column="2"/>
-                                        <CheckBox x:Name="chkIT" Content="{Binding UIString[ClassTerms_05], FallbackValue=Italian}" Grid.Column="3"/>
+                                        <CheckBox x:Name="chkES" Content="{Binding UIString[ClassTerms_05a], FallbackValue=Spanish}" Grid.Column="3"/>
+                                        <CheckBox x:Name="chkIT" Content="{Binding UIString[ClassTerms_05], FallbackValue=Italian}" Grid.Column="4"/>
                                     </Grid>
                                 </GroupBox>
                                 <TextBox x:Name="txtTermStatusMsg" Grid.Row="4" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalAlignment="Top" BorderThickness="0" Visibility="Collapsed" Background="#FFF6FB82" Foreground="Black"/>
                                 <DataGrid x:Name="dataGrdTermsFound" AutoGenerateColumns="False" IsTabStop="False" IsReadOnly="True" ColumnWidth="*" ColumnHeaderHeight="26" Cursor="Hand" ClipboardCopyMode="IncludeHeader" Focusable="False" VerticalScrollBarVisibility="Auto" Grid.Row="5" RowHeight="24" Margin="0,2,0,0">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Term_DE}" Width="Auto" MinWidth="140" MaxWidth="200">
-                                            <DataGridTextColumn.HeaderTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding DataContext.UIString[ClassTerms_02], FallbackValue=German, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
-                                                </DataTemplate>
-                                            </DataGridTextColumn.HeaderTemplate>
-                                        </DataGridTextColumn>
                                         <DataGridTextColumn Binding="{Binding Term_EN}" Width="Auto" MinWidth="140" MaxWidth="200">
                                             <DataGridTextColumn.HeaderTemplate>
                                                 <DataTemplate>
@@ -829,10 +844,24 @@
                                                 </DataTemplate>
                                             </DataGridTextColumn.HeaderTemplate>
                                         </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding Term_DE}" Width="Auto" MinWidth="140" MaxWidth="200">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding DataContext.UIString[ClassTerms_02], FallbackValue=German, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
                                         <DataGridTextColumn Binding="{Binding Term_FR}" Width="Auto" MinWidth="140" MaxWidth="200">
                                             <DataGridTextColumn.HeaderTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{Binding DataContext.UIString[ClassTerms_04], FallbackValue=French, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Binding="{Binding Term_ES}" Width="Auto" MinWidth="140" MaxWidth="200">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding DataContext.UIString[ClassTerms_05a], FallbackValue=Spanish, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                                                 </DataTemplate>
                                             </DataGridTextColumn.HeaderTemplate>
                                         </DataGridTextColumn>
@@ -1093,7 +1122,7 @@
                 </Grid>
             </AdornerDecorator>
         </TabItem>
-        <TabItem x:Name="tabClassification" Header="{Binding UIString[Adsk.QS.Classification_03], FallbackValue=Classification}" >
+        <TabItem x:Name="tabClassification" Header="{Binding UIString[Adsk.QS.Classification_03], FallbackValue=Classification}">
             <AdornerDecorator>
                 <Grid x:Name="grdClassification" Width="{Binding ActualWidth, ElementName=grdMain, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=grdMain, Mode=OneWay}" Margin="5,10,5,5">
                     <Grid.RowDefinitions>
