@@ -976,7 +976,6 @@
                         <Grid x:Name="grdContentFilter">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -984,36 +983,36 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Label x:Name="lbl_ClsStd" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
-                            <ComboBox x:Name="cmb_ClsStd" Text="{Binding Prop[_XLTN_CLSSTANDARD].Value}" VerticalAlignment="Center" ToolTipService.ShowOnDisabled="True" Grid.Column="1" MinWidth="140" >
+                            <ComboBox x:Name="cmb_ClsStd" Text="{Binding Prop[_XLTN_CLSSTANDARD].Value}" VerticalAlignment="Center" ToolTipService.ShowOnDisabled="True" Grid.Column="1" MinWidth="140" HorizontalAlignment="Left">
                                 <ComboBoxItem x:Name="IEC61355" Content="IEC 61355"/>
                                 <ComboBoxItem x:Name="eClass" Content="eCl@ss"/>
                                 <ComboBoxItem x:Name="Company" Content="PDMC-Sample"/>
                                 <ComboBoxItem x:Name="Uniclass" Content="Uniclass" />
                             </ComboBox>
-                            <WrapPanel x:Name="wrpClassification" Grid.Row="1" Grid.ColumnSpan="3">
-                                <Button x:Name="btnClsReset" Command="{Binding PsCmd[mResetTermClassFilter]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue=Reset Selection}" HorizontalAlignment="Left" Height="24" Margin="0,0,5,0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Image Width="16" Height="16" StretchDirection="DownOnly">
-                                            <Image.Style>
-                                                <Style>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchNotSearched_16.png" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchNotSearched_16.png" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Image.Style>
-                                        </Image>
-                                        <Label Content="{Binding UIString[Adsk.QS.ItemSearch_07a], FallbackValue=Clear}" Grid.Column="1" Padding="3,0,5,0" />
-                                    </Grid>
-                                </Button>
+                            <Button x:Name="btnClsReset" Grid.Row="1" Command="{Binding PsCmd[mResetTermClassFilter]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue=Reset Selection}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="24" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Width="16" Height="16" StretchDirection="DownOnly">
+                                        <Image.Style>
+                                            <Style>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\BasicSearchNotSearched_16.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\BasicSearchNotSearched_16.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <Label Content="{Binding UIString[Adsk.QS.ItemSearch_07a], FallbackValue=Clear}" Grid.Column="1" Padding="3,0,5,0" />
+                                </Grid>
+                            </Button>
+                            <WrapPanel x:Name="wrpClassification" Grid.Row="1" Grid.Column="1">
                             </WrapPanel>
                         </Grid>
                     </GroupBox>

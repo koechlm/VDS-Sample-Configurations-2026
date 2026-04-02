@@ -534,7 +534,7 @@
   <UIString ID="ClassTerms_TT04">Keine manuelle Eingabe zulässig; wählen sie eine Benennung aus dem Katalog</UIString>
   <UIString ID="ClassTerms_TT05">Öffnet Benennungskatalog</UIString>
   <UIString ID="ClassTerms_TT06">Verwenden sie '*' für gekürzte Begriffe</UIString>
-  <UIString ID="ClassTerms_TT07">Klassifizierung zurücksetzen</UIString>
+  <UIString ID="ClassTerms_TT07">Setzt Filter und Suchergebnis zurück</UIString>
   <UIString ID="ClassTerms_MSG01">Sie setzen gerade die Klassifizierung zurück, wollen Sie fortfahren?"</UIString>
   <UIString ID="ClassTerms_MSG02">Anzeige auf Seitengröße {0} von {1} möglichen begrenzt; grenzen Sie die Suche ein.</UIString>
   <UIString ID="ClassTerms_MSG03">Keine übereinstimmenden Begriffe gefunden</UIString>
