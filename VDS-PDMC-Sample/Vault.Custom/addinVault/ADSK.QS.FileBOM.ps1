@@ -14,7 +14,7 @@ class mBom {
 	[mBomRow[]] $BOMItems	
 }
 
-# NEW in VDS-MFG-Sample and VDS-PDMC-Sample 2026.2.0: the functions mGetMdlStates and GetFileBOM moved to the VdsUtilities.VltHelpers classfor extended support and better debugging
+# NEW in VDS-MFG-Sample and VDS-PDMC-Sample 2026.2.1: the functions mGetMdlStates and GetFileBOM moved to the VdsUtilities.VltHelpers class for extended support and better debugging
 # This script sample continues to demonstrates how to navigate from a BOM component in the file BOM to the corresponding file or item in Vault Explorer, and how to implement a search function to filter the BOM list.
 
 function mGoToCadBomCompFile {
