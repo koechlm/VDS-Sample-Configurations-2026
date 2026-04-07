@@ -684,7 +684,6 @@ function mApplyClassification() {
 			$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
 			if ($mFileUpdated) {
 				$dsDiag.Trace("File property definitions updated successfully.")
-				mUpdateClsPropValues
 			}
 			else {
 				$dsDiag.Trace("File property definitions update returned false, no changes applied.")
