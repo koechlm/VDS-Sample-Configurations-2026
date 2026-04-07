@@ -867,7 +867,7 @@ function mAddClsLevelCmbChild ($data) {
 	# Terms are anything in mClsObjectCustentDefIds that is NOT a Class Object
 	$mTermObjects += $children | Where-Object { 
 		($_.CustEntDefId -in $Global:mClsObjectCustentDefIds) -and
-		($_.CustEntId -ne $Global:mClassCustentDef.Id)
+		($_.CustEntDefId -ne $Global:mClassCustentDef.Id)
 	}
 
 	$dsDiag.Trace("Filtered children: ClassLevels=$($mClassLevelObjects.Count), ClassObjects=$($mClassObjects.Count), Terms=$($mTermObjects.Count)")
