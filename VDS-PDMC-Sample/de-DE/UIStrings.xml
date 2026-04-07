@@ -167,6 +167,7 @@
   <!--Vault user Defined Properties Displaynames for dynamic properties-->
   <!--use to change display name for localization or user friendly naming-->
   <UIString ID="Comments">Kommentare</UIString>
+  <UIString ID="CommentsDE">Kommentare DE</UIString>
   <UIString ID="Manager">Manager</UIString>
   <UIString ID="Subject">Thema</UIString>
   <UIString ID="CreateUserName">Erstellt von</UIString>
@@ -416,6 +417,7 @@
   <UIString ID="Adsk.QS.ItemSearch_05">Kategoriename</UIString>
   <UIString ID="Adsk.QS.ItemSearch_06">Stammdaten  (Suchergebnis)</UIString>
   <UIString ID="Adsk.QS.ItemSearch_07">Suche</UIString>
+    <UIString ID="Adsk.QS.ItemSearch_07a">Zurücksetzen</UIString>
   <UIString ID="Adsk.QS.ItemSearch_08">Achtung: Das Ergebnis beruht auf einem unvollständigen Suchindex. Wenden Sie sich an den Administrator, wenn diese Meldung immer erscheint.</UIString>
   <UIString ID="Adsk.QS.ItemSearch_09">Das Suchergebnis ist beschränkt auf die Seitengröße {0}; Gesamtzahl zutreffender Artikel: {1}. Verfeinern Sie die Suchkritieren für eine erneute Suche.</UIString>
   <UIString ID="Adsk.QS.ItemSearch_10">Erweitern für Suchabfragen</UIString>
@@ -470,11 +472,14 @@
   <UIString ID="Adsk.Qs.ClassMnu_38">Untergruppe bearbeiten...</UIString>
   <UIString ID="Adsk.Qs.ClassMnu_39">Bestehende Untergruppe bearbeiten</UIString>
   <!-- Class Menu Definitions end-->
-  <UIString ID="Adsk.QS.ClassLevel_00">Sachgebiet</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_01">Hauptgruppe</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_02">Gruppe</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_03">Untergruppe</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_04">Klasse</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_01">Klassifizierung 1</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_02">Klassifizierung 2</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_03">Klassifizierung 3</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_04">Klassifizierung 4</UIString>
+  <UIString ID="Adsk.QS.ClsObject">Klasse</UIString>
+  <UIString ID="Adsk.QS.ClsStandard">Norm</UIString> <!--Important Note: this translation must match the PropertyTranslation CLSSTANDARD-->
+  <UIString ID="Adsk.QS.ClsCode">Schlüssel</UIString>
+  <UIString ID="Adsk.QS.ClsLevelCode">Schlüssel Ebene</UIString>
   <UIString ID="Adsk.QS.Classification_00">Klasse</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Wert</UIString>
@@ -491,6 +496,8 @@
   <UIString ID="Adsk.QS.Classification_13">Der Benutzerdefinierte Arbeitsbereich 'Klassen' steht nicht zur Verfügung. Wenden Sie sich an ihren Administrator.</UIString>
   <UIString ID="Adsk.QS.Classification_14">Klassifizierung d. primär verknüpften Datei</UIString>
   <UIString ID="Adsk.QS.Classification_15">Schreibgeschützt: Wert wird aus Hierarchiepfad übernommen</UIString>
+  <UIString ID="Adsk.QS.ClsTT_01">Wählen Sie eine Klassifizierungsnorm.</UIString>
+  <UIString ID="Adsk.QS.ClsTT_02">Setzen Sie die Klassifizierung zurück (X), wenn Sie die Norm ändern wollen.</UIString>
   <!--Classification end-->
 
   <!--CatalogTermsTranslations-->
@@ -504,6 +511,7 @@
   <UIString ID="ClassTerms_03">Englisch</UIString>
   <UIString ID="ClassTerms_04">Französisch</UIString>
   <UIString ID="ClassTerms_05">Italienisch</UIString>
+  <UIString ID="ClassTerms_05a">Spanisch</UIString>
   <UIString ID="ClassTerms_06">Keine übereinstimmende Begriffe vorhanden.</UIString>
   <UIString ID="ClassTerms_07">Klassifizierung</UIString>
   <UIString ID="ClassTerms_08">Kategoriename</UIString>
@@ -511,9 +519,11 @@
   <UIString ID="ClassTerms_10">Begriff EN</UIString>
   <UIString ID="ClassTerms_11">Begriff FR</UIString>
   <UIString ID="ClassTerms_12">Begriff IT</UIString>
+  <UIString ID="ClassTerms_12a">Begriff ES</UIString>
+  <UIString ID="ClassTerms_12b">Ist manuelle Eingabe</UIString>
   <UIString ID="ClassTerms_13">Katalog...</UIString>
   <UIString ID="ClassTerms_14">Filter</UIString>
-  <UIString ID="ClassTerms_15">Zusätzliche Sprachen</UIString>
+  <UIString ID="ClassTerms_15">Filtern v. Sprachen</UIString>
   <UIString ID="ClassTerms_16">Search text to match term definition, use "*" and/or add Languages to widen the scope</UIString>
   <UIString ID="ClassTerms_BTN8">Suche</UIString>
   <UIString ID="ClassTerms_BTN9">Begriff in Titel Feld kopieren</UIString>
@@ -525,7 +535,7 @@
   <UIString ID="ClassTerms_TT04">Keine manuelle Eingabe zulässig; wählen sie eine Benennung aus dem Katalog</UIString>
   <UIString ID="ClassTerms_TT05">Öffnet Benennungskatalog</UIString>
   <UIString ID="ClassTerms_TT06">Verwenden sie '*' für gekürzte Begriffe</UIString>
-  <UIString ID="ClassTerms_TT07">Klassifizierung zurücksetzen</UIString>
+  <UIString ID="ClassTerms_TT07">Setzt Filter und Suchergebnis zurück</UIString>
   <UIString ID="ClassTerms_MSG01">Sie setzen gerade die Klassifizierung zurück, wollen Sie fortfahren?"</UIString>
   <UIString ID="ClassTerms_MSG02">Anzeige auf Seitengröße {0} von {1} möglichen begrenzt; grenzen Sie die Suche ein.</UIString>
   <UIString ID="ClassTerms_MSG03">Keine übereinstimmenden Begriffe gefunden</UIString>
@@ -595,6 +605,11 @@
   <UIString ID="c1311f9f-daff-4d62-8f1a-cf949a5e43e2">Freigabe Kunde erforderlich</UIString>
   <UIString ID="4289da0f-984f-47b2-b6ed-ff2cafbe7a9b">Freigabe Kunde von</UIString>
   <UIString ID="bb92906f-75ca-415b-b0c6-242e4e02d58b">Freigabe Kunde Datum</UIString> 
-  <!--Revision Property Tab end-->  
+  <!--Revision Property Tab end-->
+
+  <!--UIStrings for Web Link Property, supporting Markdown text, e.g. [Link](www.autodesk.com)-->
+  <UIString ID="ADSK-WebLink-TT01">Link kann nicht aus leerer Eigenschaft extrahiert werden.</UIString>
+  <UIString ID="ADSK-WebLink-TT02">Klicken zum Öffnen des Links: </UIString>
+  <!--Web Link Property end-->  
 
 </UIStrings>

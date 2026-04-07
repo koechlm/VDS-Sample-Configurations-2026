@@ -83,8 +83,8 @@ function InitializeTabWindow {
 }
 
 function InitializeWindow {	      
-	#$dsDiag.ShowLog()
-	#$dsDiag.Clear()
+	 #$dsDiag.ShowLog()
+	 #$dsDiag.Clear()
 
 	#begin rules applying commonly
 	$Prop["_Category"].add_PropertyChanged({
@@ -211,7 +211,6 @@ function InitializeWindow {
 			}
 		}
 
-
 		#region CustomObjectClassifiedWindow
 		"CustomObjectClassifiedWindow" {      
 			IF ($Prop["_CreateMode"].Value -eq $true) {
@@ -226,59 +225,108 @@ function InitializeWindow {
 				$dsWindow.Title = "New $($Prop["_Category"].Value)..."
 
 				#synchronize property with CO name
-				if ($Prop["_Category"].Value -eq "Class") {
+				if ($Prop["_Category"].Value -eq $UIString["Adsk.QS.ClsObject"]) {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-							$Prop["Class"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-						})
+						$Prop["_XLTN_CLSOBJECT"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+					})
 
-					$Prop["Class"].add_PropertyChanged({
-							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Class"].Value
-						})
+					$Prop["_XLTN_CLSOBJECT"].add_PropertyChanged({
+						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["_XLTN_CLSOBJECT"].Value
+					})
 				}
 
-				if ($Prop["_Category"].Value -eq "Term") {
+				if ($Prop["_Category"].Value -eq $UIString["ClassTerms_00"]) {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-							$Prop["Term EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-						})
+						$Prop["_XLTN_TERM-EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+					})
 
-					$Prop["Term EN"].add_PropertyChanged({
-							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Term EN"].Value
-						})
+					$Prop["_XLTN_TERM-EN"].add_PropertyChanged({
+						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["_XLTN_TERM-EN"].Value
+					})
+				}
+
+				# enable standard selection
+				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
+				$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
+				
+				$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({					
+					param($sender, $e)
+
+					$mBreadCrumb = $dsWindow.FindName("wrpClassification")
+					$children = $mBreadCrumb.Children.Count - 1					
+					while ($children -gt 0 ) {
+						$cmb = $mBreadCrumb.Children[$children]
+						$mBreadCrumb.UnregisterName($cmb.Name) #unregister the name to correct for later addition/registration
+						$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
+						$children--;
+					}
+
+					mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $sender.SelectedItem.Content #-_classes $_classes #enables classification for class objects
+
+				})		
+			}
+			
+			# Add property changed handlers for classification levels to update ClsCode
+			# This handles cases where levels are changed programmatically or via UI
+			$clsLevelProps = @(
+				$UIString["Adsk.QS.ClsLevel_01"],
+				$UIString["Adsk.QS.ClsLevel_02"],
+				$UIString["Adsk.QS.ClsLevel_03"],
+				$UIString["Adsk.QS.ClsLevel_04"],
+				$UIString["Adsk.QS.ClsLevelCode"] # the current object's own level code triggers update as well
+			)
+			
+			foreach ($levelProp in $clsLevelProps) {
+				if ($Prop[$levelProp]) {
+					$Prop[$levelProp].add_PropertyChanged({
+						param($sender, $e)
+						# Update ClsCode when any classification level changes
+						# Skip update if in read-only mode (changes won't be saved)
+						if ($dsWindow.FindName("wrpClassification") -and $Prop["_ReadOnly"].Value -ne $true) {
+							mUpdateClsCode
+						}
+					})
 				}
 			}
 
 			#region EditMode
 			IF ($Prop["_EditMode"].Value -eq $true) {
 				if ($Prop["_ReadOnly"].Value -eq $true) {
-					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value) - $($UIString["LBL26"])"
+					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["_XLTN_NAME"].Value) - $($UIString["LBL26"])"
 				}
 				else {
-					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value)"
+					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["_XLTN_NAME"].Value)"
 				}
 
 				#read existing classification elements
 				$_classes = @()
 				Try {
 					#likely not all properties are used...
-					If ($Prop["_XLTN_SEGMENT"].Value.Length -gt 1) {
-						$_classes += $Prop["_XLTN_SEGMENT"].Value
-						If ($Prop["_XLTN_MAINGROUP"].Value.Length -gt 1) {
-							$_classes += $Prop["_XLTN_MAINGROUP"].Value
-							If ($Prop["_XLTN_GROUP"].Value.Length -gt 1) {
-								$_classes += $Prop["_XLTN_GROUP"].Value
-								If ($Prop["_XLTN_SUBGROUP"].Value.Length -gt 1) {
-									$_classes += $Prop["_XLTN_SUBGROUP"].Value
+					If ($Prop["_XLTN_CLSLEVEL1"].Value.Length -gt 1) {
+						$_classes += $Prop["_XLTN_CLSLEVEL1"].Value
+						If ($Prop["_XLTN_CLSLEVEL2"].Value.Length -gt 1) {
+							$_classes += $Prop["_XLTN_CLSLEVEL2"].Value
+							If ($Prop["_XLTN_CLSLEVEL3"].Value.Length -gt 1) {
+								$_classes += $Prop["_XLTN_CLSLEVEL3"].Value
+								If ($Prop["_XLTN_CLSLEVEL4"].Value.Length -gt 1) {
+									$_classes += $Prop["_XLTN_CLSLEVEL4"].Value
 								}
 							}
 						}
 					}
 				}
 				catch {}
+				
+				$dsWindow.FindName("cmb_ClsStd").Text = $Prop["_XLTN_CLSSTANDARD"].Value
+				mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $Prop["_XLTN_CLSSTANDARD"].Value -_classes $_classes #enables classification for class objects
+				
+				# Update ClsCode based on initialized breadcrumb selections in edit mode
+				# Only update if NOT read-only (changes would not save in read-only mode)
+				if ($Prop["_ReadOnly"].Value -ne $true) {
+					mUpdateClsCode
+				}
 			}
 			#endregion EditMode
-			mAddCoCombo -_CoName "Segment" -_classes $_classes #enables classification for class objects
-			# ToDo: createmode: activate last used classification
-			
 		}
 		#endregion CustomObjectClassifiedWindow
 		
@@ -399,6 +447,100 @@ function OnTabContextChanged {
 	#$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile) not working in powershell 7.2.0
 	#Just use System.IO.FileInfo as the workaround for powershell 7.2.0
 	$xamlFile = ([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile)).Name
+	
+	# folder and custom objects may have a Web Link property; use Library functions to extract the link and tooltip text
+	if ($Prop["_XLTN_WEBLINK"].Value -ne $nullOrEmpty) {
+		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
+			$dsWindow.FindName("WebLinkDummy").Text = ExtractMarkdownText $Prop["_XLTN_WEBLINK"].Value
+			$dsWindow.FindName("ToolTipDummy").Text = ExtractToolTip $Prop["_XLTN_WEBLINK"].Value	<# Action to perform if the condition is true #>
+		}
+	}
+	else {
+		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
+			$dsWindow.FindName("WebLinkDummy").Text = ""
+			$dsWindow.FindName("ToolTipDummy").Text = $UIString["ADSK-WebLink-TT01"]	<# Action to perform if the condition is true #>
+		}
+	}
+
+	if ($xamlFile -eq "Adsk.QS.ClassifiedObject.DataSheet.xaml") {
+		
+		# level 1 is not empty for all classification standards
+		$dsWindow.FindName("treeViewClsLevel1").Header = "$($UIString["Adsk.QS.ClsLevel_01"]) -- $($Prop["_XLTN_CLSLEVEL1"].Value)"
+		$dsWindow.FindName("treeViewClsLevel2").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel3").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel4").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel5").Visibility = "Collapsed"
+
+		# activate treeview items per classification level and objecttype
+		$ObjectsToAssign = @($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
+		
+		if ($Prop["_XLTN_CLSLEVEL2"].Value -eq $nullOrEmpty) {
+			# the current object is a level 2 object: fill level 2 only
+			# class objects and structure objects have different labels
+			if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+			}
+			else {
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_NAME"].Value)"
+			}
+			$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+			$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Bold"
+		}
+		else {
+			if ($Prop["_XLTN_CLSLEVEL3"].Value -eq $nullOrEmpty) {
+				# the current object is a level 3 object: fill level 2 and 3
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+				$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+				$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					# class objects and structure objects have different labels
+					if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+						$dsWindow.FindName("treeViewClsLevel3").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+					else {
+						$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+				$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+				$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Bold"
+			}
+			else {
+				if ($Prop["_XLTN_CLSLEVEL4"].Value -eq $nullOrEmpty) {
+					# the current object is a level 4 object: fill level 2, 3 and 4
+					$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+					$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_CLSLEVEL3"].Value)"
+					$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Normal"
+					# class objects and structure objects have different labels
+					if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+						$dsWindow.FindName("treeViewClsLevel4").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+					else {
+						$dsWindow.FindName("treeViewClsLevel4").Header = "$($UIString["Adsk.QS.ClsLevel_04"]) -- $($Prop["_XLTN_NAME"].Value)"
+					}	
+					$dsWindow.FindName("treeViewClsLevel4").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel4").FontWeight = "Bold"
+				}
+				else {
+					# the current object is a level 5 object: fill level 2, 3, 4 and 5
+					$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+					$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_CLSLEVEL3"].Value)"
+					$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel4").Header = "$($UIString["Adsk.QS.ClsLevel_04"]) -- $($Prop["_XLTN_CLSLEVEL4"].Value)"
+					$dsWindow.FindName("treeViewClsLevel4").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel4").FontWeight = "Normal"
+					# level 5 are class objects only
+					$dsWindow.FindName("treeViewClsLevel4").IsExpanded = $true
+					$dsWindow.FindName("treeViewClsLevel5").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"						
+					$dsWindow.FindName("treeViewClsLevel5").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel5").FontWeight = "Bold"
+				}
+			}
+		}
+	}
 
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
@@ -1058,4 +1200,3 @@ function GetTemplateFolders {
 		return $_
 	}
 }
-

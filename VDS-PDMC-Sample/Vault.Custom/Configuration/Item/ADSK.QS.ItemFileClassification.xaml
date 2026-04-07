@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
-                <Setter Property="Height" Value="24"></Setter>
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
@@ -26,8 +26,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" 
-                                         VerticalContentAlignment="Center" BorderThickness="0"/>
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" VerticalContentAlignment="Center" BorderThickness="0" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -192,7 +191,7 @@
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
             <Label x:Name="lblActiveClass" Content="{Binding UIString[Adsk.QS.Classification_06], FallbackValue=Active Classification}"  Grid.Row="2" />
-            <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Text="{Binding Prop[_XLTN_CLASS].Value}" Grid.Row="2" Grid.Column="1" />
+            <TextBox x:Name="txtActiveClass" IsHitTestVisible="False" Text="{Binding Prop[_XLTN_CLSOBJECT].Value}" Grid.Row="2" Grid.Column="1" />
             <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue=Class Properties}" Grid.Row="3" Height="Auto" />
             <DataGrid x:Name="dtgrdClassProps" Grid.Row="3" AutoGenerateColumns="False" Grid.Column="1" SelectionUnit="Cell" Grid.ColumnSpan="3" HeadersVisibility="Column" >
                 <DataGrid.Columns>
