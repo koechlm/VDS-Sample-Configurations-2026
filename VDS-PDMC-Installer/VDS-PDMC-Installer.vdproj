@@ -57,6 +57,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_026C8B3F266F4A03A5ED91568FE84324"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_027EA2ADCE874E6D896FF3FACD1E8335"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -178,6 +184,12 @@
         "Entry"
         {
         "MsmKey" = "8:_083F725B7DF048088C45D27500F2F47F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0883365B61864981A6A41A51ABE5461B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -393,12 +405,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1A1FF54387A942679DE2AE9D781F0226"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1B715EBB069B40DB9699A4BAFA1FF701"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -520,6 +526,12 @@
         "Entry"
         {
         "MsmKey" = "8:_240F301EFF034BE29CBB880D3467A515"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_24EC9AB5F5424531A74C29E8409C3282"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1186,6 +1198,12 @@
         "Entry"
         {
         "MsmKey" = "8:_48648BE00E0440F780E7F6A1C845784C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4870FEF9C8B443C894B6EE96B98F7F42"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2013,12 +2031,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7710CFBB832246D8BED9C8C81CC31D85"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_77B2747B862A430799CB16ACF9C1465F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2158,12 +2170,6 @@
         "Entry"
         {
         "MsmKey" = "8:_7EC8481655DE41E58E6C20333DA5C6AC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7EE4B24B89A042D4BFFFD987E2446B2C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2523,12 +2529,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9860F5E515344847BB3DD181A2A24E4C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_98679A748DD9494AA5312B2853EE1A76"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2626,6 +2626,12 @@
         "Entry"
         {
         "MsmKey" = "8:_A09914E48CAF4F1AAA662090FEF2FC8A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A12F0512617B4E4C939F26933B42889F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3003,6 +3009,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BA22F9C38D60496CA9FB7036D303EE43"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_BB9446576D3A46BA94E5AAC5859E5CAB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3015,19 +3027,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BBEADB377D9042AEBA7A3565A6C1E1DE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_BC13B69B81C04792AE0B0777A1D19B5D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_BC1DE537F6D14173B78307500C4818CF"
+        "MsmKey" = "8:_BD6C2E2FDE114AAC8A392E9AA56DA5F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3105,12 +3111,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C2874F6DBCBA4F9C8C973E311C108071"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C28AAB70F0504AFA908216DB588CA03A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3178,18 +3178,6 @@
         "Entry"
         {
         "MsmKey" = "8:_C576D021440445D59A1063D16098C534"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C592561BE0B644569111E6370664C2AC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C60396986AAD4430B52C97C4693811D7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3633,6 +3621,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_DB7A59AE2F9047C5B4889EA2AF5C1D52"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DC052E3BB253481C945E9BA8D0FFCC0B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3664,6 +3658,12 @@
         "Entry"
         {
         "MsmKey" = "8:_DE176E97D691443E96E2826B34DC8CCE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DE20086968404596B16D271E494EF096"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3820,6 +3820,12 @@
         "Entry"
         {
         "MsmKey" = "8:_E69E99CB1FEF42E595AF5AF21CED5C60"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E70BC321C82A4966A9D9BC77C7808266"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -4024,12 +4030,6 @@
         "Entry"
         {
         "MsmKey" = "8:_F258AF99D4E84F0BA92A2309E08E27C7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F27A8F79D0C54D889E11EAF229F63978"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -4515,6 +4515,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_026C8B3F266F4A03A5ED91568FE84324"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\Class Level 4\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_744406A38A1645C7B0390C569F920DCE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_027EA2ADCE874E6D896FF3FACD1E8335"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\V.6.2Create.EditOrganisations.html"
@@ -4921,6 +4941,26 @@
             "TargetName" = "8:Refresh_16.ico"
             "Tag" = "8:"
             "Folder" = "8:_DCC83700450E4DF99C53BF0646AB5EF0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0883365B61864981A6A41A51ABE5461B"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\Class Level 1\\ADSK.QS.CUSTENT.Datasheet.xaml"
+            "TargetName" = "8:ADSK.QS.CUSTENT.Datasheet.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_953639E3777947DAB8D80ED21AE35748"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -5635,26 +5675,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1A1FF54387A942679DE2AE9D781F0226"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\Sub Group\\Adsk.QS.SubGroup.DataSheet.xaml"
-            "TargetName" = "8:Adsk.QS.SubGroup.DataSheet.xaml"
-            "Tag" = "8:"
-            "Folder" = "8:_744406A38A1645C7B0390C569F920DCE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1B715EBB069B40DB9699A4BAFA1FF701"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\NotesImages\\Topic53NotesImage5.jpg"
@@ -6061,6 +6081,26 @@
             "TargetName" = "8:INEST_32x32.png"
             "Tag" = "8:"
             "Folder" = "8:_B9F9A3D3C418405296A5CF4E4CB1DA93"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_24EC9AB5F5424531A74C29E8409C3282"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\Class Level 2\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_456D5791C44A4EC1B95B98F78E20E401"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -8146,6 +8186,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4870FEF9C8B443C894B6EE96B98F7F42"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\Class Object\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_8F9D454ED7AE4FD891ACC1DBA6DA6954"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_487D4E32019F400D81E49956FFB15729"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\NewStandardFolder.ico"
@@ -8990,7 +9050,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:VdsSampleUtilities, Version=2026.31.2.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:VdsSampleUtilities, Version=2026.31.2.1, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_56F413376D2D4E0CA071A6EE742FC06D"
@@ -10770,26 +10830,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7710CFBB832246D8BED9C8C81CC31D85"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\Term\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
-            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
-            "Tag" = "8:"
-            "Folder" = "8:_AC66A3A7846B4D2CA7520386024D018F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_77B2747B862A430799CB16ACF9C1465F"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\Res\\code\\boxController.js"
@@ -11256,26 +11296,6 @@
             "TargetName" = "8:ItemMaster_32.png"
             "Tag" = "8:"
             "Folder" = "8:_B9F9A3D3C418405296A5CF4E4CB1DA93"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7EE4B24B89A042D4BFFFD987E2446B2C"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\ADSK.QS.SelectClassification.xaml"
-            "TargetName" = "8:ADSK.QS.SelectClassification.xaml"
-            "Tag" = "8:"
-            "Folder" = "8:_8B93F70EB9044A648D1328DB154DF119"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -12470,26 +12490,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9860F5E515344847BB3DD181A2A24E4C"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\addinVault\\ADSK.QS.IEC61355.psm1"
-            "TargetName" = "8:ADSK.QS.IEC61355.psm1"
-            "Tag" = "8:"
-            "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98679A748DD9494AA5312B2853EE1A76"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\IconsDark\\Unknown_16x16.png"
@@ -12816,6 +12816,26 @@
             "TargetName" = "8:QuickFind_Search_16.png"
             "Tag" = "8:"
             "Folder" = "8:_B9F9A3D3C418405296A5CF4E4CB1DA93"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A12F0512617B4E4C939F26933B42889F"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\addinVault\\ADSK.TS.FileClassification.ps1"
+            "TargetName" = "8:ADSK.TS.FileClassification.ps1"
+            "Tag" = "8:"
+            "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -14041,6 +14061,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BA22F9C38D60496CA9FB7036D303EE43"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\Class Level 3\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_84181DA7F9B0480E81E59AC2D62A6949"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BB9446576D3A46BA94E5AAC5859E5CAB"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\cancel.ico"
@@ -14081,26 +14121,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BBEADB377D9042AEBA7A3565A6C1E1DE"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\addinVault\\ADSK.QS.CustomObjectsClassified.psm1"
-            "TargetName" = "8:ADSK.QS.CustomObjectsClassified.psm1"
-            "Tag" = "8:"
-            "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BC13B69B81C04792AE0B0777A1D19B5D"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault\\\\Configuration\\Item\\Icons\\mdb.png"
@@ -14121,12 +14141,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BC1DE537F6D14173B78307500C4818CF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD6C2E2FDE114AAC8A392E9AA56DA5F2"
             {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\Segment\\ADSK.QS.CUSTENT.Datasheet.xaml"
-            "TargetName" = "8:ADSK.QS.CUSTENT.Datasheet.xaml"
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\addinVault\\ADSK.QS.CustentClassification.ps1"
+            "TargetName" = "8:ADSK.QS.CustentClassification.ps1"
             "Tag" = "8:"
-            "Folder" = "8:_953639E3777947DAB8D80ED21AE35748"
+            "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -14372,26 +14392,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C2874F6DBCBA4F9C8C973E311C108071"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\addinVault\\ADSK.QS.Classification.ps1"
-            "TargetName" = "8:ADSK.QS.Classification.ps1"
-            "Tag" = "8:"
-            "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C28AAB70F0504AFA908216DB588CA03A"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\NotesImages\\Topic27NotesImage1.jpg"
@@ -14609,46 +14609,6 @@
             "TargetName" = "8:ADSK.QS.ItemLookup.ps1"
             "Tag" = "8:"
             "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C592561BE0B644569111E6370664C2AC"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\Group\\Adsk.QS.Group.DataSheet.xaml"
-            "TargetName" = "8:Adsk.QS.Group.DataSheet.xaml"
-            "Tag" = "8:"
-            "Folder" = "8:_84181DA7F9B0480E81E59AC2D62A6949"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C60396986AAD4430B52C97C4693811D7"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\Class\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
-            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
-            "Tag" = "8:"
-            "Folder" = "8:_8F9D454ED7AE4FD891ACC1DBA6DA6954"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -16094,6 +16054,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DB7A59AE2F9047C5B4889EA2AF5C1D52"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\Class Term\\Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "TargetName" = "8:Adsk.QS.ClassifiedObject.DataSheet.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_AC66A3A7846B4D2CA7520386024D018F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DC052E3BB253481C945E9BA8D0FFCC0B"
             {
             "SourcePath" = "8:..\\VDS-PDMC-Sample\\HelpFiles\\\\NotesImages\\Topic12NotesImage15.jpg"
@@ -16200,6 +16180,26 @@
             "TargetName" = "8:ADSK.QS.EditFolder.ps1"
             "Tag" = "8:"
             "Folder" = "8:_132D27F77E1F48FC889B8F40D3475E20"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DE20086968404596B16D271E494EF096"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\addinVault\\ADSK.TS.FileTermExpander.psm1"
+            "TargetName" = "8:ADSK.TS.FileTermExpander.psm1"
+            "Tag" = "8:"
+            "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -16711,6 +16711,26 @@
             "TargetName" = "8:ADSK.QS.NameValidationCustent.ps1"
             "Tag" = "8:"
             "Folder" = "8:_B6DCD6C7C44B4180BFF1693CEDB5E187"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E70BC321C82A4966A9D9BC77C7808266"
+            {
+            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\Configuration\\ADSK.TS.SelectClassification.xaml"
+            "TargetName" = "8:ADSK.TS.SelectClassification.xaml"
+            "Tag" = "8:"
+            "Folder" = "8:_8B93F70EB9044A648D1328DB154DF119"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -17391,26 +17411,6 @@
             "TargetName" = "8:C.2.9EditDatasheet.html"
             "Tag" = "8:"
             "Folder" = "8:_0A02D22C013E4C0A9F2F9008E99FA5ED"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F27A8F79D0C54D889E11EAF229F63978"
-            {
-            "SourcePath" = "8:..\\VDS-PDMC-Sample\\Vault.Custom\\\\Configuration\\Main Group\\Adsk.QS.MainGroup.DataSheet.xaml"
-            "TargetName" = "8:Adsk.QS.MainGroup.DataSheet.xaml"
-            "Tag" = "8:"
-            "Folder" = "8:_456D5791C44A4EC1B95B98F78E20E401"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -18380,7 +18380,7 @@
                                     }
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_456D5791C44A4EC1B95B98F78E20E401"
                                     {
-                                    "Name" = "8:Main Group"
+                                    "Name" = "8:Class Level 2"
                                     "AlwaysCreate" = "11:FALSE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -18424,7 +18424,7 @@
                                     }
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_744406A38A1645C7B0390C569F920DCE"
                                     {
-                                    "Name" = "8:Sub Group"
+                                    "Name" = "8:Class Level 4"
                                     "AlwaysCreate" = "11:FALSE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -18457,7 +18457,7 @@
                                     }
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_84181DA7F9B0480E81E59AC2D62A6949"
                                     {
-                                    "Name" = "8:Group"
+                                    "Name" = "8:Class Level 3"
                                     "AlwaysCreate" = "11:FALSE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -18468,7 +18468,7 @@
                                     }
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_8F9D454ED7AE4FD891ACC1DBA6DA6954"
                                     {
-                                    "Name" = "8:Class"
+                                    "Name" = "8:Class Object"
                                     "AlwaysCreate" = "11:FALSE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -18490,7 +18490,7 @@
                                     }
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_953639E3777947DAB8D80ED21AE35748"
                                     {
-                                    "Name" = "8:Segment"
+                                    "Name" = "8:Class Level 1"
                                     "AlwaysCreate" = "11:FALSE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -18512,7 +18512,7 @@
                                     }
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_AC66A3A7846B4D2CA7520386024D018F"
                                     {
-                                    "Name" = "8:Term"
+                                    "Name" = "8:Class Term"
                                     "AlwaysCreate" = "11:FALSE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -18620,20 +18620,20 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Autodesk Vault | VDS-PDMC-Sample Configuration 2026"
-        "ProductCode" = "8:{7B4D550E-0EAA-4EEC-9895-291AF10ECFA6}"
-        "PackageCode" = "8:{6632F7B0-F567-476E-BF20-450ADD8A8900}"
+        "ProductCode" = "8:{3DFEC4C5-8D6D-4720-B0CB-B53302B2994A}"
+        "PackageCode" = "8:{1603E40E-1708-4B64-8A46-4453FD59CAA6}"
         "UpgradeCode" = "8:{D3B536B0-747A-4D24-A4BD-2D981EE88792}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:31.2.05"
+        "ProductVersion" = "8:31.2.06"
         "Manufacturer" = "8:Autodesk, Technical Sales CE"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/koechlm/VDs-Sample-Configurations-2026"
         "Title" = "8:Vault Data Standard | PDMC-Sample Configuration Setup"
-        "Subject" = "8:VDS-PDMC-Sample 2026.2"
+        "Subject" = "8:VDS-PDMC-Sample 2026.2.1"
         "ARPCONTACT" = "8:Markus Koechl"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Data Standard Sample Configuration"
