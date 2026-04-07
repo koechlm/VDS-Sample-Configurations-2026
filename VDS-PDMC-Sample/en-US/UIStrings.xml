@@ -167,6 +167,7 @@
   <!--Vault user Defined Properties Displaynames for dynamic properties-->
   <!--use to change display name for localization or user friendly naming-->
   <UIString ID="Comments">Comments</UIString>
+  <UIString ID="CommentsDE">Comments DE</UIString>
   <UIString ID="Manager">Manager</UIString>
   <UIString ID="Subject">Subject</UIString>
   <UIString ID="CreateUserName">Created By</UIString>
@@ -264,6 +265,10 @@
   <UIString ID="ADSK.TS.CAD-BOM03">Model State</UIString>
   <UIString ID="ADSK.TS.CAD-BOM04">Find</UIString>
   <UIString ID="ADSK.TS.CAD-BOM05">Configuration</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM06">BOM Type:</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM07">Model Data</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM08">Structured</UIString>
+  <UIString ID="ADSK.TS.CAD-BOM09">Functional Designation</UIString>
   <!--VDS-PDMC-Sample CAD-BOM end-->
 
   <!--VDS-PDMC-Sample Inventor Dialog-->
@@ -418,6 +423,7 @@
   <UIString ID="Adsk.QS.ItemSearch_05">Category Name</UIString>
   <UIString ID="Adsk.QS.ItemSearch_06">Item Master  (Search Results)</UIString>
   <UIString ID="Adsk.QS.ItemSearch_07">Search</UIString>
+  <UIString ID="Adsk.QS.ItemSearch_07a">Clear</UIString>
   <UIString ID="Adsk.QS.ItemSearch_08">Attention: The result is based on an incomplete index! Contact your Administrator, if you continue seeing this message.</UIString>
   <UIString ID="Adsk.QS.ItemSearch_09">Search result is limited to page size {0}; Total number of items found: {1}. Refine your search criterias and search again.</UIString>
   <UIString ID="Adsk.QS.ItemSearch_10">Expand Item Query Builder for item lookup and data copy.</UIString>
@@ -447,36 +453,39 @@
 
   <!--Classification start-->
     <!--Class Menu Definitions-->
-  <UIString ID="Adsk.Qs.ClassMnu_20">New Class...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_21">Create new Class</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_22">Edit Class...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_23">Edit existing Class</UIString>
-  <!--Segment Menu Definitions-->
-  <UIString ID="Adsk.Qs.ClassMnu_24">New Segment...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_25">Create new Segment</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_26">Edit Segment...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_27">Edit existing Segment</UIString>
-  <!--Main Group Menu Definitions-->
-  <UIString ID="Adsk.Qs.ClassMnu_28">New Main Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_29">Create new Main Group</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_30">Edit Main Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_31">Edit existing Main Group</UIString>
-  <!--Group Menu Definition-->
-  <UIString ID="Adsk.Qs.ClassMnu_32">New Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_33">Create new Group</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_34">Edit Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_35">Edit existing Group</UIString>
-  <!--Sub Group Menu Definition-->
-  <UIString ID="Adsk.Qs.ClassMnu_36">New Sub Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_37">Create new Sub Group</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_38">Edit Sub Group...</UIString>
-  <UIString ID="Adsk.Qs.ClassMnu_39">Edit existing Sub Group</UIString>
-  <!-- Class Menu Definitions end-->
-  <UIString ID="Adsk.QS.ClassLevel_00">Segment</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_01">Main Group</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_02">Group</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_03">Sub Group</UIString>
-  <UIString ID="Adsk.QS.ClassLevel_04">Class</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_20">New Class Object...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_21">Create new Class Object</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_22">Edit Class Object...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_23">Edit existing Class Object</UIString>
+  <!--Classification Level 1 Menu Definitions-->
+  <UIString ID="Adsk.Qs.ClassMnu_24">New Class Level 1...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_25">Create new Class Level 1</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_26">Edit Class Level 1...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_27">Edit existing Class Level 1</UIString>
+  <!--Classification Level 2 Menu Definitions-->
+  <UIString ID="Adsk.Qs.ClassMnu_28">New Class Level 2...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_29">Create new Class Level 2</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_30">Edit Class Level 2...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_31">Edit existing Class Level 2</UIString>
+  <!--Classification Menu Definition-->
+  <UIString ID="Adsk.Qs.ClassMnu_32">New Class Level 3...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_33">Create new Class Level 3</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_34">Edit Class Level 3...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_35">Edit existing Class Level 3</UIString>
+  <!--Classification Menu Definition-->
+  <UIString ID="Adsk.Qs.ClassMnu_36">New Class Level 4...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_37">Create new Class Level 4</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_38">Edit Class Level 4...</UIString>
+  <UIString ID="Adsk.Qs.ClassMnu_39">Edit existing Class Level 4</UIString>
+  <!-- Classification Definitions end-->
+  <UIString ID="Adsk.QS.ClsLevel_01">Class Level 1</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_02">Class Level 2</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_03">Class Level 3</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_04">Class Level 4</UIString>
+  <UIString ID="Adsk.QS.ClsObject">Class Object</UIString>
+  <UIString ID="Adsk.QS.ClsStandard">Standard</UIString> <!--Important Note: this translation must match the PropertyTranslation CLSSTANDARD-->
+  <UIString ID="Adsk.QS.ClsCode">Code</UIString>
+  <UIString ID="Adsk.QS.ClsLevelCode">Level Code</UIString>
   <UIString ID="Adsk.QS.Classification_00">Class</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Value</UIString>
@@ -493,6 +502,8 @@
   <UIString ID="Adsk.QS.Classification_13">The custom workspace 'Classes' is not available. Contact your Administrator.</UIString>
   <UIString ID="Adsk.QS.Classification_14">Classification of Primary Linked File</UIString>
   <UIString ID="Adsk.QS.Classification_15">Read-Only: Values derive from breadcrumb selection</UIString>
+  <UIString ID="Adsk.QS.ClsTT_01">Select a classification standard.</UIString>
+  <UIString ID="Adsk.QS.ClsTT_02">Reset (X) the classification if you need to switch the standard.</UIString>
   <!--Classification end-->
 
   <!--CatalogTermsTranslations-->
@@ -500,12 +511,13 @@
   <UIString ID="ClassTerms_MNU11">Create new term</UIString>
   <UIString ID="ClassTerms_MNU12">Edit Term...</UIString>
   <UIString ID="ClassTerms_MNU13">Edit existing term</UIString>
-  <UIString ID="ClassTerms_00">Term</UIString>
+  <UIString ID="ClassTerms_00">Class Term</UIString>
   <UIString ID="ClassTerms_01">Terms Catalog</UIString>
   <UIString ID="ClassTerms_02">German</UIString>
   <UIString ID="ClassTerms_03">English</UIString>
   <UIString ID="ClassTerms_04">French</UIString>
   <UIString ID="ClassTerms_05">Italian</UIString>
+  <UIString ID="ClassTerms_05a">Spanish</UIString>
   <UIString ID="ClassTerms_06">No matching term(s) found.</UIString>
   <UIString ID="ClassTerms_07">Classification</UIString>
   <UIString ID="ClassTerms_08">Category Name</UIString>
@@ -513,9 +525,11 @@
   <UIString ID="ClassTerms_10">Term EN</UIString>
   <UIString ID="ClassTerms_11">Term FR</UIString>
   <UIString ID="ClassTerms_12">Term IT</UIString>
+  <UIString ID="ClassTerms_12a">Term ES</UIString>
+  <UIString ID="ClassTerms_12b">Is Manual Entry</UIString>
   <UIString ID="ClassTerms_13">Catalog...</UIString>
   <UIString ID="ClassTerms_14">Filter</UIString>
-  <UIString ID="ClassTerms_15">Additional Languages</UIString>
+  <UIString ID="ClassTerms_15">Filter Languages</UIString>
   <UIString ID="ClassTerms_16">Search text to match term definition, use "*" and/or add Languages to widen the scope</UIString>
   <UIString ID="ClassTerms_BTN8">Search</UIString>
   <UIString ID="ClassTerms_BTN9">Copy Term as Title</UIString>
@@ -527,7 +541,7 @@
   <UIString ID="ClassTerms_TT04">No hand typed terms allowed; select available term from catalog</UIString>
   <UIString ID="ClassTerms_TT05">Activates catalog of terms</UIString>
   <UIString ID="ClassTerms_TT06">Use '*' for partial terms</UIString>
-  <UIString ID="ClassTerms_TT07">Resets classification</UIString>
+  <UIString ID="ClassTerms_TT07">Resets filter and search results</UIString>
   <UIString ID="ClassTerms_MSG01">You are going to change the selected classification, are you sure?"</UIString>
   <UIString ID="ClassTerms_MSG02">Search result displays {0} out of {1}; refine your search.</UIString>
   <UIString ID="ClassTerms_MSG03">No matching terms found</UIString>
@@ -599,6 +613,11 @@
   <UIString ID="bb92906f-75ca-415b-b0c6-242e4e02d58b">Customer Approved Date</UIString>
   <!--Revision Property Tab end-->
 
+  <!--UIStrings for Web Link Property, supporting Markdown text, e.g. [Link](www.autodesk.com)-->
+  <UIString ID="ADSK-WebLink-TT01">Cannot extract link from empty property.</UIString>
+  <UIString ID="ADSK-WebLink-TT02">Click to open link: </UIString>
+  <!--Web Link Property end-->
+  
   <!--<UIString ID=""></UIString>-->
 
 </UIStrings>

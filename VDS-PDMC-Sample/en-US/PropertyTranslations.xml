@@ -48,15 +48,20 @@
   
   <!--VDS-PDMC-Sample Extensions start-->
   <PropertyTranslation Name ="ORGANISATION">Organisation</PropertyTranslation>
-  <PropertyTranslation Name="COMPANY">Company</PropertyTranslation>
+  <PropertyTranslation Name ="COMPANY">Company</PropertyTranslation>
+  <PropertyTranslation Name ="FUNCTIONALDES">Functional Designation</PropertyTranslation>
   <!--VDS-PDMC-Sample Extensions end-->
 
   <!--VDS-PDMC-Sample Extension Classification start-->
-  <PropertyTranslation Name="SEGMENT">Segment</PropertyTranslation>
-  <PropertyTranslation Name="MAINGROUP">Main Group</PropertyTranslation>
-  <PropertyTranslation Name="GROUP">Group</PropertyTranslation>
-  <PropertyTranslation Name="SUBGROUP">Sub Group</PropertyTranslation>
-  <PropertyTranslation Name="CLASS">Class</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL1">Class Level 1</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL2">Class Level 2</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL3">Class Level 3</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVEL4">Class Level 4</PropertyTranslation>
+  <PropertyTranslation Name="CLSOBJECT">Class</PropertyTranslation>
+  <PropertyTranslation Name="CLSSTANDARD">Standard</PropertyTranslation> <!--Important Note: this translation must match the UIString Adsk.QS.ClsStandard-->
+  <PropertyTranslation Name="CLSCODE">Code</PropertyTranslation>
+  <PropertyTranslation Name="CLSLEVELCODE">Level Code</PropertyTranslation>
+  <PropertyTranslation Name="COMMENTS-DE">Comments DE</PropertyTranslation>
   <!--VDS-PDMC-Sample Extension Classification end-->
 
   <!--CatalogTermsTranslations-->
@@ -66,11 +71,14 @@
   <PropertyTranslation Name="TERM-EN">Term EN</PropertyTranslation>
   <PropertyTranslation Name="TERM-FR">Term FR</PropertyTranslation>
   <PropertyTranslation Name="TERM-IT">Term IT</PropertyTranslation>
+  <PropertyTranslation Name="TERM-ES">Term ES</PropertyTranslation>
+  <PropertyTranslation Name="IS-MANUAL-ENTRY">Is Manual Entry</PropertyTranslation>
   <!--Note the default "Term" is used as object name and varies according the language-->
   <PropertyTranslation Name="TITLE-DE">Title DE</PropertyTranslation>
   <PropertyTranslation Name="TITLE-EN">Title</PropertyTranslation>
   <PropertyTranslation Name="TITLE-FR">Title FR</PropertyTranslation>
   <PropertyTranslation Name="TITLE-IT">Title IT</PropertyTranslation>
+  <PropertyTranslation Name="TITLE-ES">Title ES</PropertyTranslation>
   <!--Classification & Terms-->
 
   <!--Revision Property Tab start-->
@@ -94,6 +102,11 @@
   <PropertyTranslation Name="LATESTRELEASEDATE">Latest Released Date</PropertyTranslation>
   <PropertyTranslation Name="LATESTRELREVISION">Latest Released Revision</PropertyTranslation>
   <!--Revision Property Tab end-->
+  
+  <!--Properties for Web Links-->
+  <PropertyTranslation Name="WEBLINK">Web Link</PropertyTranslation>
+  <!--Properties for Web Links end-->
+  
   
 </PropertyTranslations>
 

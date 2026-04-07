@@ -83,8 +83,8 @@ function InitializeTabWindow {
 }
 
 function InitializeWindow {	      
-	#$dsDiag.ShowLog()
-	#$dsDiag.Clear()
+	 #$dsDiag.ShowLog()
+	 #$dsDiag.Clear()
 
 	#begin rules applying commonly
 	$Prop["_Category"].add_PropertyChanged({
@@ -211,7 +211,6 @@ function InitializeWindow {
 			}
 		}
 
-
 		#region CustomObjectClassifiedWindow
 		"CustomObjectClassifiedWindow" {      
 			IF ($Prop["_CreateMode"].Value -eq $true) {
@@ -226,59 +225,108 @@ function InitializeWindow {
 				$dsWindow.Title = "New $($Prop["_Category"].Value)..."
 
 				#synchronize property with CO name
-				if ($Prop["_Category"].Value -eq "Class") {
+				if ($Prop["_Category"].Value -eq $UIString["Adsk.QS.ClsObject"]) {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-							$Prop["Class"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-						})
+						$Prop["_XLTN_CLSOBJECT"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+					})
 
-					$Prop["Class"].add_PropertyChanged({
-							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Class"].Value
-						})
+					$Prop["_XLTN_CLSOBJECT"].add_PropertyChanged({
+						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["_XLTN_CLSOBJECT"].Value
+					})
 				}
 
-				if ($Prop["_Category"].Value -eq "Term") {
+				if ($Prop["_Category"].Value -eq $UIString["ClassTerms_00"]) {
 					$dsWindow.FindName("CUSTOMOBJECTNAME").add_LostFocus({
-							$Prop["Term EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
-						})
+						$Prop["_XLTN_TERM-EN"].Value = $dsWindow.FindName("CUSTOMOBJECTNAME").Text
+					})
 
-					$Prop["Term EN"].add_PropertyChanged({
-							$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["Term EN"].Value
-						})
+					$Prop["_XLTN_TERM-EN"].add_PropertyChanged({
+						$dsWindow.FindName("CUSTOMOBJECTNAME").Text = $Prop["_XLTN_TERM-EN"].Value
+					})
+				}
+
+				# enable standard selection
+				$dsWindow.FindName("cmb_ClsStd").IsEnabled = $true
+				$dsWindow.FindName("cmb_ClsStd").Tooltip = $UIString["Adsk.QS.ClsTT_01"]
+				
+				$dsWindow.FindName("cmb_ClsStd").add_SelectionChanged({					
+					param($sender, $e)
+
+					$mBreadCrumb = $dsWindow.FindName("wrpClassification")
+					$children = $mBreadCrumb.Children.Count - 1					
+					while ($children -gt 0 ) {
+						$cmb = $mBreadCrumb.Children[$children]
+						$mBreadCrumb.UnregisterName($cmb.Name) #unregister the name to correct for later addition/registration
+						$mBreadCrumb.Children.Remove($mBreadCrumb.Children[$children]);
+						$children--;
+					}
+
+					mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $sender.SelectedItem.Content #-_classes $_classes #enables classification for class objects
+
+				})		
+			}
+			
+			# Add property changed handlers for classification levels to update ClsCode
+			# This handles cases where levels are changed programmatically or via UI
+			$clsLevelProps = @(
+				$UIString["Adsk.QS.ClsLevel_01"],
+				$UIString["Adsk.QS.ClsLevel_02"],
+				$UIString["Adsk.QS.ClsLevel_03"],
+				$UIString["Adsk.QS.ClsLevel_04"],
+				$UIString["Adsk.QS.ClsLevelCode"] # the current object's own level code triggers update as well
+			)
+			
+			foreach ($levelProp in $clsLevelProps) {
+				if ($Prop[$levelProp]) {
+					$Prop[$levelProp].add_PropertyChanged({
+						param($sender, $e)
+						# Update ClsCode when any classification level changes
+						# Skip update if in read-only mode (changes won't be saved)
+						if ($dsWindow.FindName("wrpClassification") -and $Prop["_ReadOnly"].Value -ne $true) {
+							mUpdateClsCode
+						}
+					})
 				}
 			}
 
 			#region EditMode
 			IF ($Prop["_EditMode"].Value -eq $true) {
 				if ($Prop["_ReadOnly"].Value -eq $true) {
-					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value) - $($UIString["LBL26"])"
+					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["_XLTN_NAME"].Value) - $($UIString["LBL26"])"
 				}
 				else {
-					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["Name"].Value)"
+					$dsWindow.Title = "Edit $($Prop["_Category"].Value) - $($Prop["_XLTN_NAME"].Value)"
 				}
 
 				#read existing classification elements
 				$_classes = @()
 				Try {
 					#likely not all properties are used...
-					If ($Prop["_XLTN_SEGMENT"].Value.Length -gt 1) {
-						$_classes += $Prop["_XLTN_SEGMENT"].Value
-						If ($Prop["_XLTN_MAINGROUP"].Value.Length -gt 1) {
-							$_classes += $Prop["_XLTN_MAINGROUP"].Value
-							If ($Prop["_XLTN_GROUP"].Value.Length -gt 1) {
-								$_classes += $Prop["_XLTN_GROUP"].Value
-								If ($Prop["_XLTN_SUBGROUP"].Value.Length -gt 1) {
-									$_classes += $Prop["_XLTN_SUBGROUP"].Value
+					If ($Prop["_XLTN_CLSLEVEL1"].Value.Length -gt 1) {
+						$_classes += $Prop["_XLTN_CLSLEVEL1"].Value
+						If ($Prop["_XLTN_CLSLEVEL2"].Value.Length -gt 1) {
+							$_classes += $Prop["_XLTN_CLSLEVEL2"].Value
+							If ($Prop["_XLTN_CLSLEVEL3"].Value.Length -gt 1) {
+								$_classes += $Prop["_XLTN_CLSLEVEL3"].Value
+								If ($Prop["_XLTN_CLSLEVEL4"].Value.Length -gt 1) {
+									$_classes += $Prop["_XLTN_CLSLEVEL4"].Value
 								}
 							}
 						}
 					}
 				}
 				catch {}
+				
+				$dsWindow.FindName("cmb_ClsStd").Text = $Prop["_XLTN_CLSSTANDARD"].Value
+				mAddCoCombo -_CoName $UIString["Adsk.QS.ClsLevel_01"] -_Standard $Prop["_XLTN_CLSSTANDARD"].Value -_classes $_classes #enables classification for class objects
+				
+				# Update ClsCode based on initialized breadcrumb selections in edit mode
+				# Only update if NOT read-only (changes would not save in read-only mode)
+				if ($Prop["_ReadOnly"].Value -ne $true) {
+					mUpdateClsCode
+				}
 			}
 			#endregion EditMode
-			mAddCoCombo -_CoName "Segment" -_classes $_classes #enables classification for class objects
-			# ToDo: createmode: activate last used classification
-			
 		}
 		#endregion CustomObjectClassifiedWindow
 		
@@ -399,19 +447,153 @@ function OnTabContextChanged {
 	#$xamlFile = [System.IO.Path]::GetFileName($VaultContext.UserControl.XamlFile) not working in powershell 7.2.0
 	#Just use System.IO.FileInfo as the workaround for powershell 7.2.0
 	$xamlFile = ([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile)).Name
+	
+	# folder and custom objects may have a Web Link property; use Library functions to extract the link and tooltip text
+	if ($Prop["_XLTN_WEBLINK"].Value -ne $nullOrEmpty) {
+		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
+			$dsWindow.FindName("WebLinkDummy").Text = ExtractMarkdownText $Prop["_XLTN_WEBLINK"].Value
+			$dsWindow.FindName("ToolTipDummy").Text = ExtractToolTip $Prop["_XLTN_WEBLINK"].Value	<# Action to perform if the condition is true #>
+		}
+	}
+	else {
+		if ($dsWindow.FindName("WebLinkDummy") -and $dsWindow.FindName("ToolTipDummy")) {
+			$dsWindow.FindName("WebLinkDummy").Text = ""
+			$dsWindow.FindName("ToolTipDummy").Text = $UIString["ADSK-WebLink-TT01"]	<# Action to perform if the condition is true #>
+		}
+	}
+
+	if ($xamlFile -eq "Adsk.QS.ClassifiedObject.DataSheet.xaml") {
+		
+		# level 1 is not empty for all classification standards
+		$dsWindow.FindName("treeViewClsLevel1").Header = "$($UIString["Adsk.QS.ClsLevel_01"]) -- $($Prop["_XLTN_CLSLEVEL1"].Value)"
+		$dsWindow.FindName("treeViewClsLevel2").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel3").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel4").Visibility = "Collapsed"
+		$dsWindow.FindName("treeViewClsLevel5").Visibility = "Collapsed"
+
+		# activate treeview items per classification level and objecttype
+		$ObjectsToAssign = @($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
+		
+		if ($Prop["_XLTN_CLSLEVEL2"].Value -eq $nullOrEmpty) {
+			# the current object is a level 2 object: fill level 2 only
+			# class objects and structure objects have different labels
+			if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+			}
+			else {
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_NAME"].Value)"
+			}
+			$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+			$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Bold"
+		}
+		else {
+			if ($Prop["_XLTN_CLSLEVEL3"].Value -eq $nullOrEmpty) {
+				# the current object is a level 3 object: fill level 2 and 3
+				$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+				$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+				$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					# class objects and structure objects have different labels
+					if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+						$dsWindow.FindName("treeViewClsLevel3").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+					else {
+						$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+				$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+				$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Bold"
+			}
+			else {
+				if ($Prop["_XLTN_CLSLEVEL4"].Value -eq $nullOrEmpty) {
+					# the current object is a level 4 object: fill level 2, 3 and 4
+					$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+					$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_CLSLEVEL3"].Value)"
+					$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Normal"
+					# class objects and structure objects have different labels
+					if ($Prop["_XLTN_CATEGORY NAME"].Value -in $ObjectsToAssign) {
+						$dsWindow.FindName("treeViewClsLevel4").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"
+					}
+					else {
+						$dsWindow.FindName("treeViewClsLevel4").Header = "$($UIString["Adsk.QS.ClsLevel_04"]) -- $($Prop["_XLTN_NAME"].Value)"
+					}	
+					$dsWindow.FindName("treeViewClsLevel4").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel4").FontWeight = "Bold"
+				}
+				else {
+					# the current object is a level 5 object: fill level 2, 3, 4 and 5
+					$dsWindow.FindName("treeViewClsLevel2").Header = "$($UIString["Adsk.QS.ClsLevel_02"]) -- $($Prop["_XLTN_CLSLEVEL2"].Value)"
+					$dsWindow.FindName("treeViewClsLevel2").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel2").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel3").Header = "$($UIString["Adsk.QS.ClsLevel_03"]) -- $($Prop["_XLTN_CLSLEVEL3"].Value)"
+					$dsWindow.FindName("treeViewClsLevel3").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel3").FontWeight = "Normal"
+					$dsWindow.FindName("treeViewClsLevel4").Header = "$($UIString["Adsk.QS.ClsLevel_04"]) -- $($Prop["_XLTN_CLSLEVEL4"].Value)"
+					$dsWindow.FindName("treeViewClsLevel4").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel4").FontWeight = "Normal"
+					# level 5 are class objects only
+					$dsWindow.FindName("treeViewClsLevel4").IsExpanded = $true
+					$dsWindow.FindName("treeViewClsLevel5").Header = "$($Prop["_XLTN_CATEGORY NAME"].Value) -- $($Prop["_XLTN_NAME"].Value)"						
+					$dsWindow.FindName("treeViewClsLevel5").Visibility = "Visible"
+					$dsWindow.FindName("treeViewClsLevel5").FontWeight = "Bold"
+				}
+			}
+		}
+	}
 
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
+		if (-not $global:_mVdsUtilities) {
+			$global:_mVdsUtilities = "$($env:programdata)\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll"
+			if (! (Test-Path $mVdsUtilities)) {
+				#the basic utility installation only
+				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll')
+			}
+			Else {
+				#the extended utility activation
+				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll')
+			}
+			$global:_VltHelpers = New-Object VdsSampleUtilities.VltHelpers	<# Action to perform if the condition is true #>
+		}
+
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$global:file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
+
+		# get CAD provider for the file to determine if model states or configurations should be read; this is based on the file extension as there is no direct property indicating the CAD provider
+		# Read the Provider property to determine if it's Inventor or SolidWorks
+		$propDefs = $vault.PropertyService.GetPropertyDefinitionsByEntityClassId('FILE')
+		$providerPropDef = $propDefs | Where-Object { $_.SysName -eq 'Provider' }
+	
+		$mCadProvider = "Unknown"
+		if ($providerPropDef) {
+			$providerProp = $vault.PropertyService.GetProperties('FILE', @($file.Id), @($providerPropDef.Id))[0]
+			$providerValue = $providerProp.Val
+		
+			if ($providerValue -like "*Inventor*") {
+				$mCadProvider = "Inventor"
+			}
+			elseif ($providerValue -like "*SolidWorks*") {
+				$mCadProvider = "SolidWorks"
+			}
+		}
 
 		#check for model state BOMs;  
 		# model state names and BOMComp Id are the key value pairs of the combobox
 		$dsWindow.FindName("bomList").ItemsSource = $null
-		$dsWindow.FindName("cmbModelStates").ItemsSource = $null
-		$dsWindow.FindName("cmbModelStates").SelectedIndex = -1
-		$dsWindow.FindName("cmbModelStates").IsEnabled = $false
+		$dsWindow.FindName("cmbBomVariants").ItemsSource = $null
+		$dsWindow.FindName("cmbBomVariants").SelectedIndex = -1
+		$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
 		#reset the search text box
 		$dsWindow.FindName("txtCadBomSearch").Text = ""
+		# reset the status text bar (errors and warnings)
+		$dsWindow.FindName("txtStatus").Text = ""
+		$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+		# reset the BOM type display
+		$dsWindow.Findname("lblBomType").Visibility = "Collapsed"
+		$dsWindow.Findname("txtBomType").Visibility = "Collapsed"
+
+		# we will capture model states or configuration names and comp Ids in an array and bind to the combobox; the model state BOM will be read based on the selected model state or configuration
+		$_MsArray = @()
 
 		# applies to Inventor IAMs with true model state = false
 		if ($file.Name -match "\.iam$" ) {
@@ -428,56 +610,140 @@ function OnTabContextChanged {
 			}
 
 			if ($mPropNameValues["HasModelState"] -eq $true -and $mPropNameValues["IsTrueModelState"] -eq $false) {
-				$_MsArray = @()
-				$_MsArray += mGetMdlStates($file.id)
+				$_MsArray += $_VltHelpers.GetModelStates($vaultConnection, $file.id)
 			}
 		}
 
 		# read configuration names for sldasm files
 		if ($file.Name -match "\.sldasm$" ) {
-			$_MsArray = @()
-			$_MsArray += mGetMdlStates($file.id)
+			$_MsArray += $_VltHelpers.GetModelStates($vaultConnection, $file.id)
 		}
 
-		#read the primary BOM
+		# update the UI with model states if there are any; otherwise, just read the primary BOM
+		# Sort and display model states/configurations
+		if ($_MsArray.Count -gt 0) {
+			$mMdlStates = $_MsArray.GetEnumerator() | Sort-Object Name		
+			$dsWindow.FindName("cmbBomVariants").ItemsSource = $mMdlStates
+			$dsWindow.FindName("cmbBomVariants").SelectedIndex = 0
+			$dsWindow.FindName("cmbBomVariants").IsEnabled = $true
+			$dsWindow.FindName("cmbBomVariants").Visibility = "Visible"
+			$dsWindow.FindName("lblBomVariant").Visibility = "Visible"
+		}
+		else {
+			$dsWindow.FindName("cmbBomVariants").ItemsSource = $null		
+			$dsWindow.FindName("cmbBomVariants").IsEnabled = $false
+			$dsWindow.FindName("cmbBomVariants").Visibility = "Collapsed"
+			$dsWindow.FindName("lblBomVariant").Visibility = "Collapsed"
+		}
+		
+		# Update the label based on CAD provider
+		if ($dsWindow.FindName("lblBomVariant")) {
+			if ($mCadProvider -eq "SolidWorks") {
+				$dsWindow.FindName("lblBomVariant").Content = "Configuration:" #$UIStrings["ADSK.TS.CAD-BOM05"] #
+			}
+			else {
+				$dsWindow.FindName("lblBomVariant").Content = "Model State:" # $UIStrings["ADSK.TS.CAD-BOM03"] # 
+			}
+		}
+
+		# exit if the file.Name doesn't match either *.iam or *.sldasm as the following code is only for Inventor and SolidWorks files; for other CAD files, just read the primary BOM as there is no model state or configuration concept
+		if ($file.Name -notmatch "\.iam$" -and $file.Name -notmatch "\.sldasm$") { return }
+	
+		#read the primary BOM, GetFileBOM will return a structured BOM if available
+		$errorMessage = ""
+		$structured = $false
+		$dsWindow.FindName("txtBomType").Text = "" #reset the BOM type text box before reading the BOM, as the GetFileBOM may return error and not update the BOM type; this will avoid showing wrong BOM type from previous file selection
 		try {
-			$bom = @(GetFileBOM $file.id 0)
+			$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, 0, [ref] $structured, [ref] $errorMessage)) #primary BOM has a model state id = 0; this is for both Inventor and SolidWorks; for Inventor, the model state id is the BOMCompId; for SolidWorks, the model state id is the configuration id
 			$dsWindow.FindName("bomList").ItemsSource = $bom
+			$global:currentBOMList = $bom # keep a global copy of the original bom list for later use in reset search filtering
+			if ($errorMessage -ne "") {
+				$dsWindow.FindName("txtStatus").Text = $errorMessage
+				$dsWindow.FindName("txtStatus").Visibility = "Visible"
+				$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+				$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+			}
+			else {
+				$dsWindow.FindName("txtStatus").Text = ""
+				$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+			
+				if ($bom.Count -gt 0) {
+					$dsWindow.FindName("lblBomType").Visibility = "Visible"
+					$dsWindow.FindName("txtBomType").Visibility = "Visible"
+				
+					if ($structured -eq $true) {
+						$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+					}
+					else {
+						$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+					}
+				}
+				else {
+					$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+					$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+				}
+			}
 		}
 		catch {
-			[Autodesk.DataManagement.Client.Framework.Forms.Library]::ShowError("CAD-BOM creation failed due to incomplete data; check-out, save and check-in the assembly before you try again.", "Data Standard – CAD-BOM")
+			$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, contact your administrator if it continues or relates to a specific assembly only."
+			$dsWindow.FindName("txtStatus").Visibility = "Visible"			
 		}
 
 		# read model state BOMs on demand;		
-		if ($dsWindow.FindName("cmbModelStates").ItemsSource.Count -gt 0) {
+		if ($dsWindow.FindName("cmbBomVariants").ItemsSource.Count -gt 0) {
 			# add a selection changed event to the combobox
-			$dsWindow.FindName("cmbModelStates").add_SelectionChanged({
-					$mModelStateId = $dsWindow.FindName("cmbModelStates").SelectedValue
-					if ($dsWindow.FindName("cmbModelStates").SelectedIndex -eq -1) {
+			$dsWindow.FindName("cmbBomVariants").add_SelectionChanged({
+					$mModelStateId = $dsWindow.FindName("cmbBomVariants").SelectedValue
+					if ($dsWindow.FindName("cmbBomVariants").SelectedIndex -eq -1) {
 						$dsWindow.FindName("bomList").ItemsSource = $null
 					}
 					else {
-						$mMdlStateBom = @(GetFileBOM $file.id $mModelStateId) #($file.id, $mModelStateId)
-						$dsWindow.FindName("bomList").ItemsSource = $mMdlStateBom # model state BOMs are internal component BOMs
-						#update the global bom list to restore clearing the search text box
-						$global:currentBOMList = $mMdlStateBom
-						#clear the search text box as the grid content has changed
-						CadBomClearButton_Click
+						try {
+							$errorMessage = ""
+							$structured = $false
+							$bom = @($_VltHelpers.GetFileBOM($vaultConnection, $file.Id, $mModelStateId, [ref] $structured, [ref] $errorMessage)) #($file.id, $mModelStateId)
+							$dsWindow.FindName("bomList").ItemsSource = $bom # model state BOMs are internal component BOMs
+							if ($errorMessage -ne "") {
+								$dsWindow.FindName("txtStatus").Text = $errorMessage
+								$dsWindow.FindName("txtStatus").Visibility = "Visible"
+								$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+								$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+							}
+							else {
+								$dsWindow.FindName("txtStatus").Text = ""
+								$dsWindow.FindName("txtStatus").Visibility = "Collapsed"
+			
+								if ($bom.Count -gt 0) {
+									$dsWindow.FindName("lblBomType").Visibility = "Visible"
+									$dsWindow.FindName("txtBomType").Visibility = "Visible"
+				
+									if ($structured -eq $true) {
+										$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM08"]
+									}
+									else {
+										$dsWindow.FindName("txtBomType").Text = $UIString["ADSK.TS.CAD-BOM07"]
+									}
+								}
+								else {
+									$dsWindow.FindName("lblBomType").Visibility = "Collapsed"
+									$dsWindow.FindName("txtBomType").Visibility = "Collapsed"
+								}
+							}
+							#update the global bom list to restore clearing the search text box
+							$global:currentBOMList = $bom
+							#clear the search text box as the grid content has changed
+							CadBomClearButton_Click
+						}
+						catch {
+							$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, contact your administrator if it continues or relates to a specific assembly only."
+							$dsWindow.FindName("txtStatus").Visibility = "Visible"
+						}					
 					}
 				})
 		}
+		return
+	}
 
-		$global:mFileBOM = $null #clear the global variable to release the grid content
-		return
-	}
-	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "ItemMaster" -and $xamlFile -eq "Associated Files.xaml") {
-		$items = $vault.ItemService.GetItemsByIds(@($vaultContext.SelectedObject.Id))
-		$item = $items[0]
-		$itemids = @($item.Id)
-		$assocFiles = @(GetAssociatedFiles $itemids $([System.IO.FileInfo]::new($VaultContext.UserControl.XamlFile).DirectoryName))
-		$dsWindow.FindName("AssoicatedFiles").ItemsSource = $assocFiles
-		return
-	}
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.FileDataSheet.xaml") {
 		$fileMasterId = $vaultContext.SelectedObject.Id
 		$file = $vault.DocumentService.GetLatestFileByMasterId($fileMasterId)
@@ -1058,4 +1324,3 @@ function GetTemplateFolders {
 		return $_
 	}
 }
-

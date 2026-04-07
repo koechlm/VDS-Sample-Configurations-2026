@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Style="{DynamicResource ThemedWindowStyle}"
         x:Name="AssignClsWindow"
-        Title="VDS-PDMC-Sample | Select Classification . . ." Topmost="True" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight"  VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ResizeMode="NoResize">
+        Title="VDS-PDMC-Sample | Select Classification . . ." Topmost="True" WindowStartupLocation="CenterOwner" SizeToContent="Height" Width="800" MaxWidth="1200" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ResizeMode="CanResize">
     <WPF:MainWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,6 +17,7 @@
             <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -28,7 +29,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -184,9 +185,13 @@
             <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource ThemedListBoxStyle}" />
             <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ThemedListBoxItemStyle}"/>
             <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource ThemedTreeViewStyle}"/>
+            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource ThemedTreeViewItemStyle}"/>
             <Style TargetType="{x:Type Border}" BasedOn="{StaticResource ThemedBorderStyle}"/>
             <!--#endregion themed styles for VE dialog standard controls-->
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <DataTemplate x:Key="TreeViewItemItemTemplate1">
+                <Grid/>
+            </DataTemplate>
         </ResourceDictionary>
     </WPF:MainWindow.Resources>
     <Grid>
@@ -198,175 +203,170 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,2" >
-            <Grid Margin="5">
+            <Grid Margin="5" Grid.IsSharedSizeScope="True">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition x:Name="clmStandard" Width="Auto" SharedSizeGroup="FirstCol"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="SecondCol"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="Classification Standard"/>
-                <ComboBox x:Name="cmb_ClsStd" SelectedIndex="2" VerticalAlignment="Center" Grid.Column="1" Margin="0" Height="26">
+                <Label x:Name="lbl_ClsStd" VerticalAlignment="Center" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}" FontWeight="Bold"/>
+                <ComboBox x:Name="cmb_ClsStd" Text="" SelectedIndex="0" VerticalAlignment="Center" Grid.Column="1" Margin="0" MinWidth="140">
                     <ComboBoxItem x:Name="IEC61355" Content="IEC 61355"/>
                     <ComboBoxItem x:Name="eClass" Content="eCl@ss"/>
                     <ComboBoxItem x:Name="Company" Content="PDMC-Sample"/>
+                    <ComboBoxItem x:Name="Uniclass" Content="Uniclass" />
                 </ComboBox>
+                <Grid Grid.Row="1" Margin="0,5,0,10" Height="22" MinWidth="140" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="clmReset" Width="Auto" SharedSizeGroup="FirstCol"/>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="SecondCol"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnResetClsLevels" Grid.Column="0" Content="Reset" Margin="2,0,5,0" Padding="5,1,5,1" Width="50"
+                        Command="{Binding PsCmd[mResetClassSelection]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue='Reset Selection'}" />
+                    <WrapPanel x:Name="wrpClassification2" MaxWidth="800" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Left"/>
+                </Grid>
             </Grid>
         </Border>
-        <Grid x:Name="grdIEC61355" Grid.Row="1" Grid.ColumnSpan="3" Margin="5,10,5,5" Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition MaxHeight="350"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TabControl x:Name="tabIEC61355" >
-                <TabItem x:Name="tabIEC61355Search" Header="Search Classes/Examples">
-                    <GroupBox x:Name="grpSearchIEC61355" Grid.Row="1" Header="{Binding UIString[], FallbackValue=Search bookmarked tags or any keyword for subclass or document samples}" Margin="0,5,0,0" BorderThickness="0">
-                        <Grid x:Name="grdIEC61355Search" Width="562" HorizontalAlignment="Left">
+        <Grid Grid.ColumnSpan="3" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TreeView Margin="10,0,5,0">
+                <TreeViewItem x:Name="trvClssLevel1" Header="Class Level 1" IsExpanded="True" Foreground="{Binding Foreground, ElementName=cmbCls1}" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Class Object" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbCls1" Grid.Column="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                        <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                        <ComboBox x:Name="cmbTrm1" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                    </Grid>
+                    <TreeViewItem x:Name="trvClsLevel2" Header="Class Level 2" FontWeight="Bold" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
+                        <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="35"/>
-                                <ColumnDefinition Width="141"/>
-                                <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton x:Name="radioSearchBkmk" Content="Search bookmarks only" Grid.Column="0" IsChecked="True" Margin="0,5" Grid.ColumnSpan="2"/>
-                            <RadioButton Content="Search all" Grid.Column="2" Margin="5,5,0,5"/>
-                            <TextBox x:Name="txtSearchIEC61355" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" ToolTip="{Binding UIString[], FallbackValue=Remind the Token based search behavior - use * to combine the letters with incomplete numbers or vice versa.}" BorderThickness="1" />
-                            <Button x:Name="btnSearchIEC61355" Grid.Column="3" Grid.Row="1" Content="{Binding UIString[], FallbackValue=Search}" Command="{Binding PsCmd[mSearchIEC61355]}" Width="80" Margin="3,0,0,0" Height="24"/>
+                            <Label Content="Class Object" FontWeight="Normal"/>
+                            <ComboBox x:Name="cmbCls2" Grid.Column="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                            <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                            <ComboBox x:Name="cmbTrm2" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
                         </Grid>
-                    </GroupBox>
-                </TabItem>
-                <TabItem x:Name="tabIEC61355Navigate" Header="Navigate Classes" >
-                    <GroupBox x:Name="grpIEC61355" Header="{Binding UIString[], FallbackValue=Class Hierarchy}" Grid.Row="0" MinWidth="574" Margin="0,5,0,0">
-                        <Grid x:Name="grdIEC61355Filter">
-                            <WrapPanel x:Name="wrpIEC61355" Grid.Row="2">
-                                <Button x:Name="btnIEC61355Reset" Command="{Binding PsCmd[mResetIEC61355BrdCrmb]}" Content="X" FontWeight="Bold" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue=Reset Selection}" Foreground="Red" Width="24" Height="24">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <Border  BorderThickness="1">
-                                                <Image x:Name="imgTemplateReset" Source="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\filter-delete.ico" Margin="2" />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </WrapPanel>
-                        </Grid>
-                    </GroupBox>
-                </TabItem>
-            </TabControl>
-            <TextBox x:Name="txtIEC61355StatusMsg" Grid.Row="3" TextWrapping="Wrap" HorizontalContentAlignment="Center" VerticalAlignment="Top" 
-                BorderThickness="0" Visibility="Collapsed" Background="#FFF6FB82"/>
-            <DataGrid x:Name="dataGrdIEC61355Found" AutoGenerateColumns="False" IsTabStop="False" IsReadOnly="True" ColumnWidth="*" 
-                ColumnHeaderHeight="26" 
-                Cursor="Hand" ClipboardCopyMode="IncludeHeader" 
-                Focusable="False" VerticalScrollBarVisibility="Auto" Grid.Row="4" RowHeight="24" Margin="0,5,0,0" MaxWidth="{Binding ActualWidth, ElementName=tabIEC61355, Mode=OneWay}" MinWidth="782" MinHeight="266" HorizontalAlignment="Left">
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="dtgrdColPath" Binding="{Binding PathCode}" Width="Auto" CanUserResize="False">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[], FallbackValue=Path, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="dtgrdColCode" Binding="{Binding Code}" Width="Auto" CanUserResize="False">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[], FallbackValue=Code, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="dtgrdColSubCls" Binding="{Binding SubClass}" Width="Auto" MinWidth="140">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[], FallbackValue=Subclass, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Height="Auto" TextWrapping="WrapWithOverflow"/>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="dtgrdColSubClsDE" Binding="{Binding SubClassDE}" Width="Auto" MinWidth="140">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[], FallbackValue=Subclass DE, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" Height="Auto" TextWrapping="WrapWithOverflow"/>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="dtgrdColCmmts" Binding="{Binding Example}" MinWidth="200" Width="Auto">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[], FallbackValue=Examples, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                    TextWrapping="Wrap" Height="Auto"/>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="dtgrdColCmmtsDE" Binding="{Binding ExampleDE}" MinWidth="200" Width="Auto">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[], FallbackValue=Examples DE, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                    TextWrapping="Wrap" Height="Auto"/>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding PsCmd[mApplyIEC61355]}" Header="{Binding UIString[], FallbackValue=Assign Classification}" ToolTip="{Binding UIString[ClassTerms_TT00]}" CommandParameter="{Binding SelectedIndex, ElementName=dataGrdTermsFound}"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
-            <Grid x:Name="grdIEC61355Btns" Grid.Row="5" Margin="0,5">
-                <Button x:Name="btnIEC61355Adopt" Command="{Binding PsCmd[mApplyIEC61355]}" 
-                    Content="{Binding UIString[], FallbackValue=Select Classification}"                             
-                    HorizontalAlignment="Right" Width="140" IsEnabled="False" Height="24" 
-                    ToolTip="{Binding UIString[]}"/>
+                        <TreeViewItem x:Name="trvClsLevel3" Header="Class Level 3" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Class Object" FontWeight="Normal"/>
+                                <ComboBox x:Name="cmbCls3" Grid.Column="1" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                                <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                                <ComboBox x:Name="cmbTrm3" Grid.Column="1" Grid.Row="1" MinWidth="140" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                            </Grid>
+                            <TreeViewItem x:Name="trvClsLevel4" Header="Class Level 4" Foreground="{Binding Foreground, ElementName=cmbCls1}" IsExpanded="True">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="Class Object" FontWeight="Normal"/>
+                                    <ComboBox x:Name="cmbCls4" Grid.Column="1" MinWidth="140" Margin="0,0,10,0" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                                    <Label Content="Class Term" Grid.Row="1" FontWeight="Normal"/>
+                                    <ComboBox x:Name="cmbTrm4" Grid.Column="1" Grid.Row="1" MinWidth="140" Margin="0,0,10,0" Height="22" IsEnabled="False" FontWeight="Normal"/>
+                                </Grid>
+                            </TreeViewItem>
+                        </TreeViewItem>
+                    </TreeViewItem>
+                </TreeViewItem>
+            </TreeView>
+            <Grid Grid.Column="1" Margin="5,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Class Object" MinHeight="240" Margin="0,0,0,5">
+                    <DataGrid x:Name="dtgrdClassProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0" 
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ClassPropName1" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="120">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn x:Name="ClassPropValue1" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}" Width="*" MinWidth="180">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="Class Term" MinHeight="240" Grid.Row="1" Margin="0,5,0,0">
+                    <DataGrid x:Name="dtgrdTermProps" AutoGenerateColumns="False" SelectionUnit="Cell" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24" Margin="0,5,0,0"
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="ClassPropName2" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto" MinWidth="120">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn x:Name="ClassPropValue2" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}" Width="*" MinWidth="180">
+                                <DataGridTextColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
+                                    </DataTemplate>
+                                </DataGridTextColumn.HeaderTemplate>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
             </Grid>
         </Grid>
-
-        <Grid x:Name="grdClassification" Visibility="Visible" Grid.ColumnSpan="3" Grid.RowSpan="2" Grid.Row="1" Margin="5,10,5,5" >
+        <Grid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" Margin="10,0,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="26"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition Width="502"/>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Label x:Name="lblClassProps" Content="{Binding UIString[Adsk.QS.Classification_07], FallbackValue=Class Properties}" Grid.Row="4" BorderThickness="1,1,0,1" />
-            <DataGrid x:Name="dtgrdClassProps" Grid.Row="4" AutoGenerateColumns="False" Grid.Column="1" SelectionUnit="Cell" Grid.ColumnSpan="2" Margin="0,0,0,5" MinWidth="637" MinHeight="282" HorizontalAlignment="Left" CanUserResizeRows="False" SelectionMode="Single" RowHeight="24">
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="ClassPropName" Binding="{Binding Key, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridLabelStyle}" Width="Auto">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_01], FallbackValue=Property Name, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="ClassPropValue" Binding="{Binding Value, Mode=OneWay}" CellStyle="{StaticResource DynamicDataGridCellStyle}"  Width="*">
-                        <DataGridTextColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DataContext.UIString[Adsk.QS.Classification_02], FallbackValue=Property Value, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsEnabled="False" FontWeight="Bold"/>
-                            </DataTemplate>
-                        </DataGridTextColumn.HeaderTemplate>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <Grid x:Name="grdClassificationBtns" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,5">
+            <Grid x:Name="grdClassificationBtns_2" Grid.ColumnSpan="2" Margin="0,10,0,10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -377,36 +377,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btnHelp1" Content="{Binding UIString[MSDCE_BTN1], FallbackValue=Help}" 
+                <CheckBox x:Name="chckCopyTermToTitle" Content="Copy Term -&gt; Title Values (Multi-Languages)" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" IsChecked="True"/>
+                <Button x:Name="btnHelp2" Content="{Binding UIString[MSDCE_BTN1], FallbackValue=Help}" 
                     Command="{Binding PsCmd[mHelp(500)]}" ToolTip="F1" Margin="0" Width="80" Height="24" />
                 <Button x:Name="btnSelectClass" Content="{Binding UIString[], FallbackValue=Select Classification}"  Command="{Binding PsCmd[mSelectClassification]}" Grid.Column="3" BorderThickness="1" Padding="5,1" IsEnabled="False" Height="24"/>
             </Grid>
-            <Border x:Name="brdwrpclassification" Grid.ColumnSpan="3" Grid.Column="1" Margin="0" BorderThickness="1" >
-                <WrapPanel x:Name="wrpClassification2" MaxWidth="800"/>
-            </Border>
-            <Label x:Name="lblClassHierarchy" Content="{Binding UIString[Adsk.QS.Classification_04], FallbackValue=Class Hierarchy}" BorderThickness="1,1,0,1" />
-            <Button x:Name="btnClsReset2" Command="{Binding PsCmd[mResetClassSelection]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue='Reset Selection'}" IsEnabled="{Binding IsNotReadonly}" Height="24" Width="24" HorizontalAlignment="Right">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image x:Name="imgClsReset" >
-                            <Image.Style>
-                                <Style>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\RemoveAction_32.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                            <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\RemoveAction_32.png" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-            <Label x:Name="lblAvailableClasses" Content="{Binding UIString[Adsk.QS.Classification_05], FallbackValue=Classes}" Grid.Row="2" BorderThickness="1,1,0,1" />
-            <ComboBox x:Name="cmbAvailableClasses" DisplayMemberPath="Name" SelectedValuePath="Name" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Margin="0" BorderThickness="1" IsEnabled="False" Height="26" HorizontalAlignment="Left" MinWidth="200"/>
         </Grid>
     </Grid>
 </WPF:MainWindow>

@@ -52,11 +52,12 @@ namespace VdsSampleUtilities
         public static string GetAssemblyPath()
         {
             string prefix = "file:///";
-            string codebase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+            string codebase = System.Reflection.Assembly.GetExecutingAssembly().Location;
             if (codebase.StartsWith(prefix))
                 codebase = codebase.Substring(prefix.Length);
 
-            return Path.GetDirectoryName(codebase);
+            string? directory = Path.GetDirectoryName(codebase);
+            return directory ?? string.Empty;
         }
     }
 

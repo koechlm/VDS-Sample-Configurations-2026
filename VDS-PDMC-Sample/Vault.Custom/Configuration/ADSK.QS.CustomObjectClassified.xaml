@@ -19,6 +19,7 @@
             <WPF:MultiBooleanConverter x:Key="booleanAndConverter" Mode="And" />
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -30,7 +31,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -58,7 +59,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <ComboBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0">
+                                    <ComboBox Text="{WPF:ValidatedBinding Value}" IsEditable="True" BorderThickness="0">
                                         <ComboBoxItem Content="True" />
                                         <ComboBoxItem Content="False" />
                                     </ComboBox>
@@ -76,7 +77,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Segment">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 1">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -86,7 +87,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Main Group">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 2">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -96,7 +97,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Group">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 3">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -106,7 +107,7 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding DispName}" Value="Sub Group">
+                    <DataTrigger Binding="{Binding DispName}" Value="Class Level 4">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -116,6 +117,17 @@
                             </Setter.Value>
                         </Setter>
                     </DataTrigger>
+                    <DataTrigger Binding="{Binding DispName}" Value="Standard">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox Text="{WPF:ValidatedBinding Value, StringFormat=N}" BorderThickness="0" 
+                                        CharacterCasing="{Binding Case}" IsReadOnly="True" ToolTip="{Binding DataContext.UIString[Adsk.QS.Classification_15], FallbackValue='Read-Only: Values derive from breadcrumb selection'}"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+
                 </Style.Triggers>
             </Style>
             <Style x:Key="DynamicDataGridLabelStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
@@ -251,7 +263,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="80"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -260,25 +271,41 @@
         </Grid.ColumnDefinitions>
         <GroupBox Header="{Binding UIString[ClassTerms_07],FallbackValue=Classification}" Grid.ColumnSpan="2" BorderThickness="1">
             <Grid x:Name="grdContentFilter">
-                <WrapPanel x:Name="wrpClassification" Grid.Row="2" MaxWidth="800">
-                    <Button x:Name="btnClsReset" Command="{Binding PsCmd[mResetClassFilter]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue='Reset Selection'}" IsEnabled="{Binding IsNotReadonly}" Height="24" Width="24" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label x:Name="lbl_ClsStd" Content="{Binding UIString[Adsk.QS.ClsStandard], FallbackValue=Standard}"/>
+                <ComboBox x:Name="cmb_ClsStd" Text="{Binding Prop[_XLTN_CLSSTANDARD].Value}" MinWidth="100" VerticalAlignment="Center" Grid.Column="1" Margin="0" ToolTipService.ShowOnDisabled="True" >
+                    <ComboBoxItem x:Name="IEC61355" Content="IEC 61355"/>
+                    <ComboBoxItem x:Name="eClass" Content="eCl@ss"/>
+                    <ComboBoxItem x:Name="Company" Content="PDMC-Sample"/>
+                    <ComboBoxItem x:Name="Uniclass" Content="Uniclass" />
+                </ComboBox>
+                <WrapPanel x:Name="wrpClassification" Grid.Row="1" MaxWidth="800" Grid.ColumnSpan="3" Margin="5,0,0,0" >
+                    <Button x:Name="btnClsReset" Command="{Binding PsCmd[mResetClassFilter]}" ToolTip="{Binding UIString[ClassTerms_TT07], FallbackValue=Reset Selection}" IsEnabled="{Binding IsNotReadonly}" Height="24" Width="24" >
                         <Button.Template>
                             <ControlTemplate>
                                 <!--<Border>-->
-                                    <Image x:Name="imgClsReset" >
-                                        <Image.Style>
-                                            <Style>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
-                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\RemoveAction_32.png" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
-                                                        <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\RemoveAction_32.png" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
+                                <Image x:Name="imgClsReset" >
+                                    <Image.Style>
+                                        <Style>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Dark}">
+                                                    <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsDark\RemoveAction_32.png" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentTheme, Source={x:Static wpfUtilities:ActiveThemeProvider.Instance}}" Value="{x:Static winFormTheme:Theme.Light}">
+                                                    <Setter Property="Image.Source" Value="C:\ProgramData\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\IconsLight\RemoveAction_32.png" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
                                 <!--</Border>-->
                             </ControlTemplate>
                         </Button.Template>
@@ -375,15 +402,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
-        <Grid x:Name="grdComments" Grid.ColumnSpan="2" Grid.Row="2" Margin="5,10,3,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="140"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Label x:Name="lblComments" Content="{Binding UIString[LBL7], FallbackValue=Comments}" Height="Auto" BorderThickness="1,1,0,1" VerticalAlignment="Top" Width="{Binding ActualWidth, ElementName=lblCategory, Mode=OneWay}"/>
-            <TextBox x:Name="txtComments" Text="{Binding Prop[_XLTN_COMMENTS].Value}" Height="Auto" TextWrapping="Wrap" MinHeight="62" BorderThickness="1" Grid.Column="1" AcceptsReturn="True" AcceptsTab="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="102" VerticalContentAlignment="Top"/>
-        </Grid>
-        <Grid x:Name="ButtonGrid" Grid.ColumnSpan="2" Grid.Row="3" Margin="5,15,5,5">
+        <Grid x:Name="ButtonGrid" Grid.ColumnSpan="2" Grid.Row="2" Margin="5,15,5,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition/>

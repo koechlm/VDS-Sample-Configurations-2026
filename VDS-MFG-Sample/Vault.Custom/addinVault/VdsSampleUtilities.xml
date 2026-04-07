@@ -14,37 +14,6 @@
             Events registration
             </summary>
         </member>
-        <member name="T:VdsSampleUtilities.Properties.Resources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.Properties.Resources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.Properties.Resources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.Properties.Resources.Open_Settings_16_Dark">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.Properties.Resources.Open_Settings_16_Light">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="P:VdsSampleUtilities.Properties.Resources.Vault_Pro">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
         <member name="T:VdsSampleUtilities.Settings">
             <summary>
             Registered configuration points
@@ -278,6 +247,21 @@
             Class extending VDS Vault scripts
             </summary>
         </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.GetImageResourceAsByteArray(System.String)">
+            <summary>
+            Gets an image resource as a byte array in PNG format
+            </summary>
+            <param name="resourceName">The name of the image resource (e.g., "VirtualComp_32")</param>
+            <returns>Byte array containing the image in PNG format, or an empty array if the resource cannot be loaded</returns>
+        </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.GetImageResourceAsByteArray(System.String,System.Boolean)">
+            <summary>
+            Gets an image from a local file as a byte array in PNG format
+            </summary>
+            <param name="filePath">The full path and filename of the image file</param>
+            <param name="isFilePath">Must be set to true to indicate this is a file path (used to differentiate overloads)</param>
+            <returns>Byte array containing the image in PNG format, or an empty array if the file cannot be loaded</returns>
+        </member>
         <member name="M:VdsSampleUtilities.VltHelpers.UserCredentials1(System.String,System.String,System.String,System.String)">
             <summary>
             Creates user credentials for connecting to a Vault server.
@@ -383,6 +367,52 @@
             <param name="CustentId">Custom Object Id</param>
             <param name="CustentProperties">Name-Value map of Display Name and Values. All Values return as text.</param>
         </member>
+        <member name="T:VdsSampleUtilities.VltHelpers.BomRow">
+            <summary>
+            Represents a single row in a Bill of Materials (BOM)
+            </summary>
+        </member>
+        <member name="T:VdsSampleUtilities.VltHelpers.Bom">
+            <summary>
+            Represents a Bill of Materials containing multiple BOM items
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.GetModelStates(Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection,System.Int64)">
+            <summary>
+            Get model states or configurations from a file's BOM structure
+            </summary>
+            <param name="conn">Vault connection</param>
+            <param name="fileId">File ID to get model states from</param>
+            <returns>Dictionary of model state names and their IDs</returns>
+        </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.GetFileBOM(Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection,System.Int64,System.Int64,System.Boolean@,System.String@)">
+            <summary>
+            Read the structured BOM (Inventor BOM: Structured = Enabled)
+            </summary>
+            <param name="conn">Vault connection</param>
+            <param name="fileId">File ID</param>
+            <param name="bomCompId">BOM Component ID (use root component or model state ID)</param>
+            <param name="returnMessage"></param>
+            <returns>List of BOM items</returns>
+        </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.ReadModelBom(Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection,Autodesk.Connectivity.WebServices.BOM,System.Collections.Generic.List{VdsSampleUtilities.VltHelpers.BomRow})">
+            <summary>
+            Read the model BOM
+            </summary>
+            <param name="conn">Vault connection</param>
+            <param name="parentBom">BOM object retrieved from DocumentService.GetBOMByFileId</param>
+            <param name="bomItems">List to populate with BOM items</param>
+        </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.ReadStructuredBom(Autodesk.DataManagement.Client.Framework.Vault.Currency.Connections.Connection,Autodesk.Connectivity.WebServices.BOM,Autodesk.Connectivity.WebServices.BOMSchm,System.Collections.Generic.List{VdsSampleUtilities.VltHelpers.BomRow})">
+            <summary>
+            Process a BOM level (recursively if needed in future)
+            </summary>
+        </member>
+        <member name="M:VdsSampleUtilities.VltHelpers.ShouldProcessNestedBOM(Autodesk.Connectivity.WebServices.BOMComp,Autodesk.Connectivity.WebServices.BOM)">
+            <summary>
+            Determines if a nested BOM should be processed
+            </summary>
+        </member>
         <member name="T:VdsSampleUtilities.InvHelpers">
             <summary>
             Class sharing options to interact with hosting Inventor session
@@ -478,6 +508,42 @@
             Switch running AutoCAD application
             </summary>
             <param name="m_AcadApp">AutoCAD Application ($Application)</param>
+        </member>
+        <member name="T:VDSSampleUtilities.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:VDSSampleUtilities.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:VDSSampleUtilities.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:VDSSampleUtilities.Properties.Resources.Open_Settings_16_Dark">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:VDSSampleUtilities.Properties.Resources.Open_Settings_16_Light">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:VDSSampleUtilities.Properties.Resources.Vault_Pro">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:VDSSampleUtilities.Properties.Resources.VirtualComp_32">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
         </member>
     </members>
 </doc>
