@@ -20,6 +20,7 @@
             <WPF:ErrorProviderIconConverter x:Key="errorProviderIconConverter"/>
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                <Setter Property="MinHeight" Value="24"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -34,7 +35,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBox Text="{WPF:ValidatedBinding Value}" BorderThickness="0" CharacterCasing="{Binding Case}" />
+                                    <TextBox Text="{WPF:ValidatedBinding Value}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"  BorderThickness="0" CharacterCasing="{Binding Case}" />
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -154,9 +155,9 @@
                             <Setter.Value>
                                 <ControlTemplate>
                                     <Button Content="{Binding DataContext.UIString[], FallbackValue=. . ., RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                                    Command="{Binding DataContext.PsCmd[], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" HorizontalAlignment="Right"
-                                    ToolTip="{Binding DataContext.UIString[], FallbackValue='No ToolTip set', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                                    Grid.Column="1" Padding="5,1" MinWidth="20"/>
+                                        Command="{Binding DataContext.PsCmd[], RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" HorizontalAlignment="Right"
+                                        ToolTip="{Binding DataContext.UIString[], FallbackValue='No ToolTip set', RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                                        Grid.Column="1" Padding="5,1" MinWidth="20"/>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -463,7 +464,7 @@
         </Grid>
         <TabControl x:Name="tabCtrlMain" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"  
                     MinHeight="80" MaxWidth="700" Margin="0,10,0,0" >
-            <TabItem x:Name="tabProperties" Header="{Binding UIString[LBL63], FallbackValue= 'Category Properties'}">
+            <TabItem x:Name="tabProperties" Header="{Binding UIString[LBL63], FallbackValue=Category Properties}">
                 <AdornerDecorator>
                     <Grid x:Name="DSDynCatPropGrid" MinHeight="80" MinWidth="694">
                         <DataGrid x:Name="DSDynamicCategoryProperties"
@@ -493,8 +494,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.HeaderTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn CellStyle="{StaticResource DynamicDataGridBtnCellStyle}" MinWidth="25" >
-                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn CellStyle="{StaticResource DynamicDataGridBtnCellStyle}" MinWidth="25" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
