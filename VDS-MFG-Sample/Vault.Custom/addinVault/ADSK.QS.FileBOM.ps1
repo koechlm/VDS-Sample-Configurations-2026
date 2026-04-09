@@ -19,7 +19,7 @@ class mBom {
 
 function mGoToCadBomCompFile {
 	$selectedBomRow = $dsWindow.FindName("bomList").SelectedItem
-	[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Autodesk Vault 2026 SDK\bin\x64\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
+	[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Vault Client 2026\Explorer\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
 	[Autodesk.Connectivity.Explorer.ExtensibilityTools.IExplorerUtil]$mExplorerUtil = [Autodesk.Connectivity.Explorer.ExtensibilityTools.ExplorerLoader]::GetExplorerUtil($VaultApplication)
 		
 	#search a file to navigate to. Note the search returns the first file found; ensure that part number is unique in the vault
@@ -34,7 +34,7 @@ function mGoToCadBomCompFile {
 
 function mGoToCadBomCompItem {
 	$selectedBomRow = $dsWindow.FindName("bomList").SelectedItem
-	[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Autodesk Vault 2026 SDK\bin\x64\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
+	[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Vault Client 2026\Explorer\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
 	[Autodesk.Connectivity.Explorer.ExtensibilityTools.IExplorerUtil]$mExplorerUtil = [Autodesk.Connectivity.Explorer.ExtensibilityTools.ExplorerLoader]::GetExplorerUtil($VaultApplication)
 		
 	#search a file to navigate to. Note the search returns the first file found; ensure that part number is unique in the vault

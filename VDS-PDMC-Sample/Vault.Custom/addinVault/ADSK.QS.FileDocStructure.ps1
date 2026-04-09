@@ -35,7 +35,7 @@ function mGoToWhereUsedItem() {
 
 function mGoToTreeViewFile($TreeItemName) {
 	if ($null -eq $mExplorerUtil) {
-		[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Autodesk Vault 2026 SDK\bin\x64\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
+		[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Vault Client 2026\Explorer\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
 		[Autodesk.Connectivity.Explorer.ExtensibilityTools.IExplorerUtil]$global:mExplorerUtil = [Autodesk.Connectivity.Explorer.ExtensibilityTools.ExplorerLoader]::GetExplorerUtil($VaultApplication)
 	}
 	
@@ -51,7 +51,7 @@ function mGoToTreeViewFile($TreeItemName) {
 
 function mGoToTreeViewItem($TreeItemName) {		
 	if ($null -eq $mExplorerUtil) {
-		[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Autodesk Vault 2026 SDK\bin\x64\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
+		[System.Reflection.Assembly]::LoadFrom('C:\Program Files\Autodesk\Vault Client 2026\Explorer\Autodesk.Connectivity.Explorer.ExtensibilityTools.dll')
 		[Autodesk.Connectivity.Explorer.ExtensibilityTools.IExplorerUtil]$global:mExplorerUtil = [Autodesk.Connectivity.Explorer.ExtensibilityTools.ExplorerLoader]::GetExplorerUtil($VaultApplication)
 	}			
 	#search a file to navigate to. Note the search returns the first file found; ensure that part number is unique in the vault
