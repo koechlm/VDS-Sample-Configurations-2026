@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /ReleasePackages/Installer
 /VDS-PDMC-Sample/Vault.Custom/addinVault/ADSK.QS.NameValidationCustent.ps1trial
+/VDS-Sample-Utilities/CoPilot_PhantomEnh.txt

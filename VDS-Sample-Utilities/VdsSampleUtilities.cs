@@ -1297,15 +1297,111 @@ namespace VdsSampleUtilities
                         }
                     }
 
-                    // Function Designation is a bom row property in Vault, and optionally an instance property in Inventor; we need to to handle both cases to get the value if it exists
-                    var funcProp = parentBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
-                    if (funcProp != null)
+                    // Resolve the instance matching this occurrence before the Functional Designation lookup.
+                    // The promoted component check must run first because:
+                    //   a) detection is at instance level (BOMInst.UniqueId == "" and ParId != 0), not occurrence level
+                    //   b) for promoted components the FD property definition may only exist in the phantom
+                    //      subassembly's BOM and not in parentBom, so a parentBom funcProp lookup would
+                    //      short-circuit and skip FD entirely if checked first
+                    //
+                    // Lookup strategy: SchemeOccurrenceId is the most direct link between a BOMInst and its
+                    // BOMSchmOccur, but it is only populated when Vault explicitly binds the instance to the
+                    // scheme (i.e. for normal, non-promoted instances). For promoted instances SchemeOccurrenceId
+                    // is typically 0. Falling back to i.Id == occur.Id is unsafe because instance IDs and
+                    // occurrence IDs are from different ID spaces and will only match by coincidence.
+                    //
+                    // Instead, for each occurrence we use CldId-based positional matching: collect all instances
+                    // in parentBom.InstArray whose CldId matches occur.CompId, then pick the one at the same
+                    // ordinal position as the current occurrence among all occurrences sharing that CompId.
+                    // This correctly handles multiple occurrences of the same component in the same phantom.
+                    BOMInst? instArrayMatch = null;
+                    if (parentBom.InstArray.Length >= 1)
                     {
-                        // we need to lookup the instances matching the current occurrence that have an instance property with funcProp.PropId
-                        if (parentBom.InstArray.Length >= 1)
+                        // First try the direct SchemeOccurrenceId link (reliable for normal instances)
+                        instArrayMatch = parentBom.InstArray.FirstOrDefault(i => i.SchemeOccurrenceId == occur.Id);
+
+                        if (instArrayMatch == null)
                         {
-                            // occurrences on structured BOM differ from occurrences within phantom subassemblies; we need different logic to find the matching instance for each case
-                            var instArrayMatch = parentBom.InstArray.FirstOrDefault(i => i.SchemeOccurrenceId == occur.Id || i.Id == occur.Id);
+                            // Fallback: positional match by CldId among occurrences that share the same CompId
+                            var siblingsOccurrences = ((IEnumerable<BOMSchmOccur>)occurrences)
+                                .Where(o => o.CompId == occur.CompId)
+                                .ToList();
+                            int occurIdx = siblingsOccurrences.IndexOf(occur);
+
+                            var candidateInsts = parentBom.InstArray
+                                .Where(i => i.CldId == occur.CompId)
+                                .ToList();
+
+                            if (occurIdx >= 0 && occurIdx < candidateInsts.Count)
+                                instArrayMatch = candidateInsts[occurIdx];
+                        }
+                    }
+
+                    if (instArrayMatch != null && instArrayMatch.UniqueId == "" && instArrayMatch.ParId != 0)
+                    {
+                        // Promoted component: BOMInst.UniqueId == "" and ParId != 0 confirm this instance
+                        // belongs to a phantom subassembly promoted one level higher in the structured BOM.
+                        // Navigate: instArrayMatch.ParId → phantom's own instance → phantom component → phantom BOM.
+                        // FD is looked up exclusively from the phantom BOM's InstPropArray since it may not
+                        // exist in parentBom at all.
+                        var phantomParentInst = parentBom.InstArray
+                            .FirstOrDefault(i => i.Id == instArrayMatch.ParId);
+                        if (phantomParentInst != null)
+                        {
+                            var phantomComp = parentBom.CompArray
+                                .FirstOrDefault(c => c.Id == phantomParentInst.CldId);
+                            if (phantomComp != null && phantomComp.XRefId != -1)
+                            {
+                                var phantomBoms = conn.WebServiceManager.DocumentService
+                                    .GetBOMByFileIds(new long[] { phantomComp.XRefId });
+                                var phantomBom = phantomBoms?.FirstOrDefault();
+                                if (phantomBom != null)
+                                {
+                                    // FD property definition is resolved from the phantom BOM —
+                                    // it may not exist in parentBom at all
+                                    var funcPropInPhantom = phantomBom.PropArray?
+                                        .FirstOrDefault(p => p.DispName == "Functional Designation");
+                                    if (funcPropInPhantom != null)
+                                    {
+                                        // Correlation: group all promoted instances sharing the same phantom
+                                        // parent (ParId == instArrayMatch.ParId) in the order they appear in
+                                        // parentBom.InstArray; the i-th promoted instance maps to the i-th
+                                        // top-level instance (ParId == 0) in the phantom BOM's InstArray.
+                                        var promotedInstsForPhantom = parentBom.InstArray
+                                            .Where(i => i.ParId == instArrayMatch.ParId)
+                                            .ToList();
+                                        int idx = promotedInstsForPhantom
+                                            .FindIndex(i => i.Id == instArrayMatch.Id);
+
+                                        // Filter to actual child instances only; ParId == 0 alone can include a
+                                        // self-referential root entry for the phantom assembly itself (XRefId == -1
+                                        // on its component), which would shift all indices by one and cause the
+                                        // first promoted occurrence to map to the root instead of a real child.
+                                        var phantomChildInsts = phantomBom.InstArray?
+                                            .Where(i => i.ParId == 0 &&
+                                                        phantomBom.CompArray?.FirstOrDefault(c => c.Id == i.CldId)?.XRefId != -1)
+                                            .ToList();
+
+                                        if (phantomChildInsts != null && idx >= 0 && idx < phantomChildInsts.Count)
+                                        {
+                                            var fdInstProp = phantomBom.InstPropArray?
+                                                .FirstOrDefault(p =>
+                                                    p.InstId == phantomChildInsts[idx].Id
+                                                    && p.PropId == funcPropInPhantom.Id);
+                                            if (fdInstProp != null)
+                                                bomItem.FunctionalDesignation = fdInstProp.Val;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Normal component: Function Designation is a bom row property in Vault, and optionally an instance property in Inventor; we need to to handle both cases to get the value if it exists
+                        var funcProp = parentBom.PropArray.FirstOrDefault(p => p.DispName == "Functional Designation");
+                        if (funcProp != null)
+                        {
                             if (instArrayMatch != null)
                             {
                                 var instProp = parentBom.InstPropArray.FirstOrDefault(p => p.InstId == instArrayMatch.Id);
