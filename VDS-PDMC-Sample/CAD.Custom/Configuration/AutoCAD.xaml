@@ -969,7 +969,7 @@
                                     </Style>
                                 </Image.Style>
                             </Image>
-                            <TextBlock x:Name="lblTermMaster" Text="{Binding UIString[], FallbackValue='Terms Master'}" Margin="26,0,0,0" FontSize="14" Padding="10,5,0,0" VerticalAlignment="Center" Height="27" FontWeight="Bold"/>
+                            <TextBlock x:Name="lblTermMaster" Text="{Binding UIString[ClassTerms_01], FallbackValue='Terms Master'}" Margin="26,0,0,0" FontSize="14" Padding="10,5,0,0" VerticalAlignment="Center" Height="27" FontWeight="Bold"/>
                         </Grid>
                     </Grid>
                     <GroupBox x:Name="grpClassification" Header="{Binding UIString[ClassTerms_14], FallbackValue=Classification Filter}" Grid.Row="1">

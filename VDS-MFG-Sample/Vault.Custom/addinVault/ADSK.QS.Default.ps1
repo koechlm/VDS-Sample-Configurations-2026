@@ -354,7 +354,7 @@ function OnTabContextChanged
 	if ($VaultContext.SelectedObject.TypeId.SelectionContext -eq "FileMaster" -and $xamlFile -eq "ADSK.QS.CAD BOM.xaml") {
 		if (-not $global:_mVdsUtilities) {
 			$global:_mVdsUtilities = "$($env:programdata)\Autodesk\Vault 2026\Extensions\Autodesk.VdsSampleUtilities\VdsSampleUtilities.dll"
-			if (! (Test-Path $mVdsUtilities)) {
+			if (! (Test-Path $global:_mVdsUtilities)) {
 				#the basic utility installation only
 				[System.Reflection.Assembly]::LoadFrom($Env:ProgramData + '\Autodesk\Vault 2026\Extensions\DataStandard\Vault.Custom\addinVault\VdsSampleUtilities.dll')
 			}

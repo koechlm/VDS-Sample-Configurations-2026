@@ -512,7 +512,7 @@
   <UIString ID="ClassTerms_MNU12">Edit Term...</UIString>
   <UIString ID="ClassTerms_MNU13">Edit existing term</UIString>
   <UIString ID="ClassTerms_00">Class Term</UIString>
-  <UIString ID="ClassTerms_01">Terms Catalog</UIString>
+  <UIString ID="ClassTerms_01">Terms Master</UIString>
   <UIString ID="ClassTerms_02">German</UIString>
   <UIString ID="ClassTerms_03">English</UIString>
   <UIString ID="ClassTerms_04">French</UIString>

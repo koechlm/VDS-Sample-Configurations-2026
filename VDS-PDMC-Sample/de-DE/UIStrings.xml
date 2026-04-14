@@ -510,7 +510,7 @@
   <UIString ID="ClassTerms_MNU12">Begriff bearbeiten...</UIString>
   <UIString ID="ClassTerms_MNU13">Vorhandenen Begriff bearbeiten</UIString>
   <UIString ID="ClassTerms_00">Begriff</UIString>
-  <UIString ID="ClassTerms_01">Benennungs-Katalog</UIString>
+  <UIString ID="ClassTerms_01">Begriffe-Übersicht</UIString>
   <UIString ID="ClassTerms_02">Deutsch</UIString>
   <UIString ID="ClassTerms_03">Englisch</UIString>
   <UIString ID="ClassTerms_04">Französisch</UIString>
