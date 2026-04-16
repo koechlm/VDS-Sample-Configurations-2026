@@ -164,10 +164,37 @@ function InitializeCategory()
 
 function InitializeNumSchm()
 {
-	#Adopted from a DocumentService call, which always pulls FILE class numbering schemes
-	$global:numSchems = @($vault.NumberingService.GetNumberingSchemes('FILE', 'Activated')) 
-    $Prop["_Category"].add_PropertyChanged({
-        if ($_.PropertyName -eq "Value")
+	# Create "None" scheme with fallback localization
+	$noneLabel = if ($UIString.ContainsKey("LBL77")) { $UIString["LBL77"] } else { "None" }
+	$noneNumSchm = New-Object Autodesk.Connectivity.WebServices.NumSchm
+	$noneNumSchm.Name = $noneLabel
+	
+	# Get numbering schemes
+	$schemes = $vault.NumberingService.GetNumberingSchemes('FILE', 'Activated')
+
+	# Find default scheme (select first if multiple exist)
+	$defaultScheme = $schemes | Where-Object { $_.IsDflt } | Select-Object -First 1
+	
+	# Build global list with "None" prepended and schemes sorted by default
+	if ($schemes -and $schemes.Count -gt 0)
+	{
+	    $sortedSchemes = $schemes | Sort-Object -Property IsDflt -Descending
+	    $global:numSchems = @($noneNumSchm) + $sortedSchemes
+	}
+	else
+	{
+	    $global:numSchems = @($noneNumSchm)
+	}
+	
+	# Set default value safely
+	if ($Prop["_NumSchm"] -and $dsWindow.Name -eq "FileWindow")
+	{
+	    $Prop["_NumSchm"].Value = if ($defaultScheme) { $defaultScheme.Name } else { $noneNumSchm.Name }
+	}
+	
+	# Property changed event handler...
+	$Prop["_Category"].add_PropertyChanged({
+    if ($_.PropertyName -eq "Value")
         {
             $numSchm = $numSchems | where {$_.Name -eq $Prop["_Category"].Value}
             if($numSchm)
@@ -398,18 +425,7 @@ function GetNumSchms
 {
 	if ($Prop["_CreateMode"].Value)
 	{
-		try
-		{
-			if ($numSchems.Count -gt 1)
-			{
-				$numSchems = $numSchems | Sort-Object -Property IsDflt -Descending
-			}
-			return $numSchems
-		}
-		catch [System.Exception]
-		{		
-			#[System.Windows.MessageBox]::Show($error)
-		}
+		return $numSchems
 	}
 }
 
