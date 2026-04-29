@@ -424,8 +424,15 @@ function OnTabContextChanged
 		}
 
 		# read configuration names for sldasm files
-		if ($file.Name -match "\.sldasm$" ) {
-			$_MsArray += $_VltHelpers.GetModelStates($vaultConnection, $file.id)
+		try {
+			if ($file.Name -match "\.sldasm$" ) {
+				$_MsArray += $_VltHelpers.GetModelStates($vaultConnection, $file.id)
+			}
+		}
+		catch {
+			$dsWindow.FindName("txtStatus").Text = "CAD-BOM creation failed, due to missing SolidWorks-Vault Addin; contact your administrator."
+			$dsWindow.FindName("txtStatus").Visibility = "Visible"
+			break;
 		}
 
 		# update the UI with model states if there are any; otherwise, just read the primary BOM
