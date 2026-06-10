@@ -14,6 +14,7 @@
             <Style x:Key="DynamicDataGridCellStyle" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource ThemedDataGridCellStyle}">
                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
                 <Setter Property="MinHeight" Value="24"/>
+                <Setter Property="BorderThickness" Value="0"/>
                 <Style.Triggers>
                     <Trigger Property="IsSelected" Value="True">
                         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
@@ -211,9 +212,9 @@
                 <TextBox Text="{Binding Prop[_XLTN_CREATED BY].Value}" Grid.Column="1" Grid.Row="5" Margin="0,1" IsReadOnly="True"  />
                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Prop[_XLTN_REVISION].Value}" Margin="0,1" IsReadOnly="True"/>
                 <Label Content="{Binding UIString[LBL12], FallbackValue=Revision}" Grid.Row="2"/>
-                <Border Grid.Row="7" Grid.ColumnSpan="2" Visibility="{Binding IsLoaded, ElementName=image, Mode=OneWay}" Margin="0,5,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                <Border Grid.Row="7" Grid.ColumnSpan="2" Visibility="{Binding IsLoaded, ElementName=image, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Left" MaxWidth="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
                     <Image x:Name="image"
-                        Source="{Binding Prop[_XLTN_THUMBNAIL].Value}" Stretch="None" MinHeight="{Binding ActualHeight, ElementName=image, Mode=OneWay}"/>
+                        Source="{Binding Prop[_XLTN_THUMBNAIL].Value}" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" MaxHeight="260"/>
                 </Border>
             </Grid>
             <Label Content="{Binding UIString[LBL63], FallbackValue=Category Properties}" Grid.Column="1" FontWeight="Bold" Margin="5,0,0,0"/>
