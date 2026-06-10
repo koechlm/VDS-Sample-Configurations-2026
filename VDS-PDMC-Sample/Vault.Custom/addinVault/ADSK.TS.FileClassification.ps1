@@ -31,7 +31,7 @@ function mSortPropertyTable($propTable) {
 
 function mInitializeClassificationTab($ParentType, $file) {
 	#$dsDiag.ShowLog()
-	$dsDiag.Clear()
+	#$dsDiag.Clear()
 
 	$dsWindow.FindName("txtClassificationStatus").Visibility = "Collapsed"
 	$Global:mClsTabInitialized = $false
@@ -683,11 +683,14 @@ function mApplyClassification() {
 		try {
 			$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
 			if ($mFileUpdated) {
-				$dsDiag.Trace("File property definitions updated successfully.")
+				$dsDiag.Trace("File property definitions updated successfully.")				
 			}
 			else {
 				$dsDiag.Trace("File property definitions update returned false, no changes applied.")
 			}
+
+			# update the values for create and edit mode (create = properties added, edit = properties exist, but values may have changed)
+			mUpdateClsPropValues
 			$dsDiag.Trace("Successfully applied classification with $($mPropsAdd.Count) properties")
 		}
 		catch {
@@ -769,7 +772,6 @@ function mRemoveClassification() {
 				$mFileUpdated = $vault.DocumentService.UpdateFilePropertyDefinitions(@($Global:mFile.MasterId), $mPropsAdd, $mPropsRemove, $mAddRemoveComment)
 				if ($mFileUpdated) {
 					$dsDiag.Trace("File property definitions updated successfully.")
-					mUpdateClsPropValues
 				}
 				else {
 					$dsDiag.Trace("File property definitions update returned false, no changes applied.")
@@ -1004,8 +1006,8 @@ function mGetCustentClsLevelList ([String] $ClassLevelName) {
 			$mResultPage = $vault.CustomEntityService.FindCustomEntitiesBySearchConditions($srchConds, @($srchSort), [ref]$bookmark, [ref]$searchStatus)
 			If ($searchStatus.IndxStatus -ne "IndexingComplete" -or $searchStatus -eq "IndexingContent") {
 				#check the indexing status; you might return a warning that the result bases on an incomplete index, or even return with a stop/error message, that we need to have a complete index first
-				<# $dsWindow.FindName("txtClassificationStatus").Text = $UIString["Adsk.QS.Classification_12"]
-				$dsWindow.FindName("txtClassificationStatus").Visibility = "Visible" #>
+				$dsWindow.FindName("txtClassificationStatus").Text = $UIString["Adsk.QS.Classification_12"]
+				$dsWindow.FindName("txtClassificationStatus").Visibility = "Visible"
 			}
 			If ($mResultPage.Count -ne 0) {
 				$mResultAll.AddRange($mResultPage)
