@@ -141,9 +141,9 @@
             <TextBox Grid.Row="7" Text="{Binding Prop[_XLTN_COMMENTS].Value}" x:Name="Comments" Grid.Column="1" VerticalScrollBarVisibility="Auto" MinHeight="50" MaxHeight="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" Height="Auto" IsReadOnly="True" />
             <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Prop[_XLTN_REVISION].Value}" Margin="0,1" IsReadOnly="True"/>
             <Label Content="{Binding UIString[LBL12], FallbackValue=Revision}" Grid.Row="2"/>
-            <Border Grid.Row="8" Grid.ColumnSpan="2" Visibility="{Binding IsLoaded, ElementName=image, Mode=OneWay}" Margin="0,5,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+            <Border Grid.Row="7" Grid.ColumnSpan="2" Visibility="{Binding IsLoaded, ElementName=image, Mode=OneWay}" Margin="0,5,0,0" HorizontalAlignment="Left" MaxWidth="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
                 <Image x:Name="image"
-                        Source="{Binding Prop[_XLTN_THUMBNAIL].Value}" Stretch="UniformToFill"/>
+                        Source="{Binding Prop[_XLTN_THUMBNAIL].Value}" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MaxWidth="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" MaxHeight="260"/>
             </Border>
         </Grid>
         <Grid Grid.Column="1" Margin="5,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True">
