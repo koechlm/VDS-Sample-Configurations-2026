@@ -478,6 +478,7 @@
   <UIString ID="Adsk.Qs.ClassMnu_38">Edit Class Level 4...</UIString>
   <UIString ID="Adsk.Qs.ClassMnu_39">Edit existing Class Level 4</UIString>
   <!-- Classification Definitions end-->
+  <!-- Class Custent and Property Name definitions; must not localize, but match the Vault configuration-->
   <UIString ID="Adsk.QS.ClsLevel_01">Class Level 1</UIString>
   <UIString ID="Adsk.QS.ClsLevel_02">Class Level 2</UIString>
   <UIString ID="Adsk.QS.ClsLevel_03">Class Level 3</UIString>
@@ -486,6 +487,7 @@
   <UIString ID="Adsk.QS.ClsStandard">Standard</UIString> <!--Important Note: this translation must match the PropertyTranslation CLSSTANDARD-->
   <UIString ID="Adsk.QS.ClsCode">Code</UIString>
   <UIString ID="Adsk.QS.ClsLevelCode">Level Code</UIString>
+  <!-- end of Name definitions that must not localize -->
   <UIString ID="Adsk.QS.Classification_00">Class</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Value</UIString>

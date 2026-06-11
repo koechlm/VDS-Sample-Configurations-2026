@@ -476,14 +476,16 @@
   <UIString ID="Adsk.Qs.ClassMnu_38">Untergruppe bearbeiten...</UIString>
   <UIString ID="Adsk.Qs.ClassMnu_39">Bestehende Untergruppe bearbeiten</UIString>
   <!-- Class Menu Definitions end-->
-  <UIString ID="Adsk.QS.ClsLevel_01">Klassifizierung 1</UIString>
-  <UIString ID="Adsk.QS.ClsLevel_02">Klassifizierung 2</UIString>
-  <UIString ID="Adsk.QS.ClsLevel_03">Klassifizierung 3</UIString>
-  <UIString ID="Adsk.QS.ClsLevel_04">Klassifizierung 4</UIString>
-  <UIString ID="Adsk.QS.ClsObject">Klasse</UIString>
-  <UIString ID="Adsk.QS.ClsStandard">Norm</UIString> <!--Important Note: this translation must match the PropertyTranslation CLSSTANDARD-->
-  <UIString ID="Adsk.QS.ClsCode">Schlüssel</UIString>
-  <UIString ID="Adsk.QS.ClsLevelCode">Schlüssel Ebene</UIString>
+  <!-- Class Custent and Property Name definitions; must not localize, but match the Vault configuration-->
+  <UIString ID="Adsk.QS.ClsLevel_01">Class Level 1</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_02">Class Level 2</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_03">Class Level 3</UIString>
+  <UIString ID="Adsk.QS.ClsLevel_04">Class Level 4</UIString>
+  <UIString ID="Adsk.QS.ClsObject">Class Object</UIString>
+  <UIString ID="Adsk.QS.ClsStandard">Standard</UIString> <!--Important Note: this translation must match the PropertyTranslation CLSSTANDARD-->
+  <UIString ID="Adsk.QS.ClsCode">Code</UIString>
+  <UIString ID="Adsk.QS.ClsLevelCode">Level Code</UIString>
+  <!-- end of Name definitions that must not localize -->
   <UIString ID="Adsk.QS.Classification_00">Klasse</UIString>
   <UIString ID="Adsk.QS.Classification_01">Name</UIString>
   <UIString ID="Adsk.QS.Classification_02">Wert</UIString>

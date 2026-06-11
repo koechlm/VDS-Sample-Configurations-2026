@@ -56,12 +56,13 @@ function mInitializeClassificationTab($ParentType, $file) {
 		$Global:mClsObjectNames = ($UIString["Adsk.QS.ClsObject"], $UIString["ClassTerms_00"])
 		$Global:mClsObjectCustentDefIds = ($Global:mCustentDefs | Where-Object { $_.DispName -in $Global:mClsObjectNames }).Id
 
+		# $Prop[].DispName cannot be used to filter the classification properties, as those are not part of the file properties until the class is assigned; we use the UIStrings instead, which must match the Vault configuration (important note for localization: the UIStrings for classification levels, standard, code, etc. must not be localized, but kept as is to match the property names in the Vault)
 		$Global:mClsPropNames = (
-			$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"], 
+ 			$UIString["Adsk.QS.ClsLevel_01"], $UIString["Adsk.QS.ClsLevel_02"], $UIString["Adsk.QS.ClsLevel_03"],
 			$UIString["Adsk.QS.ClsLevel_04"], $UIString["Adsk.QS.ClsObject"], $UIString["Adsk.QS.ClsStandard"], $UIString["ClassTerms_09"], 
 			$UIString["ClassTerms_10"], $UIString["ClassTerms_11"], $UIString["ClassTerms_12"], $UIString["ClassTerms_12a"], $UIString["ClassTerms_12b"], $UIString["Adsk.QS.ClsLevelCode"], 
 			$UIString["Comments"], $UIString["CommentsDE"] )
-		$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id	
+		$Global:mClsPropDefIds = ($Global:mAllCustentPropDefs | Where-Object { $_.DispName -in $Global:mClsPropNames }).Id
  }
 
 	Switch ($ParentType) {
@@ -560,34 +561,39 @@ function mSelectClassification() {
 	$chckCopyTermToTitle = $AssignClsWindow.FindName("chckCopyTermToTitle")
 	$copyTermToTitle = $chckCopyTermToTitle -and $chckCopyTermToTitle.IsChecked -eq $true
 	
-	# Then, add/override with Term properties (Term has priority)
+	# Then, add/override with Term properties (Term has priority, except for the code))
 	$termProps = $AssignClsWindow.FindName("dtgrdTermProps").ItemsSource
 	if ($termProps) {
 		foreach ($entry in $termProps.GetEnumerator()) {
+
+			if ($entry.Key -eq $Prop["_XLTN_CLSCODE"].DispName) {
+				continue;
+			}
+
 			$propertyName = $entry.Key
-			$propertyValue = $entry.Value
+			$propertyValue = $entry.Value			
 			
 			# If checkbox is checked, map Term properties to Title properties
 			if ($copyTermToTitle) {
 				# Check if this is a Term language property and map it to Title
-				if ($propertyName -eq "Term DE") {
-					$propertyName = "Title DE"
+				if ($propertyName -eq $Prop["_XLTN_TERM-DE"].DispName) {
+					$propertyName = $Prop["_XLTN_TITLE-DE"].DispName
 					$dsDiag.Trace("Mapped 'Term DE' to 'Title DE'")
 				}
-				elseif ($propertyName -eq "Term EN") {
-					$propertyName = "Title"  # Default Title property
+				elseif ($propertyName -eq $Prop["_XLTN_TERM-EN"].DispName) {
+					$propertyName = $Prop["_XLTN_TITLE"].DispName  # Default Title property
 					$dsDiag.Trace("Mapped 'Term EN' to 'Title'")
 				}
-				elseif ($propertyName -eq "Term FR") {
-					$propertyName = "Title FR"
+				elseif ($propertyName -eq $Prop["_XLTN_TERM-FR"].DispName) {
+					$propertyName = $Prop["_XLTN_TITLE-FR"].DispName
 					$dsDiag.Trace("Mapped 'Term FR' to 'Title FR'")
 				}
-				elseif ($propertyName -eq "Term IT") {
-					$propertyName = "Title IT"
+				elseif ($propertyName -eq $Prop["_XLTN_TERM-IT"].DispName) {
+					$propertyName = $Prop["_XLTN_TITLE-IT"].DispName
 					$dsDiag.Trace("Mapped 'Term IT' to 'Title IT'")
 				}
-				elseif ($propertyName -eq "Term ES") {
-					$propertyName = "Title ES"
+				elseif ($propertyName -eq $Prop["_XLTN_TERM-ES"].DispName) {
+					$propertyName = $Prop["_XLTN_TITLE-ES"].DispName
 					$dsDiag.Trace("Mapped 'Term ES' to 'Title ES'")
 				}
 			}
