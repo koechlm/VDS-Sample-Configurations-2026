@@ -426,16 +426,27 @@ function AddinUnloaded {
 	#Executed when DataStandard is unloaded in Inventor/AutoCAD
 }
 
-function GetVaultRootFolder() {
-	$mappedRootPath = $Prop["_VaultVirtualPath"].Value + $Prop["_WorkspacePath"].Value
-	$mappedRootPath = $mappedRootPath -replace "\\", "/" -replace "//", "/"
-	if ($mappedRootPath -eq '') {
+function GetVaultRootFolder()
+{
+	$vaultVirtualPath = [string]$Prop["_VaultVirtualPath"].Value
+	$workspacePath = [string]$Prop["_WorkspacePath"].Value
+
+	# Both properties are not guaranteed to contain a path separator.  Build
+	# the path explicitly so "$" + "Design" becomes "$/Design".
+	if ([string]::IsNullOrEmpty($vaultVirtualPath))
+    {
+		$vaultVirtualPath = '$'
+    }
+	$mappedRootPath = ($vaultVirtualPath.TrimEnd('\', '/') + '/' + $workspacePath.TrimStart('\', '/'))
+	$mappedRootPath = $mappedRootPath.replace("\", "/")
+	if ($mappedRootPath -eq '$')
+	{
 		$mappedRootPath = '$'
 	}
-	try{
-		$rootFolder = $vault.DocumentService.GetFolderByPath($mappedRootPath)
-		return $rootFolder
-	}
+    try{
+        $rootFolder = $vault.DocumentService.GetFolderByPath($mappedRootPath)
+        return $rootFolder
+    }
 	catch{
         return $null
     }

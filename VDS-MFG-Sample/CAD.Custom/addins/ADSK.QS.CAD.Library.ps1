@@ -60,17 +60,11 @@ function mInheritProperties ($Id, $MappingTable) {
 #Get parent project folder object
 function mGetNewFileParentFldrByCat ([string] $Category) {
 	#get the Vault path of Inventors working folder
-	$mappedRootPath = $Prop["_VaultVirtualPath"].Value + $Prop["_WorkspacePath"].Value
-	$mappedRootPath = $mappedRootPath -replace "\\", "/" -replace "//", "/"
-	if ($mappedRootPath -eq '') {
-		$mappedRootPath = '$/'
-	}
-	#$dsDiag.Trace("mapped root: $($mappedRootPath)")
-	$mWfVault = $mappedRootPath
+	$mWfVault = GetVaultRootFolder
 					
 	#get local path of vault workspace path for Inventor
 	If ($dsWindow.Name -eq "InventorWindow") {
-		$mCAxRoot = $mappedRootPath.Split("/")[1]
+		$mCAxRoot = $mWfVault.FullName.Split("/")[1]
 	}
 	if ($dsWindow.Name -eq "AutoCADWindow") {
 		$mCAxRoot = ""
@@ -94,7 +88,7 @@ function mGetNewFileParentFldrByCat ([string] $Category) {
 		}
 		#merge the local path and relative target path of new file in vault
 		$mPath = $Prop["_FilePath"].Value.Replace($mWFCAD, "")
-		$mPath = $mWfVault + $mPath
+		$mPath = $mWfVault.FullName + "/" + $mPath
 		$mPath = $mPath.Replace(".\", "")
 		$mPath = $mPath.Replace("\", "/")
 		$mPath = $mPath.Replace("//", "/")
