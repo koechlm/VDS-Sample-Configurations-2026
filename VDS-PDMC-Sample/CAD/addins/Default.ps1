@@ -168,18 +168,28 @@ function InitializeNumSchm()
     }
 }
 
-function GetVaultRootFolder()
+function GetVaultRootFolder() #replaced 2026.4 default with proposed fix for PDM-53649
 {
-    $mappedRootPath = $Prop["_VaultVirtualPath"].Value + $Prop["_WorkspacePath"].Value
-    $mappedRootPath = $mappedRootPath -replace "\\", "/" -replace "//", "/"
-    if ($mappedRootPath -eq '')
+	$vaultVirtualPath = [string]$Prop["_VaultVirtualPath"].Value
+	$workspacePath = [string]$Prop["_WorkspacePath"].Value
+
+	# Both properties are not guaranteed to contain a path separator.  Build
+	# the path explicitly so "$" + "Design" becomes "$/Design".
+	if ([string]::IsNullOrEmpty($vaultVirtualPath))
     {
-        $mappedRootPath = '$'
+		$vaultVirtualPath = '$'
     }
+	$mappedRootPath = ($vaultVirtualPath.TrimEnd('\', '/') + '/' + $workspacePath.TrimStart('\', '/'))
+	$mappedRootPath = $mappedRootPath.replace("\", "/")
+	if ($mappedRootPath -eq '$')
+	{
+		$mappedRootPath = '$'
+	}
     try{
         $rootFolder = $vault.DocumentService.GetFolderByPath($mappedRootPath)
         return $rootFolder
-    }catch{
+    }
+	catch{
         return $null
     }
 }
